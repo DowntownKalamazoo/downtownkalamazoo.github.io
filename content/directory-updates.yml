@@ -1,0 +1,18 @@
+# Quick changes to the business directory, on top of the main spreadsheet (imported into directory.json).
+# The spreadsheet is the main record. Use this file for small fixes between spreadsheet updates.
+#
+# hide:            ids to keep off the site, with the reason
+# update:          change details for a business already in the directory, by its id
+#                  (the id is the end of its link, for example directory.html#b-rustica is "rustica")
+#                  fields: name, desc, website, phone, address, dd (Downtown Dollars), sd (Social District)
+# social_district: extra ids to tag as Social District
+# add:             businesses that aren't in the spreadsheet yet (name, cat, address, phone, website, desc,
+#                  social_district: true, downtown_dollars: true). cat is shop, dine, arts, services or stay.
+
+hide: {}
+
+update: {}
+
+social_district: []
+
+add: []

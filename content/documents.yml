@@ -1,0 +1,100 @@
+# Budgets, reports, plans and other documents shown on the DDA & DEGA page.
+#
+# To add one:
+#   1. Upload the PDF to the "files" folder (Add file > Upload files), or copy a link to it on another site.
+#   2. Copy one of the entries below, paste it at the top, and change the details.
+#   3. Commit. The page updates in a minute or two.
+#
+# board: DDA, DEGA, or DDA & DEGA
+# kind:  Budget, Financial statement, Annual report, Plan, Bylaws, Agenda, Minutes, or Other
+# url:   files/your-file.pdf for an uploaded file, or a full https:// link
+
+- title: DDA bylaws
+  board: DDA
+  kind: Bylaws
+  year: ""
+  url: https://www.kalamazoocity.org/files/assets/public/v/1/minutes-amp-agendas/dda/4872-7831-8941-v3-kalamazoo-dda-bylaws.pdf
+
+- title: DEGA bylaws
+  board: DEGA
+  kind: Bylaws
+  year: ""
+  url: https://www.kalamazoocity.org/files/assets/public/v/1/minutes-amp-agendas/dda/4888-6999-9965-v3-kalamazoo-dega-bylaws.pdf
+
+- title: DDA 2023 budget
+  board: DDA
+  kind: Budget
+  year: 2023
+  url: https://stories.opengov.com/kalamazoocity/published/HsV9PrwEdc
+
+- title: DEGA 2023 budget
+  board: DEGA
+  kind: Budget
+  year: 2023
+  url: https://stories.opengov.com/kalamazoocity/published/WYDKh44tEC
+
+- title: DDA audited financial statements, 2023
+  board: DDA
+  kind: Financial statement
+  year: 2023
+  url: https://www.kalamazoocity.org/files/assets/public/v/1/financial-documents/dda/dda-audited-financial-statements-2023.pdf
+
+- title: DEGA audited financial statements, 2023
+  board: DEGA
+  kind: Financial statement
+  year: 2023
+  url: https://www.kalamazoocity.org/files/assets/public/v/2/financial-documents/dega/dega-audited-financial-statements-2023.pdf
+
+- title: DDA audited financial statements, 2022
+  board: DDA
+  kind: Financial statement
+  year: 2022
+  url: https://www.kalamazoocity.org/files/assets/public/financial-documents/dda/dda-audited-financial-statements-2022.pdf
+
+- title: DEGA audited financial statements, 2022
+  board: DEGA
+  kind: Financial statement
+  year: 2022
+  url: https://www.kalamazoocity.org/files/assets/public/financial-documents/dega/dega-audited-financial-statements-2022.pdf
+
+- title: DDA audited financial statements, 2021
+  board: DDA
+  kind: Financial statement
+  year: 2021
+  url: https://www.kalamazoocity.org/files/assets/public/financial-documents/dda/dda-audited-financial-statements-2021.pdf
+
+- title: DEGA audited financial statements, 2021
+  board: DEGA
+  kind: Financial statement
+  year: 2021
+  url: https://www.kalamazoocity.org/files/assets/public/financial-documents/dega/dega-audited-financial-statements-2021.pdf
+
+- title: DDA audited financial statements, 2020
+  board: DDA
+  kind: Financial statement
+  year: 2020
+  url: https://www.kalamazoocity.org/files/assets/public/financial-documents/dda/dda-audited-financial-statements-2020.pdf
+
+- title: DEGA audited financial statements, 2020
+  board: DEGA
+  kind: Financial statement
+  year: 2020
+  url: https://www.kalamazoocity.org/files/assets/public/financial-documents/dega/dega-audited-financial-statements-2020.pdf
+
+- title: DDA audited financial statements, 2019
+  board: DDA
+  kind: Financial statement
+  year: 2019
+  url: https://www.kalamazoocity.org/files/assets/public/financial-documents/dda/dda-audited-financial-statements-2019.pdf
+
+- title: DEGA audited financial statements, 2019
+  board: DEGA
+  kind: Financial statement
+  year: 2019
+  url: https://www.kalamazoocity.org/files/assets/public/financial-documents/dega/dega-audited-financial-statements-2019.pdf
+
+- title: DDA audited financial statements, 2018
+  board: DDA
+  kind: Financial statement
+  year: 2018
+  url: https://www.kalamazoocity.org/files/assets/public/financial-documents/dda/dda-audited-financial-statements-2018.pdf

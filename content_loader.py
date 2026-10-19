@@ -1,0 +1,131 @@
+"""Reads the staff-editable files in content/ (Markdown with a short header, and YAML lists).
+
+Each Markdown file starts with a header between two lines of three dashes, for example:
+
+    ---
+    title: Downtown parking updates take effect
+    date: 2026-04-01
+    type: Press release
+    summary: One or two sentences for the news list.
+    ---
+    The article itself, in Markdown.
+"""
+import calendar
+import datetime as dt
+import os
+import re
+
+import markdown
+import yaml
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+CONTENT = os.path.join(HERE, 'content')
+MD = markdown.Markdown(extensions=['extra', 'sane_lists', 'smarty'])
+
+
+def _date(v):
+    if isinstance(v, dt.datetime):
+        return v.date()
+    if isinstance(v, dt.date):
+        return v
+    if v in (None, ''):
+        return None
+    return dt.date.fromisoformat(str(v).strip())
+
+
+def read_md(path):
+    text = open(path, encoding='utf-8').read().lstrip('﻿')
+    meta, body = {}, text
+    m = re.match(r'^---\s*\n(.*?)\n---\s*\n?(.*)$', text, re.S)
+    if m:
+        meta = yaml.safe_load(m.group(1)) or {}
+        body = m.group(2)
+    MD.reset()
+    meta['body_html'] = MD.convert(body.strip()) if body.strip() else ''
+    stem = os.path.splitext(os.path.basename(path))[0]
+    meta.setdefault('slug', re.sub(r'^\d{4}-\d{2}-\d{2}-', '', stem))
+    meta['source_file'] = os.path.relpath(path, HERE)
+    return meta
+
+
+def load(folder):
+    d = os.path.join(CONTENT, folder)
+    if not os.path.isdir(d):
+        return []
+    items = [read_md(os.path.join(d, f)) for f in sorted(os.listdir(d)) if f.endswith('.md') and not f.startswith(('_', 'README'))]
+    return [i for i in items if not i.get('draft')]
+
+
+def load_yaml(name, default=None):
+    p = os.path.join(CONTENT, name)
+    if not os.path.exists(p):
+        return default
+    return yaml.safe_load(open(p, encoding='utf-8')) or default
+
+
+# ---------------------------------------------------------------- News
+NEWS_TYPES = ['Press release', 'News', 'Feature', 'In the news']
+
+
+def news():
+    posts = []
+    for p in load('news'):
+        p['date'] = _date(p.get('date'))
+        p['type'] = p.get('type') if p.get('type') in NEWS_TYPES else 'News'
+        posts.append(p)
+    return sorted(posts, key=lambda p: p['date'] or dt.date.min, reverse=True)
+
+
+# ---------------------------------------------------------------- Events
+ORD = {'first': 1, 'second': 2, 'third': 3, 'fourth': 4, 'last': -1}
+DAYS = {d.lower(): i for i, d in enumerate(calendar.day_name)}
+
+
+def _nth_weekday(year, month, nth, weekday):
+    days = [d for d in range(1, calendar.monthrange(year, month)[1] + 1) if dt.date(year, month, d).weekday() == weekday]
+    return dt.date(year, month, days[nth - 1] if nth > 0 else days[-1])
+
+
+def occurrences(ev, start, months_ahead=9):
+    """Dates for one event. A one-off event uses `date` (and `end`); a repeating one uses
+    `repeats: first friday` (or second/third/fourth/last + any weekday), with optional `until` and `skip` dates."""
+    rule = str(ev.get('repeats') or '').strip().lower()
+    if not rule:
+        d = _date(ev.get('date'))
+        return [(d, _date(ev.get('end')))] if d else []
+    nth, _, day = rule.partition(' ')
+    if nth not in ORD or day not in DAYS:
+        raise ValueError(f'{ev.get("source_file")}: "repeats" should look like "first friday", not "{rule}"')
+    until = _date(ev.get('until'))
+    skip = {_date(s) for s in (ev.get('skip') or [])}
+    first = _date(ev.get('starts')) or start
+    out, y, m = [], start.year, start.month
+    limit = (start.year * 12 + start.month - 1) + months_ahead
+    while y * 12 + m - 1 <= limit:
+        d = _nth_weekday(y, m, ORD[nth], DAYS[day])
+        if d >= first and (not until or d <= until) and d not in skip:
+            out.append((d, None))
+        m += 1
+        if m > 12:
+            y, m = y + 1, 1
+    return out
+
+
+def events():
+    evs = load('events')
+    for e in evs:
+        e['tags'] = e.get('tags') or []
+        if isinstance(e['tags'], str):
+            e['tags'] = [t.strip() for t in e['tags'].split(',')]
+    return evs
+
+
+def documents():
+    docs = load_yaml('documents.yml', []) or []
+    for d in docs:
+        d['year'] = str(d.get('year', '')).strip()
+    return docs
+
+
+def directory_updates():
+    return load_yaml('directory-updates.yml', {}) or {}
