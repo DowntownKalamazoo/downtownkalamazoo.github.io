@@ -1,0 +1,128 @@
+# Downtown Ambassadors page (ambassadors.html)
+#
+# Two lists live here: the team, and the monthly reports.
+# The spaces at the start of each line matter. Copy an existing entry and keep its spacing.
+
+# ---------------------------------------------------------------- Meet the Ambassadors
+# One entry per ambassador, in the order they should appear.
+#   name:      as they'd like it shown (first name only is fine)
+#   since:     the year they joined (optional)
+#   note:      a short line about them (optional), e.g. "Ask about the best tacos downtown."
+#   photo:     upload a photo to files/ambassadors/ and put its path here, e.g. files/ambassadors/skylar.jpg
+#              Use a JPG, cropped taller than wide (about 4:5), under 500 KB.
+#              Leave blank to show a brand-pattern card with their initials until the photo is ready.
+#   photo_alt: one sentence describing the photo, e.g. "Skylar smiling on the Kalamazoo Mall in the blue Downtown Ambassador jacket."
+# To take someone off the page, delete their entry.
+
+team:
+  - name: Skylar Culver
+    since: 2021
+    note: Here since the program started, and a familiar face all over downtown.
+    photo:
+    photo_alt:
+
+# ---------------------------------------------------------------- Monthly reports
+# Newest first. Each month:
+#   1. Upload the PDF to files/ambassadors/ named ambassador-report-YYYY-MM.pdf
+#   2. Copy the top entry, paste it above it, and change month, file and highlights.
+#   3. Copy the numbers from the report's "Stats By Zone" page (the Total column).
+# The page adds up the numbers for the year on its own.
+# If there's no PDF for a month, leave file blank. Its numbers still count.
+
+reports:
+  - month: 2026-07
+    file: files/ambassadors/ambassador-report-2026-07.pdf
+    highlights:
+      - Helped a property owner clean up a hard-to-reach spot, working with the Public Safety Community Service Team and the City’s Community Planning & Economic Development department.
+      - Removed 31 pieces of graffiti and hand bills. A friendly reminder to event promoters that posting hand bills isn’t the way to get the word out.
+    trash: 7150
+    recycling: 2950
+    litter: 1530
+    graffiti: 31
+    assists: 43
+    flower_gallons: 2225
+    snow_hours: 0
+    project_hours: 8
+
+  - month: 2026-06
+    file: files/ambassadors/ambassador-report-2026-06.pdf
+    highlights:
+      - Spent 47 hours getting Arcadia Creek Festival Place and the Kalamazoo Mall ready for Jumpstart and Caribbean Fest.
+      - City staff fixed brick pavers on the Mall that were causing trip hazards.
+    trash: 8650
+    recycling: 3925
+    litter: 2195
+    graffiti: 22
+    assists: 76
+    flower_gallons: 1013
+    snow_hours: 0
+    project_hours: 47
+
+  - month: 2026-05
+    file: files/ambassadors/ambassador-report-2026-05.pdf
+    highlights:
+      - Set out gray tables and chairs on the Mall and in Bates Alley, and new flower planters donated by the Peregrine Group.
+      - Removed the last green trash cans to make way for the rest of the Bigbelly units.
+      - Celebrated five years with Skylar Culver, who has been with the program since day one.
+    trash: 7275
+    recycling: 3275
+    litter: 2235
+    graffiti: 59
+    assists: 66
+    flower_gallons: 861
+    snow_hours: 0
+    project_hours: 24
+
+  - month: 2026-04
+    file:
+    highlights: []
+    trash: 7100
+    recycling: 2875
+    litter: 2270
+    graffiti: 31
+    assists: 66
+    flower_gallons: 0
+    snow_hours: 0
+    project_hours: 10
+
+  - month: 2026-03
+    file: files/ambassadors/ambassador-report-2026-03.pdf
+    highlights:
+      - Warmer weather brought more graffiti and hand bills. The team started marking spots that need pressure washing or paint.
+      - Set up poster cabinets explaining the changes to downtown parking.
+    trash: 6950
+    recycling: 2600
+    litter: 2000
+    graffiti: 39
+    assists: 66
+    flower_gallons: 0
+    snow_hours: 14
+    project_hours: 5
+
+  - month: 2026-02
+    file: files/ambassadors/ambassador-report-2026-02.pdf
+    highlights:
+      - Installed new Downtown Kalamazoo brand panels on every Bigbelly unit in the district.
+      - Pitched in on the cleanup after a string of storefront vandalism.
+    trash: 5100
+    recycling: 1675
+    litter: 1765
+    graffiti: 10
+    assists: 40
+    flower_gallons: 0
+    snow_hours: 42
+    project_hours: 12
+
+  - month: 2026-01
+    file: files/ambassadors/ambassador-report-2026-01.pdf
+    highlights:
+      - Logged 222 hours of snow removal to keep sidewalks and crossings open.
+      - Worked with the Public Safety Community Service Team to reach people who may need services.
+    trash: 3950
+    recycling: 1525
+    litter: 925
+    graffiti: 1
+    assists: 32
+    flower_gallons: 0
+    snow_hours: 222
+    project_hours: 3

@@ -881,3 +881,53 @@ input, select, textarea, button { box-sizing: border-box; }
 .dd-band .btn, .host-band .btn { color: var(--ink); border-color: var(--ink); background: transparent; }
 .dd-band .btn-primary, .host-band .btn-primary { background: var(--dk-navy); border-color: var(--dk-navy); color: #fff; }
 .dd-band a:not(.btn), .host-band a:not(.btn) { color: var(--ink); }
+
+/* ---------------------------------------------------------------- Downtown Ambassadors */
+.amb-band { background: var(--band); }
+.amb-grid { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 12.5rem), 1fr)); gap: 1.25rem; }
+@media (max-width: 560px) { .amb-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; } }
+.amb { position: relative; display: grid; grid-template-rows: auto 1fr; background: var(--bg); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); }
+.amb-pic { margin: 0; aspect-ratio: 4 / 5; background: var(--accent); position: relative; overflow: hidden; }
+.amb-pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.amb-ph { position: absolute; inset: 0; background: center / 220% auto; display: grid; place-items: center; }
+.amb-initials { width: 46%; aspect-ratio: 1; border-radius: 50%; background: var(--accent); color: var(--ink); display: grid; place-items: center; font-family: var(--font-display); font-weight: 900; font-size: clamp(1.6rem, 1rem + 2vw, 2.4rem); letter-spacing: .02em; box-shadow: 0 0 0 6px var(--bg); }
+.amb-body { padding: .9rem 1rem 1.1rem; display: grid; gap: .3rem; align-content: start; border-top: 6px solid var(--accent); }
+.amb-name { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; font-size: 1.1rem; line-height: 1.15; }
+.amb-since { font-family: var(--font-ui); font-size: .8125rem; font-weight: 600; color: var(--muted); }
+.amb-note { font-size: .95rem; }
+/* a little brand pattern peeks from the corner of the photo on hover */
+.amb::after { content: ""; position: absolute; right: 0; top: 0; width: 0; height: 0; background: var(--amb-pat) center / 300% auto; clip-path: polygon(0 0, 100% 0, 100% 100%); transition: width .35s ease, height .35s ease; pointer-events: none; }
+.amb:hover::after { width: 3.25rem; height: 3.25rem; }
+
+.amb-stats { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); gap: 1rem; margin-block-end: 2rem; }
+.amb-stats li { background: var(--accent); color: var(--ink); border-radius: var(--radius); padding: 1rem 1.1rem 1.1rem; display: grid; gap: .3rem; align-content: start; }
+.amb-stats .n { font-family: var(--font-display); font-weight: 900; font-size: clamp(1.7rem, 1.2rem + 1.6vw, 2.4rem); line-height: 1; font-variant-numeric: tabular-nums; }
+.amb-chart { margin: 0; border: 1px solid var(--line); border-radius: var(--radius); padding: 1.1rem 1.2rem .5rem; background: var(--surface); }
+.amb-chart figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 1rem; align-items: baseline; margin-block-end: 1rem; }
+.amb-key { display: flex; flex-wrap: wrap; gap: .4rem 1rem; font-family: var(--font-ui); font-size: .8125rem; font-weight: 600; }
+.amb-key span { display: inline-flex; align-items: center; gap: .4rem; }
+.amb-key i { width: .9rem; height: .9rem; border-radius: 3px; display: inline-block; }
+.b-trash { background: var(--fg); } .b-recycling { background: var(--dk-blue); } .b-litter { background: var(--dk-green); }
+.amb-bars { list-style: none; padding: 0; margin: 0 0 .75rem; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: .6rem; height: 12rem; align-items: end; }
+.amb-bars li { height: 100%; display: grid; grid-template-rows: 1fr auto; gap: .35rem; }
+.amb-bar { align-self: end; height: var(--h); display: flex; flex-direction: column-reverse; border-radius: 6px 6px 2px 2px; overflow: hidden; gap: 2px; transform-origin: bottom; animation: amb-grow .7s cubic-bezier(.2, .9, .3, 1) both; }
+.amb-bars li:nth-child(2) .amb-bar { animation-delay: .05s; } .amb-bars li:nth-child(3) .amb-bar { animation-delay: .1s; } .amb-bars li:nth-child(4) .amb-bar { animation-delay: .15s; }
+.amb-bars li:nth-child(5) .amb-bar { animation-delay: .2s; } .amb-bars li:nth-child(6) .amb-bar { animation-delay: .25s; } .amb-bars li:nth-child(n+7) .amb-bar { animation-delay: .3s; }
+.amb-bar i { display: block; flex-basis: 0; min-height: 2px; }
+@keyframes amb-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+.amb-mon { font-family: var(--font-ui); font-size: .78rem; font-weight: 700; text-align: center; text-transform: uppercase; letter-spacing: .06em; }
+.amb-numbers { border-top: 1px solid var(--line) !important; }
+.amb-numbers > div { max-width: none; }
+.amb-numbers td, .amb-numbers th:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
+.amb-numbers tr.total th, .amb-numbers tr.total td { font-weight: 800; border-top: 2px solid var(--fg); }
+
+.amb-reports { list-style: none; padding: 0; display: grid; gap: .75rem; margin-block-end: 1.5rem; }
+.amb-report { display: flex; gap: 1.1rem; align-items: flex-start; padding: 1rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); }
+.amb-report .date-tile { position: relative; overflow: hidden; }
+.amb-report .date-tile .day { font-size: 1.45rem; text-transform: uppercase; }
+.amb-report .date-tile .dow { font-size: .8rem; }
+.amb-report .body { display: grid; gap: .5rem; min-width: 0; }
+.amb-rep-title { font-family: var(--font-body); font-weight: 700; font-size: 1.15rem; }
+.amb-report ul { margin: 0; padding-inline-start: 1.1rem; display: grid; gap: .3rem; }
+.amb-rep-link { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .9rem; margin-top: .2rem; }
+@media (max-width: 520px) { .amb-report { flex-direction: column; } .amb-report .date-tile { width: auto; aspect-ratio: auto; grid-auto-flow: column; gap: .5rem; justify-content: start; padding: .35rem .7rem; } .amb-bars { gap: .3rem; height: 10rem; } }

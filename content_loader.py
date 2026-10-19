@@ -129,3 +129,29 @@ def documents():
 
 def directory_updates():
     return load_yaml('directory-updates.yml', {}) or {}
+
+
+# ---------------------------------------------------------------- Downtown Ambassadors
+AMB_STATS = ['trash', 'recycling', 'litter', 'graffiti', 'assists', 'flower_gallons', 'snow_hours', 'project_hours']
+
+
+def ambassadors():
+    """The team and monthly reports from content/ambassadors.yml, newest report first."""
+    data = load_yaml('ambassadors.yml', {}) or {}
+    team = [t for t in (data.get('team') or []) if t and t.get('name')]
+    reports = []
+    for r in data.get('reports') or []:
+        if not r or not r.get('month'):
+            continue
+        y, m = (int(x) for x in str(r['month']).strip()[:7].split('-'))
+        r['year'], r['mon'] = y, m
+        r['file'] = (r.get('file') or '').strip()
+        r['highlights'] = [h for h in (r.get('highlights') or []) if h]
+        for k in AMB_STATS:
+            try:
+                r[k] = int(str(r.get(k) or 0).replace(',', ''))
+            except ValueError:
+                raise ValueError(f'content/ambassadors.yml: {r["month"]} {k} should be a number, not "{r.get(k)}"')
+        reports.append(r)
+    reports.sort(key=lambda r: (r['year'], r['mon']), reverse=True)
+    return team, reports

@@ -84,6 +84,29 @@ Small changes go in `content/directory-updates.yml`:
 
 ---
 
+## Downtown Ambassadors: monthly reports and the team
+
+Everything on the Ambassadors page that changes lives in `content/ambassadors.yml`. The notes at the top of that file explain each field.
+
+**Each month's report**
+1. Open `files/ambassadors` and choose **Add file → Upload files**. Name the PDF `ambassador-report-YYYY-MM.pdf`, for example `ambassador-report-2026-08.pdf`.
+2. Open `content/ambassadors.yml` and choose the pencil icon.
+3. Under `reports:`, copy the top entry (from `- month:` down to `project_hours:`), paste it above itself, and change it:
+   - `month`: `2026-08`
+   - `file`: the PDF's path, `files/ambassadors/ambassador-report-2026-08.pdf`
+   - `highlights`: one or two short sentences from the report's Highlights page
+   - the numbers: copy them from the Total column of the report's "Stats By Zone" page (trash, recycling and litter in pounds, graffiti removed, hospitality assists, gallons of water, snow hours and special project hours)
+4. Commit. The report shows up at the top of the list, and the year's totals and chart update on their own.
+
+**Meet the Ambassadors**
+- **Add someone:** under `team:`, copy an entry and change the name. `since` and `note` are optional.
+- **Add a photo:** upload it to `files/ambassadors` (a JPG under 500 KB, cropped taller than wide), put its path in `photo:`, and write a short `photo_alt:` description. Until there's a photo, the card shows a brand pattern with their initials.
+- **Remove someone:** delete their entry.
+
+Check with each ambassador before posting their photo and full name. First names are fine.
+
+---
+
 ## Season switch
 
 When the holidays are over, open `build.py`, find `HOLIDAY_SEASON = True`, and change it to `HOLIDAY_SEASON = False`. The Holidays menu link, homepage banner and footer column go away, and the holiday pages stay online at `/holidays/`.
