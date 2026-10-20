@@ -862,6 +862,16 @@
   }
 
   /* ---------- Copy buttons ---------- */
+  /* ---------- Ambassadors: pause or play the stats ribbon ---------- */
+  $$('[data-ribbon-toggle]').forEach(btn => {
+    const box = btn.closest('.amb-ribbon');
+    btn.addEventListener('click', () => {
+      const paused = box.classList.toggle('is-paused');
+      btn.textContent = paused ? 'Play' : 'Pause';
+      btn.setAttribute('aria-label', paused ? 'Play the scrolling numbers' : 'Pause the scrolling numbers');
+    });
+  });
+
   $$('[data-copy]').forEach(b => b.addEventListener('click', async () => {
     const text = b.dataset.copy;
     const label = b.textContent;

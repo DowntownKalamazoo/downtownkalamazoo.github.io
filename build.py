@@ -286,9 +286,16 @@ def crumbs(trail):
             parts.append(f'<li><a href="{{R}}{href}">{E(text)}</a></li>')
     return f'<nav class="crumbs" aria-label="Breadcrumb"><ol>{"".join(parts)}</ol></nav>'
 
-def page_hero(trail, eyebrow, title, lede, fill='f-green', extra=''):
+def page_hero(trail, eyebrow, title, lede, fill='f-green', extra='', photo=None):
+    """photo: optional (src, alt). It fills the painted-edge area on the right in place of the pattern."""
+    if photo and photo[0]:
+        art = (f'<figure class="hero-pat hero-photo"><img src="{{R}}{E(photo[0])}" alt="{E(photo[1] or '')}" '
+               f'fetchpriority="high" decoding="async"></figure>')
+        fill += ' has-photo'
+    else:
+        art = '<div class="hero-pat" aria-hidden="true"></div>'
     return f'''<section class="band page-hero {fill}" aria-labelledby="page-title">
-  <div class="hero-pat" aria-hidden="true"></div>
+  {art}
   <div class="wrap">
     {crumbs(trail)}
     <div class="hero-row">

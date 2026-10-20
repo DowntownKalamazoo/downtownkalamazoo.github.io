@@ -16,8 +16,8 @@ def long_date(d):
     return f'{MONTH_NAMES[d.month]} {d.day}, {d.year}'
 
 
-def sources_list(items):
-    return '<h2 class="h3" style="margin-top:2rem">Sources</h2><ul class="sources">' + ''.join(f'<li>{ext(h, E(t))}</li>' for t, h in items) + '</ul>'
+def sources_list(items, level='h2'):
+    return f'<{level} class="h3" style="margin-top:2rem">Sources</{level}><ul class="sources">' + ''.join(f'<li>{ext(h, E(t))}</li>' for t, h in items) + '</ul>'
 
 
 def status_tag(text):
@@ -546,133 +546,179 @@ def amb_card(t, i):
     else:
         pic = (f'<div class="amb-ph" style="background-image:url({{R}}pattern-{pat}.webp)" aria-hidden="true">'
                f'<span class="amb-initials">{E(_initials(str(t["name"])))}</span></div>')
+    role = f'<p class="amb-role">{E(str(t["role"]).strip())}</p>' if t.get('role') else ''
     since = f'<p class="amb-since">On the team since {E(str(t["since"]))}</p>' if t.get('since') else ''
     note = f'<p class="amb-note">{E(str(t["note"]).strip())}</p>' if t.get('note') else ''
     return (f'<li class="amb {fill}" style="--amb-pat:url({{R}}pattern-{pat}.webp)"><figure class="amb-pic">{pic}</figure>'
-            f'<div class="amb-body"><h3 class="amb-name">{name}</h3>{since}{note}</div></li>')
+            f'<div class="amb-body"><h3 class="amb-name">{name}</h3>{role}{since}{note}</div></li>')
+
+
+def _tel(phone):
+    digits = re.sub(r'\D', '', phone)
+    return '+1' + digits if len(digits) == 10 else '+' + digits
+
+
+def amb_hours(info, cls='amb-hours'):
+    if not info['hours']:
+        return ''
+    rows = ''.join(f'<div><dt>{E(str(h["days"]))}</dt><dd>{E(str(h["time"]))}</dd></div>' for h in info['hours'])
+    return f'<dl class="{cls}">{rows}</dl>'
+
+
+PHONE_ICON = ('<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" '
+              'd="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>')
+
+RIBBON_DOTS = ['f-blue', 'f-pink', 'f-green', 'f-red']
+LINE_FILLS = ['f-blue', 'f-pink', 'f-green', 'f-red']
+
+
+def amb_line_card(t, i):
+    name = E(str(t['name']).strip())
+    alt = E(str(t.get('photo_alt') or f'{t["name"]} in Downtown Ambassador gear').strip())
+    role = f'<p class="amb-role">{E(str(t["role"]).strip())}</p>' if t.get('role') else ''
+    fill = LINE_FILLS[i % len(LINE_FILLS)]
+    return (f'<li class="amb-person {fill}"><img src="{{R}}{E(t["photo"].strip())}" alt="{alt}" loading="lazy" width="640" height="800">'
+            f'<div class="amb-person-body"><h3 class="amb-name">{name}</h3>{role}</div></li>')
+
+
+def _and(names):
+    return names[0] if len(names) == 1 else ', '.join(names[:-1]) + ' and ' + names[-1]
 
 
 def build_ambassadors():
     team, reports = CL.ambassadors()
-    body = page_hero([('index.html', 'Home'), ('about.html', 'About'), ('ambassadors.html', 'Downtown Ambassadors')], 'Clean, friendly, here to help', 'Downtown Ambassadors',
-                     'Look for the new Downtown Kalamazoo gear. Downtown Ambassadors are on the streets seven days a week, keeping downtown clean and helping people find their way.', 'f-blue')
+    info = CL.ambassador_info()
+    phone = info['phone']
 
-    # What they do
-    body += f'''<section class="section" aria-labelledby="do-title">
-  <div class="wrap two-col">
-    <div class="prose" style="max-width:none">
-      {in_short('Downtown Ambassadors clean sidewalks, empty trash and recycling, clear snow and graffiti, water the flowers and help visitors find their way. They work downtown seven days a week and post a report every month.')}
-      <h2 class="h2" id="do-title">What ambassadors do</h2>
-      <ul class="strip" style="list-style:none;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr))">
-        <li class="f-blue"><span class="big">Keep it clean</span><span>Sweeping sidewalks, picking up litter, clearing leaves and weeds, and removing graffiti and hand bills.</span></li>
-        <li class="f-pink"><span class="big">Clear the way</span><span>Shoveling snow so sidewalks and crossings stay open in winter.</span></li>
-        <li class="f-green"><span class="big">Lend a hand</span><span>Directions, places to shop and eat, and what’s happening downtown today.</span></li>
-        <li class="f-red"><span class="big">Empty the Bigbellys</span><span>The smart bins tell ambassadors when they’re full, so they get emptied before they overflow.</span></li>
-        <li class="f-mist"><span class="big">Keep it blooming</span><span>Watering planters and hanging baskets, and setting out tables and chairs when the weather turns.</span></li>
-        <li class="f-blue"><span class="big">Get ready for events</span><span>Prepping the Kalamazoo Mall and Arcadia Creek Festival Place before festivals, and cleaning up after.</span></li>
-      </ul>
-    </div>
-    <div class="aside">
-      <section class="panel f-blue"><h2>Need something cleaned up?</h2><p>Spot overflowing trash, graffiti or a sidewalk that needs attention? Email {DOWNTOWN_EMAIL} or call 311.</p></section>
-      <section class="panel"><h2>Four zones</h2><p>The team covers downtown in four zones: the <strong>Kalamazoo Mall</strong>, <strong>North</strong>, <strong>East</strong> and <strong>West</strong>. Each monthly report breaks the numbers down by zone.</p></section>
-      <section class="panel"><h2>Related</h2><ul><li><a href="{{R}}waste-recycling.html">Waste &amp; recycling</a></li><li><a href="{{R}}boards.html">DDA &amp; DEGA</a></li><li><a href="{{R}}visit.html">Visit &amp; park</a></li></ul></section>
-    </div>
-  </div>
-</section>'''
+    # Hero: group photo, phone and hours
+    duty = ''
+    if phone or info['hours']:
+        call = f'<a class="btn btn-primary amb-call" href="tel:{_tel(phone)}">{PHONE_ICON}Call {E(phone)}</a>' if phone else ''
+        hours = f'<div class="amb-duty-hours"><p class="amb-duty-k">On duty downtown</p>{amb_hours(info)}</div>' if info['hours'] else ''
+        duty = f'<div class="amb-duty"><h2 class="sr-only">Hours and phone</h2>{call}{hours}</div>'
+    body = page_hero([('index.html', 'Home'), ('about.html', 'About'), ('ambassadors.html', 'Downtown Ambassadors')],
+                     'Clean, friendly, here to help', 'Downtown Ambassadors',
+                     'Look for the green Downtown Kalamazoo shirts and caps. Downtown Ambassadors are on the streets seven days a week, keeping downtown clean and helping people find their way.',
+                     'f-blue', extra=duty, photo=(info['photo'], info['photo_alt']))
 
-    # Meet the Ambassadors
-    if team:
-        body += f'''<section class="section amb-band" aria-labelledby="meet-title">
-  <div class="wrap">
-    <div class="section-head"><div><p class="eyebrow">Say hello</p><h2 class="h2" id="meet-title">Meet the Ambassadors</h2></div>
-      <p class="muted" style="max-width:34rem">Look for the new Downtown Kalamazoo gear. They’re happy to point you to a good lunch spot or tonight’s show. Just ask.</p></div>
-    <ul class="amb-grid">{''.join(amb_card(t, i) for i, t in enumerate(team))}</ul>
-  </div>
-</section>'''
-
-    # The year so far
+    # Stats ribbon, right under the hero
     if reports:
         yr = reports[0]['year']
         ytd = sorted([r for r in reports if r['year'] == yr], key=lambda r: r['mon'])
         tot = {k: sum(r[k] for r in ytd) for k in CL.AMB_STATS}
         lbs = tot['trash'] + tot['recycling'] + tot['litter']
-        span = MONTH_NAMES[ytd[0]['mon']] + (f' through {MONTH_NAMES[ytd[-1]["mon"]]}' if len(ytd) > 1 else '')
-        top = max(r['trash'] + r['recycling'] + r['litter'] for r in ytd) or 1
-        bars = ''.join(
-            f'<li><span class="amb-bar" style="--h:{(r["trash"] + r["recycling"] + r["litter"]) / top * 100:.1f}%">'
-            f'<i class="b-trash" style="flex-grow:{r["trash"]}"></i><i class="b-recycling" style="flex-grow:{r["recycling"]}"></i><i class="b-litter" style="flex-grow:{r["litter"]}"></i></span>'
-            f'<span class="amb-mon">{MONTH_NAMES[r["mon"]][:3]}</span></li>' for r in ytd)
-        rows = ''.join(f'<tr><th scope="row">{MONTH_NAMES[r["mon"]]}</th><td>{r["trash"]:,}</td><td>{r["recycling"]:,}</td><td>{r["litter"]:,}</td><td>{r["trash"] + r["recycling"] + r["litter"]:,}</td></tr>' for r in ytd)
-        rows += f'<tr class="total"><th scope="row">Total</th><td>{tot["trash"]:,}</td><td>{tot["recycling"]:,}</td><td>{tot["litter"]:,}</td><td>{lbs:,}</td></tr>'
-        stats = [(f'{lbs:,}', 'pounds of trash, recycling and litter picked up', 'f-blue'),
-                 (f'{tot["assists"]:,}', 'times they helped someone find their way', 'f-pink'),
-                 (f'{tot["graffiti"]:,}', 'pieces of graffiti and hand bills removed', 'f-green')]
+        span = MONTH_NAMES[ytd[0]['mon']][:3] + (f'–{MONTH_NAMES[ytd[-1]["mon"]][:3]}' if len(ytd) > 1 else '')
+        stats = [(f'{lbs:,}', 'pounds of trash, recycling and litter'),
+                 (f'{round(lbs / 2000):,}', 'tons kept off downtown sidewalks'),
+                 (f'{tot["assists"]:,}', 'times they helped someone find their way'),
+                 (f'{tot["graffiti"]:,}', 'pieces of graffiti and hand bills removed')]
         if tot['snow_hours']:
-            stats.append((f'{tot["snow_hours"]:,}', 'hours shoveling snow', 'f-mist'))
+            stats.append((f'{tot["snow_hours"]:,}', 'hours shoveling snow'))
         if tot['flower_gallons']:
-            stats.append((f'{tot["flower_gallons"]:,}', 'gallons of water for downtown flowers', 'f-red'))
-        body += f'''<section class="section" aria-labelledby="ytd-title">
-  <div class="wrap">
-    <div class="section-head"><div><p class="eyebrow">{span} {yr}</p><h2 class="h2" id="ytd-title">{yr} so far</h2></div>
-      <p class="muted" style="max-width:34rem">Totals from the ambassadors’ monthly reports. That’s about {round(lbs / 2000):,} tons kept off downtown sidewalks.</p></div>
-    <ul class="amb-stats">{''.join(f'<li class="{f}"><span class="n">{n}</span><span>{E(t)}</span></li>' for n, t, f in stats)}</ul>
-    <figure class="amb-chart">
-      <figcaption><span class="h3">Pounds picked up each month</span>
-        <span class="amb-key" aria-hidden="true"><span><i class="b-trash"></i>Trash</span><span><i class="b-recycling"></i>Recycling</span><span><i class="b-litter"></i>Litter</span></span></figcaption>
-      <ol class="amb-bars" aria-hidden="true">{bars}</ol>
-      <details class="amb-numbers"><summary>See the numbers</summary>
-        <div class="table-wrap"><table><caption class="sr-only">Pounds picked up each month in {yr}</caption>
-          <thead><tr><th scope="col">Month</th><th scope="col">Trash</th><th scope="col">Recycling</th><th scope="col">Litter</th><th scope="col">Total</th></tr></thead>
-          <tbody>{rows}</tbody></table></div></details>
-    </figure>
+            stats.append((f'{tot["flower_gallons"]:,}', 'gallons of water for downtown flowers'))
+        if tot['project_hours']:
+            stats.append((f'{tot["project_hours"]:,}', 'hours on special projects and events'))
+        items = ''.join(f'<li class="{RIBBON_DOTS[i % len(RIBBON_DOTS)]}"><span class="n">{n}</span> {E(t)}</li>' for i, (n, t) in enumerate(stats))
+        body += f'''<section class="amb-ribbon" aria-labelledby="ytd-title">
+  <h2 class="amb-ribbon-k" id="ytd-title"><span>{yr} so far</span><span class="amb-ribbon-span">{span}</span></h2>
+  <div class="amb-ribbon-view" tabindex="0" role="region" aria-label="{yr} numbers, scrollable">
+    <div class="amb-ribbon-track">
+      <ul class="amb-ribbon-list">{items}</ul>
+      <ul class="amb-ribbon-list amb-ribbon-dup" aria-hidden="true">{items}</ul>
+    </div>
+  </div>
+  <button class="amb-ribbon-btn" type="button" data-ribbon-toggle aria-label="Pause the scrolling numbers">Pause</button>
+</section>'''
+
+    # What they do, plus how to reach them | About the program
+    reach = f'call the ambassadors at <a href="tel:{_tel(phone)}">{E(phone)}</a> while they’re on duty' if phone else 'call 311'
+    left = in_short('Downtown Ambassadors clean sidewalks, empty trash and recycling, clear snow and graffiti, water the flowers and help visitors find their way. They work downtown seven days a week and post a report every month.')
+    left += f'''
+      <h2 class="h2" id="do-title">What ambassadors do</h2>
+      <ul class="amb-do">
+        <li class="f-blue"><h3>Keep it clean</h3><p>Sweeping sidewalks, picking up litter, clearing leaves and weeds, and removing graffiti and hand bills.</p></li>
+        <li class="f-pink"><h3>Clear the way</h3><p>Shoveling snow so sidewalks and crossings stay open in winter.</p></li>
+        <li class="f-green"><h3>Lend a hand</h3><p>Directions, places to shop and eat, and what’s happening downtown today.</p></li>
+        <li class="f-red"><h3>Empty the Bigbellys</h3><p>The smart bins tell ambassadors when they’re full, so they get emptied before they overflow.</p></li>
+        <li class="f-green"><h3>Keep it blooming</h3><p>Watering planters and hanging baskets, and setting out tables and chairs when the weather turns.</p></li>
+        <li class="f-blue"><h3>Get ready for events</h3><p>Prepping the Kalamazoo Mall and Arcadia Creek Festival Place before festivals, and cleaning up after.</p></li>
+      </ul>
+      <section class="panel f-blue amb-contact" aria-labelledby="help-title"><h2 id="help-title">Need something cleaned up?</h2>
+        <p>Overflowing trash, graffiti or a sidewalk that needs attention? {reach[0].upper() + reach[1:]}. After hours, email {DOWNTOWN_EMAIL} or call 311.</p></section>'''
+
+    srcs = ''.join(f'<li>{ext(h, E(t))}</li>' for t, h in [
+        ('City of Kalamazoo: Downtown Kalamazoo', CITY + '/Community/Downtown-Kalamazoo'),
+        ('WMU News: Downtown Kalamazoo Ambassador Program launches (May 2021)', 'https://wmich.edu/bulletins/64347'),
+        ('Block by Block: Downtown Ambassadors hit the streets in Kalamazoo', 'https://blockbyblock.com/?p=1547'),
+        ('WMUK: smart recycling units and the ambassadors (2025)', 'https://www.wmuk.org/wmuk-news/2025-08-01/the-city-of-kalamazoo-will-replace-old-trash-cans-downtown-with-more-smart-recycling-units')])
+    right = f'''<section class="amb-about" aria-labelledby="about-title">
+        <p class="eyebrow">Since 2021</p>
+        <h2 class="h2" id="about-title">About the program</h2>
+        <p>The program launched in May 2021 with five full-time ambassadors, working on foot, on bikes and in marked cars. In their first two days they picked up 4,731 pounds of trash, cleared weeds on 36 blocks, removed 101 pieces of graffiti and introduced themselves to 33 downtown businesses.</p>
+        <p>The jobs were designed as a workforce program with room to grow, so ambassadors build skills and can move up.</p>
+        <h3 class="h3">Four zones</h3>
+        <p>The team covers the <strong>Kalamazoo Mall</strong>, <strong>North</strong>, <strong>East</strong> and <strong>West</strong>. Each monthly report breaks the numbers down by zone.</p>
+        <h3 class="h3">Neighbors who need help</h3>
+        <p>Ambassadors aren’t outreach workers, but they’re trained to treat people experiencing homelessness with respect, share the services that are available, and call on Public Safety’s Community Service Team when someone needs more help.</p>
+        <details class="amb-src"><summary>Sources</summary><ul class="sources">{srcs}</ul></details>
+      </section>'''
+
+    body += f'''<section class="section" aria-labelledby="do-title">
+  <div class="wrap two-col amb-cols">
+    <div class="amb-main">
+      {left}
+    </div>
+    <div class="amb-aside">
+      {right}
+    </div>
   </div>
 </section>'''
 
-    # Monthly reports
+    # The team, in one line
+    pictured = [t for t in team if (t.get('photo') or '').strip()]
+    coming = [str(t['name']).strip() for t in team if not (t.get('photo') or '').strip()]
+    if team:
+        line = ''.join(amb_line_card(t, i) for i, t in enumerate(pictured))
+        line = f'<div class="amb-line-wrap" role="region" aria-label="Ambassador photos" tabindex="0"><ul class="amb-line">{line}</ul></div>' if line else ''
+        also = (f'<p class="amb-also">Also on the team: {E(_and(coming))}. '
+                f'{"Photo" if len(coming) == 1 else "Photos"} coming soon.</p>') if coming else ''
+        body += f'''<section class="section amb-band amb-team" aria-labelledby="meet-title">
+  <div class="wrap">
+    <div class="section-head"><div><p class="eyebrow">Say hello</p><h2 class="h2" id="meet-title">Meet the Ambassadors</h2></div>
+      <p class="muted" style="max-width:30rem">They’re happy to point you to a good lunch spot or tonight’s show. Just ask.</p></div>
+    {line}
+    {also}
+  </div>
+</section>'''
+
+    # Monthly reports, at the very bottom
     listed = [r for r in reports if r['file'] or r['highlights']]
     if listed:
-        items, last_year = '', None
+        cards = ''
         for r in listed:
-            if r['year'] != last_year:
-                if last_year is not None:
-                    items += '</ol>'
-                items += f'<h3 class="month-head h3">{r["year"]}</h3><ol class="amb-reports">'
-                last_year = r['year']
             label = f'{MONTH_NAMES[r["mon"]]} {r["year"]}'
             hl = ''.join(f'<li>{E(h)}</li>' for h in r['highlights'])
-            size = _file_size(r['file']) if r['file'] else ''
-            link = (f'<a class="btn btn-small" href="{{R}}{E(r["file"])}">{label} report<span class="sr-only"> (PDF{", " + size if size else ""})</span></a>'
-                    f'<span class="meta"><span>PDF</span>{f"<span>{size}</span>" if size else ""}</span>') if r['file'] else '<span class="meta"><span>Report not posted</span></span>'
-            items += (f'<li class="amb-report"><div class="date-tile f-blue" aria-hidden="true"><span class="day">{MONTH_NAMES[r["mon"]][:3]}</span><span class="dow">{r["year"]}</span></div>'
-                      f'<div class="body"><h4 class="amb-rep-title">{label}</h4>{f"<ul>{hl}</ul>" if hl else ""}<div class="amb-rep-link">{link}</div></div></li>')
-        items += '</ol>'
+            hl = f'<details class="amb-hl"><summary>Highlights<span class="sr-only"> from {label}</span></summary><ul>{hl}</ul></details>' if hl else ''
+            if r['file']:
+                size = _file_size(r['file'])
+                sr = f' (PDF{", " + size if size else ""})'
+                meta = f' · {size}' if size else ''
+                link = (f'<a class="btn btn-small" href="{{R}}{E(r["file"])}">Read the report<span class="sr-only"> for {label}{sr}</span></a>'
+                        f'<span class="meta" aria-hidden="true">PDF{meta}</span>')
+            else:
+                link = '<span class="meta">Report not posted</span>'
+            latest = '<span class="amb-latest">Latest</span>' if r is listed[0] else ''
+            cards += (f'<li class="amb-rep"><div class="amb-rep-head"><div class="date-tile f-blue" aria-hidden="true"><span class="day">{MONTH_NAMES[r["mon"]][:3]}</span></div>'
+                      f'<h3 class="amb-rep-title">{label}</h3>{latest}</div>'
+                      f'<div class="amb-rep-link">{link}</div>{hl}</li>')
         body += f'''<section class="section amb-reports-sec" aria-labelledby="reports-title">
-  <div class="wrap two-col">
-    <div>
-      <div class="section-head"><div><p class="eyebrow">Every month</p><h2 class="h2" id="reports-title">Monthly reports</h2></div></div>
-      <p style="max-width:44rem">Each report has photos from around town, highlights, and the month’s numbers for cleaning, hospitality, safety and outreach, zone by zone.</p>
-      {items}
-    </div>
-    <div class="aside">
-      <section class="panel f-mist"><h2>What’s in a report</h2><ul><li>Around town: photos of the month’s work</li><li>Highlights</li><li>Numbers by zone</li><li>Zone map</li><li>Year-to-date totals</li></ul></section>
-      <section class="panel"><h2>Questions about a report?</h2><p>Email {DOWNTOWN_EMAIL} or call {DOWNTOWN_PHONE}.</p></section>
-    </div>
+  <div class="wrap">
+    <div class="section-head"><div><p class="eyebrow">Every month</p><h2 class="h2" id="reports-title">Monthly reports</h2></div>
+      <p class="muted" style="max-width:34rem">Photos from around town, highlights, and each month’s numbers zone by zone. Questions? Email {DOWNTOWN_EMAIL}.</p></div>
+    <ol class="amb-rep-grid">{cards}</ol>
   </div>
 </section>'''
-
-    # About the program
-    body += f'''<section class="section" aria-labelledby="about-title">
-  <div class="wrap narrow prose">
-    <h2 class="h2" id="about-title">About the program</h2>
-    <h3 class="h3">How it started</h3>
-    <p>The program launched in May 2021 with five full-time ambassadors, working on foot, on bikes and in marked cars. In their first two days they picked up 4,731 pounds of trash, cleared weeds on 36 blocks and removed 101 pieces of graffiti, and introduced themselves to 33 downtown businesses.</p>
-    <p>The jobs were designed as a workforce program with room to grow, so ambassadors build skills and can move up.</p>
-    <h3 class="h3">Neighbors who need help</h3>
-    <p>Ambassadors aren’t outreach workers, but they’re trained to treat people experiencing homelessness with respect, share the services that are available, and call on Public Safety’s Community Service Team when someone needs more help. The monthly reports track where the team sees people sheltering downtown, so partners can see which areas need the most attention.</p>
-    {sources_list([('City of Kalamazoo: Downtown Kalamazoo', CITY + '/Community/Downtown-Kalamazoo'), ('WMU News: Downtown Kalamazoo Ambassador Program launches (May 2021)', 'https://wmich.edu/bulletins/64347'), ('Block by Block: Downtown Ambassadors hit the streets in Kalamazoo', 'https://blockbyblock.com/?p=1547'), ('WMUK: smart recycling units and the ambassadors (2025)', 'https://www.wmuk.org/wmuk-news/2025-08-01/the-city-of-kalamazoo-will-replace-old-trash-cans-downtown-with-more-smart-recycling-units')])}
-  </div>
-</section>'''
-    page('ambassadors.html', 'Downtown Ambassadors', body, None, 'Meet Downtown Kalamazoo’s ambassadors, see what they’ve done this year, and read their monthly reports.')
+    page('ambassadors.html', 'Downtown Ambassadors', body, None, 'Downtown Kalamazoo’s ambassadors: hours, phone number, this year’s numbers, the team, and monthly reports.')
 
 
 # ---------------------------------------------------------------- Waste & recycling

@@ -931,3 +931,96 @@ input, select, textarea, button { box-sizing: border-box; }
 .amb-report ul { margin: 0; padding-inline-start: 1.1rem; display: grid; gap: .3rem; }
 .amb-rep-link { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .9rem; margin-top: .2rem; }
 @media (max-width: 520px) { .amb-report { flex-direction: column; } .amb-report .date-tile { width: auto; aspect-ratio: auto; grid-auto-flow: column; gap: .5rem; justify-content: start; padding: .35rem .7rem; } .amb-bars { gap: .3rem; height: 10rem; } }
+
+
+/* ---------- Ambassadors: group photo in the painted-edge hero, hours ---------- */
+.hero-photo { margin: 0; background: var(--accent); }
+.hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; display: block; }
+@media (min-width: 1000px) {
+  .page-hero.has-photo { padding-bottom: 2.75rem; }
+  .page-hero.has-photo .hero-photo { width: calc(27rem + max(0px, (100vw - 72rem) / 2)); }
+  .page-hero.has-photo .hero-row { padding-right: 28.5rem; }
+}
+@media (max-width: 999px) {
+  .page-hero.has-photo { display: flex; flex-direction: column; padding-bottom: 0; }
+  .page-hero.has-photo > .wrap { width: 100%; box-sizing: border-box; }
+  .page-hero.has-photo .hero-row { padding-right: 0; }
+  .page-hero.has-photo .hero-photo { position: relative; order: 2; inset: auto; width: 100%; height: clamp(12rem, 52vw, 24rem); margin-top: 1.75rem; z-index: 0;
+    -webkit-mask: var(--brush-h) top / 100% 22px no-repeat, linear-gradient(#000, #000) 0 21px / 100% 100% no-repeat;
+            mask: var(--brush-h) top / 100% 22px no-repeat, linear-gradient(#000, #000) 0 21px / 100% 100% no-repeat; }
+}
+.amb-duty { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem; margin-top: 1.5rem; }
+.amb-call { font-size: 1rem; padding-inline: 1.3rem; }
+.amb-call svg { flex: none; }
+.amb-duty-hours { display: grid; gap: .3rem; padding-left: 1rem; border-left: 4px solid var(--accent); }
+.amb-duty-k { font-family: var(--font-ui); font-weight: 800; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.amb-hours { margin: 0; display: grid; grid-template-columns: max-content auto; gap: .15rem 1rem; }
+.amb-hours > div { display: contents; }
+.amb-hours dt { font-weight: 700; }
+.amb-hours dd { margin: 0; font-variant-numeric: tabular-nums; white-space: nowrap; }
+@media (max-width: 420px) { .amb-hours { grid-template-columns: 1fr; } .amb-hours dd { margin-bottom: .35rem; } }
+a[href^="tel:"] { white-space: nowrap; }
+
+/* Stats ribbon: scrolls on its own, pauses on hover, focus or the Pause button; a plain scrolling row when motion is off */
+.amb-ribbon { display: flex; align-items: stretch; background: var(--dk-navy); color: #fff; border-bottom: 1px solid var(--line); }
+.amb-ribbon-k { flex: none; display: grid; align-content: center; gap: .1rem; margin: 0; padding: .55rem 1.1rem .55rem max(16px, calc((100vw - 72rem) / 2));
+  background: var(--dk-pink); color: var(--ink); font-family: var(--font-ui); font-weight: 800; font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; line-height: 1.25; }
+.amb-ribbon-span { font-weight: 600; letter-spacing: .06em; }
+.amb-ribbon-view { flex: 1; min-width: 0; overflow: hidden;
+  -webkit-mask: linear-gradient(90deg, transparent, #000 2.5rem, #000 calc(100% - 2.5rem), transparent);
+          mask: linear-gradient(90deg, transparent, #000 2.5rem, #000 calc(100% - 2.5rem), transparent); }
+.amb-ribbon-view:focus-visible { outline-offset: -3px; }
+.amb-ribbon-track { display: flex; width: max-content; padding-left: 1.5rem; animation: amb-ribbon 55s linear infinite; }
+.amb-ribbon-list { display: flex; list-style: none; margin: 0; padding: 0; }
+.amb-ribbon-list li { display: flex; align-items: center; gap: .45rem; padding: .7rem 2rem .7rem 0; white-space: nowrap; font-size: .95rem; }
+.amb-ribbon-list li::before { content: ""; flex: none; width: .55rem; height: .55rem; border-radius: 2px; background: var(--accent); transform: rotate(45deg); margin-right: .35rem; }
+.amb-ribbon-list .n { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; }
+@keyframes amb-ribbon { to { transform: translateX(-50%); } }
+.amb-ribbon:hover .amb-ribbon-track, .amb-ribbon:focus-within .amb-ribbon-track, .amb-ribbon.is-paused .amb-ribbon-track { animation-play-state: paused; }
+.amb-ribbon-btn { flex: none; background: none; color: #fff; border: 0; border-left: 1px solid rgba(255, 255, 255, .3); cursor: pointer;
+  font-family: var(--font-ui); font-weight: 700; font-size: .8125rem; text-decoration: underline; text-underline-offset: .2em;
+  padding: 0 max(16px, calc((100vw - 72rem) / 2)) 0 1rem; }
+.amb-ribbon-btn:focus-visible { outline-color: var(--dk-pink); outline-offset: -4px; }
+:root.a11y-motion .amb-ribbon-view { overflow-x: auto; -webkit-mask: none; mask: none; }
+:root.a11y-motion .amb-ribbon-dup, :root.a11y-motion .amb-ribbon-btn { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .amb-ribbon-view { overflow-x: auto; -webkit-mask: none; mask: none; }
+  .amb-ribbon-dup, .amb-ribbon-btn { display: none; }
+}
+@media (max-width: 560px) { .amb-ribbon-k { padding-right: .8rem; } .amb-ribbon-list li { font-size: .9rem; } }
+
+/* What they do | About the program */
+.amb-cols { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 2.5rem 3rem; }
+@media (max-width: 860px) { .amb-cols { grid-template-columns: 1fr; } }
+.amb-do { list-style: none; padding: 0; margin: 1rem 0 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: .9rem; }
+.amb-do li { border: 1px solid var(--line); border-top: 5px solid var(--accent); border-radius: var(--radius); padding: .85rem 1rem 1rem; background: var(--bg); display: grid; gap: .3rem; align-content: start; }
+.amb-do h3 { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; font-size: 1rem; line-height: 1.2; }
+.amb-do p { margin: 0; font-size: .95rem; }
+.amb-about { display: grid; gap: .7rem; align-content: start; }
+.amb-about p { margin: 0; }
+.amb-about .h2 { font-size: clamp(1.3rem, 1rem + 1vw, 1.65rem); }
+.amb-about .h3 { margin-top: .5rem; }
+.amb-src, .amb-src:first-of-type, .amb-hl, .amb-hl:first-of-type { border: 0; padding: 0; }
+.amb-src summary, .amb-hl summary { padding-block: .15rem; font-family: var(--font-ui); font-size: .8125rem; font-weight: 700; color: var(--link); width: fit-content; }
+.amb-src .sources { margin-top: .4rem; padding-left: 1.1rem; display: grid; gap: .3rem; }
+
+/* The team, in one line */
+.amb-line-wrap { overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: .35rem; }
+.amb-line { list-style: none; padding: 0; margin: 0; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(9.5rem, 1fr); gap: 1rem; }
+.amb-person { scroll-snap-align: start; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.amb-person img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-bottom: 5px solid var(--accent); }
+.amb-person-body { padding: .65rem .8rem .8rem; display: grid; gap: .15rem; }
+.amb-role { font-family: var(--font-ui); font-size: .75rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.amb-also { margin-top: 1rem; color: var(--muted); }
+
+/* Monthly reports, at the bottom */
+.amb-rep-grid { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: .9rem; align-items: start; }
+.amb-rep { border: 1px solid var(--line); border-radius: var(--radius); padding: .9rem 1rem; display: grid; gap: .65rem; background: var(--bg); }
+.amb-rep-head { display: flex; align-items: center; gap: .75rem; }
+.amb-rep .date-tile { width: 3.25rem; padding: .2rem; }
+.amb-rep .date-tile .day { font-size: 1rem; text-transform: uppercase; }
+.amb-rep .amb-rep-title { font-family: var(--font-body); font-weight: 700; font-size: 1.05rem; }
+.amb-latest { margin-left: auto; font-family: var(--font-ui); font-weight: 800; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; background: var(--dk-pink); color: var(--ink); padding: .15rem .55rem; border-radius: 999px; }
+.amb-rep .amb-rep-link { margin: 0; gap: .5rem .8rem; }
+.amb-rep .meta { font-family: var(--font-ui); font-size: .8125rem; color: var(--muted); }
+.amb-hl ul { margin: .4rem 0 0; padding-left: 1.1rem; font-size: .95rem; display: grid; gap: .3rem; }

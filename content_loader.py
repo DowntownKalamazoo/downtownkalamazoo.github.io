@@ -155,3 +155,13 @@ def ambassadors():
         reports.append(r)
     reports.sort(key=lambda r: (r['year'], r['mon']), reverse=True)
     return team, reports
+
+
+def ambassador_info():
+    """Phone, hours and the header photo from the top of content/ambassadors.yml."""
+    data = load_yaml('ambassadors.yml', {}) or {}
+    phone = str(data.get('phone') or '').strip()
+    hours = [h for h in (data.get('hours') or []) if h and h.get('days') and h.get('time')]
+    return dict(phone=phone, hours=hours,
+                photo=str(data.get('team_photo') or '').strip(),
+                photo_alt=str(data.get('team_photo_alt') or '').strip())
