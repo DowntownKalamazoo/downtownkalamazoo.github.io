@@ -283,3 +283,120 @@ def investments():
             raise ValueError(f'{p["source_file"]}: "order" should be a number, not "{p.get("order")}"')
         out.append(p)
     return sorted(out, key=lambda p: (p['order'], p['title']))
+
+
+# ---------------------------------------------------------------- For businesses page
+NEEDS = {
+    'start': 'Starting up',
+    'funding': 'Loans & grants',
+    'advice': 'Free advice & classes',
+    'network': 'Networks',
+    'space': 'Space & kitchens',
+    'permits': 'Permits & City help',
+    'customers': 'Reaching customers',
+    'hiring': 'Hiring & training',
+}
+STALE_MONTHS = 12
+
+
+def _month(v):
+    s = _s(v)
+    m = re.match(r'^(\d{4})-(\d{1,2})', s)
+    return (int(m.group(1)), int(m.group(2))) if m else None
+
+
+def _links(item, f, label):
+    out = []
+    for l in item.get('links') or []:
+        if not l:
+            continue
+        t, u = _s(l.get('text')), _s(l.get('url'))
+        if not t or not u:
+            raise ValueError(f'{f}: a link under "{label}" needs both text and url')
+        out.append(dict(text=t, url=u))
+    return out
+
+
+def business_resources(today=None):
+    """Everything on the For businesses page, from content/business-resources.yml.
+    Returns the cleaned data plus a list of warnings for entries not checked in a year."""
+    f = 'content/business-resources.yml'
+    today = today or dt.date.today()
+    data = load_yaml('business-resources.yml', {}) or {}
+    warnings = []
+
+    def stale(item, label):
+        m = _month(item.get('checked'))
+        if not m:
+            warnings.append(f'"{label}" has no checked date. Add one like checked: {today.year}-{today.month:02d}')
+        elif (today.year * 12 + today.month) - (m[0] * 12 + m[1]) >= STALE_MONTHS:
+            warnings.append(f'"{label}" was last checked {m[0]}-{m[1]:02d}. Confirm its details and link, then update checked.')
+
+    stats = []
+    for i, s in enumerate(data.get('stats') or [], 1):
+        if not s or s.get('draft'):
+            continue
+        st = {k: _s(s.get(k)) for k in ('number', 'label', 'source', 'source_url', 'as_of')}
+        if not st['number'] or not st['label']:
+            raise ValueError(f'{f}: stat {i} needs a number and a label')
+        if not st['source']:
+            raise ValueError(f'{f}: the stat "{st["number"]} {st["label"]}" needs a source, or add draft: true to hide it')
+        stats.append(st)
+
+    tools = []
+    for i, t in enumerate(data.get('tools') or [], 1):
+        if not t or t.get('draft'):
+            continue
+        tl = {k: _s(t.get(k)) for k in ('group', 'title', 'text')}
+        if not tl['title'] or not tl['text']:
+            raise ValueError(f'{f}: tool {i} needs a title and text')
+        tl['group'] = tl['group'] or 'More from downtown'
+        tl['links'] = _links(t, f, tl['title'])
+        stale(t, tl['title'])
+        tools.append(tl)
+
+    def entries(key, need_tags):
+        out = []
+        for i, r in enumerate(data.get(key) or [], 1):
+            if not r or r.get('draft'):
+                continue
+            e = {k: _s(r.get(k)) for k in ('name', 'url', 'what', 'for', 'cost')}
+            if not e['name'] or not e['what']:
+                raise ValueError(f'{f}: entry {i} under {key} needs a name and what')
+            e['links'] = _links(r, f, e['name'])
+            if need_tags:
+                needs = r.get('needs') or []
+                if isinstance(needs, str):
+                    needs = [n.strip() for n in needs.split(',')]
+                needs = [_s(n).lower() for n in needs if _s(n)]
+                bad = [n for n in needs if n not in NEEDS]
+                if bad:
+                    raise ValueError(f'{f}: in "{e["name"]}", needs should be from {", ".join(NEEDS)}, not "{bad[0]}"')
+                if not needs:
+                    raise ValueError(f'{f}: "{e["name"]}" needs at least one of {", ".join(NEEDS)}')
+                e['needs'] = needs
+            stale(r, e['name'])
+            out.append(e)
+        return out
+
+    research = []
+    for i, d in enumerate(data.get('research') or [], 1):
+        if not d or d.get('draft'):
+            continue
+        r = {k: _s(d.get(k)) for k in ('title', 'by', 'year', 'url', 'note')}
+        if not r['title'] or not r['url']:
+            raise ValueError(f'{f}: research item {i} needs a title and url')
+        stale(d, r['title'])
+        research.append(r)
+
+    partners = []
+    for i, p in enumerate(data.get('partners') or [], 1):
+        if not p or p.get('draft'):
+            continue
+        pt = {k: _s(p.get(k)) for k in ('name', 'url', 'what')}
+        if not pt['name']:
+            raise ValueError(f'{f}: partner {i} needs a name')
+        partners.append(pt)
+
+    return dict(stats=stats, tools=tools, resources=entries('resources', True), develop=entries('develop', False),
+                research=research, partners=partners, warnings=warnings)

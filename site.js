@@ -88,7 +88,7 @@
     document.addEventListener('click', e => { if (!btn.parentElement.contains(e.target)) set(false); });
   });
 
-  /* ---------- Filter buttons: events calendar, news, board documents ---------- */
+  /* ---------- Filter buttons: events calendar, news, board documents, business resources ---------- */
   function filterChips(chipSel, attr, itemSel, groupSel, statusEl, emptyEl, noun) {
     const chips = $$(chipSel);
     if (!chips.length) return;
@@ -116,6 +116,7 @@
   filterChips('#cal-tags .chip', 'tag', '.calendar .event-row', '.cal-month', $('#cal-status'), $('#cal-empty'), 'event');
   filterChips('#news-types .chip', 'type', '#news-list .news-item', null, $('#news-status'), null, 'story');
   filterChips('#doc-filter button', 'board', '#docs-table tbody tr', null, null, null, 'document');
+  filterChips('#res-needs .chip', 'need', '#res-list .res-card', null, $('#res-status'), null, 'resource');
 
   /* ---------- Share a news story ---------- */
   $$('[data-share]').forEach(b => b.addEventListener('click', async () => {

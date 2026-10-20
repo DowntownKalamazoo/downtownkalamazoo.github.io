@@ -1063,61 +1063,207 @@ def build_investment():
     page('investment.html', 'Investing in downtown', body, None, 'Private investment in downtown Kalamazoo: the State Theatre restoration and new development.')
 
 
-# ---------------------------------------------------------------- Business resources
+# ---------------------------------------------------------------- For businesses
+# Everything that changes on this page lives in content/business-resources.yml.
+BIZ = CL.business_resources(TODAY)
+for _w in BIZ['warnings']:
+    print(f'::warning file=content/business-resources.yml,title=Check this entry::{_w}')
+BIZ_FILLS = ['f-blue', 'f-green', 'f-pink', 'f-red', 'f-mist']
+BIZ_CSS = ('<style>'
+    '.jump { display: flex; flex-wrap: wrap; gap: .6rem; list-style: none; padding: 0; margin: 1.25rem 0 0; }'
+    '.biz-stats { margin-block-end: 0; }'
+    '.biz-stats .lbl { font-weight: 600; }'
+    '.biz-stats .src { font-size: .85rem; margin-top: .35rem; }'
+    '.biz-stats .src a { color: var(--ink); }'
+    '.tool-group + .tool-group { margin-top: 2rem; }'
+    '.tool-group > h3 { font-family: var(--font-ui); font-weight: 800; font-size: .95rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: .8rem; display: flex; align-items: center; gap: .55rem; }'
+    '.tool-group > h3::before { content: ""; width: .8rem; height: .8rem; border-radius: 3px; background: var(--accent); transform: rotate(45deg); flex: none; }'
+    '.res-grid .panel { border-top: 6px solid var(--accent, var(--line)); }'
+    '.need-tools { display: grid; gap: .5rem; margin: 0 0 1.25rem; }'
+    ':root:not(.js) .need-tools { display: none; }'
+    '.res-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: 1rem; }'
+    '.res-card { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 1.1rem 1.2rem; display: grid; gap: .5rem; align-content: start; border-top: 6px solid var(--accent); }'
+    '.res-card h3 { font-family: var(--font-body); font-weight: 700; font-size: 1.15rem; line-height: 1.25; }'
+    '.res-card h3 a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: .2em; }'
+    '.res-card h3 a:hover { color: var(--link); }'
+    '.res-meta { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0; }'
+    '.res-for { margin: 0; font-family: var(--font-ui); font-weight: 600; font-size: .85rem; color: var(--muted); }'
+    '.res-card ul { padding-left: 1.1rem; font-size: .95rem; display: grid; gap: .3rem; }'
+    '.res-needs { margin: 0; font-size: .85rem; color: var(--muted); }'
+    '.space-band { position: relative; border-radius: 18px; overflow: hidden; background: var(--dk-blue); color: var(--ink); display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }'
+    '.space-band .sb-copy { padding: clamp(1.4rem, 3vw, 2.4rem); display: grid; gap: .8rem; align-content: center; }'
+    '.space-band a:not(.btn) { color: var(--ink); font-weight: 700; }'
+    '.space-band .btn { border-color: var(--ink); color: var(--ink); }'
+    '.space-band .btn-primary { background: var(--ink); color: #fff; }'
+    '.space-band .sb-pat { background-size: 260px; background-position: center; min-height: 10rem; }'
+    '@media (max-width: 760px) { .space-band { grid-template-columns: 1fr; } .space-band .sb-pat { min-height: 5rem; order: -1; } }'
+    '.research { list-style: none; padding: 0; display: grid; gap: 0; border-top: 2px solid var(--fg); }'
+    '.research li { padding: 1rem 0; border-bottom: 1px solid var(--line); display: grid; gap: .25rem; }'
+    '.research .r-title { font-weight: 700; font-size: 1.05rem; }'
+    '.research .r-by { margin: 0; font-family: var(--font-ui); font-weight: 600; font-size: .85rem; color: var(--muted); }'
+    '.research p { margin: 0; }'
+    '.partners { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: 1rem; }'
+    '.partners li { border-left: 6px solid var(--accent); padding: .3rem 0 .3rem 1rem; display: grid; gap: .3rem; }'
+    '.partners .p-name { font-weight: 700; }'
+    '</style>')
+
+
+def _href(url):
+    """A link target: full links open in a new tab, pages on this site stay in the tab."""
+    return url if url.startswith(('http', 'mailto:')) else '{R}' + url
+
+
+def _a(url, text):
+    return ext(url, text) if url.startswith('http') else f'<a href="{_href(url)}">{text}</a>'
+
+
+def biz_stat(s, i):
+    src = E(s['source']) + (f', {E(s["as_of"])}' if s['as_of'] else '')
+    if s['source_url']:
+        src = ext(s['source_url'], src)
+    return (f'<li class="{BIZ_FILLS[i % 4]}"><span class="n">{E(s["number"])}</span><span class="lbl">{E(s["label"])}</span>'
+            f'<span class="src">Source: {src}</span></li>')
+
+
+def tool_card(t, fill):
+    links = ''.join(link_item(l['text'], l['url']) for l in t['links'])
+    return (f'<section class="panel {fill}"><h4 class="h3" style="font-size:1.1rem">{E(t["title"])}</h4><p>{E(t["text"])}</p>'
+            f'{f"<ul>{links}</ul>" if links else ""}</section>')
+
+
+def res_card(r, i, show_needs=True):
+    name = _a(r['url'], E(r['name'])) if r['url'] else E(r['name'])
+    tags = (f'<span class="status-tag st-now">{E(r["cost"])}</span>' if r['cost'] else '')
+    who = f'<p class="res-for">For: {E(r["for"])}</p>' if r['for'] else ''
+    links = ''.join(link_item(l['text'], l['url']) for l in r['links'])
+    contact = '' if r['url'] else f'<p class="res-for">Contact: {DOWNTOWN_EMAIL}</p>'
+    needs = ''
+    if show_needs and r.get('needs'):
+        needs = f'<p class="res-needs"><span class="sr-only">Helps with: </span>{E(", ".join(CL.NEEDS[n] for n in r["needs"]))}</p>'
+    data = f' data-need="{"|".join(r["needs"])}"' if r.get('needs') else ''
+    return (f'<li class="res-card {BIZ_FILLS[i % 5]}"{data}><h3>{name}</h3>{who}'
+            f'{f"<p class=res-meta>{tags}</p>" if tags else ""}<p>{E(r["what"])}</p>'
+            f'{f"<ul>{links}</ul>" if links else ""}{contact}{needs}</li>')
+
+
 def build_business_resources():
-    def res(title, text, links, fill=''):
-        ls = ''.join(f'<li>{ext(h, E(t)) if h.startswith("http") else f"<a href=\"{{R}}{h}\">{E(t)}</a>"}</li>' for t, h in links)
-        return f'<section class="panel {fill}"><h3 class="h3">{E(title)}</h3><p>{text}</p>{f"<ul>{ls}</ul>" if ls else ""}</section>'
-    body = page_hero([('index.html', 'Home'), ('businesses.html', 'For businesses')], 'Open, grow, take part', 'Business resources',
-                     'Grants, permits, programs and the people to call, for anyone running a business or planning one in downtown Kalamazoo.', 'f-blue')
-    body += f'''<section class="section" aria-labelledby="money-title">
+    jump = [('#tools', 'From the downtown team'), ('#find', 'Start or grow a business'), ('#develop', 'Develop property'),
+            ('#space', 'Find space'), ('#research', 'Data & research')]
+    jump_html = ('<nav aria-label="On this page"><ul class="jump">'
+                 + ''.join(f'<li><a class="btn btn-small" href="{h}">{E(t)}</a></li>' for h, t in jump) + '</ul></nav>')
+    body = BIZ_CSS + page_hero([('index.html', 'Home'), ('businesses.html', 'For businesses')], 'Open, grow, build', 'Do business downtown',
+                               'Here, businesses don’t stand alone. Whether you’re starting something new, growing what you have or building, '
+                               'downtown Kalamazoo has room for you, and people ready to help.', 'f-blue', extra=jump_html)
+
+    # The numbers
+    stats = ''
+    if BIZ['stats']:
+        stats = (f'<h2 class="h2" id="stats-title" style="margin-bottom:1rem">Downtown by the numbers</h2>'
+                 f'<ul class="amb-stats biz-stats">{"".join(biz_stat(s, i) for i, s in enumerate(BIZ["stats"]))}</ul>')
+
+    # Downtown's own tools, grouped
+    groups = []
+    for t in BIZ['tools']:
+        if t['group'] not in groups:
+            groups.append(t['group'])
+    tools = ''
+    for gi, g in enumerate(groups):
+        fill = BIZ_FILLS[gi % 4]
+        cards = ''.join(tool_card(t, fill) for t in BIZ['tools'] if t['group'] == g)
+        tools += f'<section class="tool-group {fill}" aria-labelledby="tg-{gi}"><h3 id="tg-{gi}">{E(g)}</h3><div class="res-grid">{cards}</div></section>'
+
+    # Partner resources and the need buttons
+    res = BIZ['resources']
+    counts = {k: sum(1 for r in res if k in r['needs']) for k in CL.NEEDS}
+    chips = (f'<li><button type="button" class="chip" data-need="all" aria-pressed="true">All<span class="n">{len(res)}</span></button></li>'
+             + ''.join(f'<li><button type="button" class="chip" data-need="{k}" aria-pressed="false">{E(v)}<span class="n">{counts[k]}</span></button></li>'
+                       for k, v in CL.NEEDS.items() if counts[k]))
+    cards = ''.join(res_card(r, i) for i, r in enumerate(res))
+
+    # Developers
+    dev = ''.join(res_card(r, i + 1, show_needs=False) for i, r in enumerate(BIZ['develop']))
+
+    # Research
+    research = ''.join(
+        f'<li><span class="r-title">{_a(d["url"], E(d["title"]))}</span>'
+        f'<p class="r-by">{E(d["by"])}{(" · " + E(d["year"])) if d["year"] else ""}</p>'
+        f'{f"<p>{E(d["note"])}</p>" if d["note"] else ""}</li>' for d in BIZ['research'])
+
+    partners = ''.join(f'<li class="{BIZ_FILLS[i % 4]}"><span class="p-name">{_a(p["url"], E(p["name"])) if p["url"] else E(p["name"])}</span>'
+                       f'{f"<span>{E(p["what"])}</span>" if p["what"] else ""}</li>' for i, p in enumerate(BIZ['partners']))
+
+    n_inv = len(INVESTMENTS)
+    team_link = '<li><a href="{R}team.html">Who to contact for what</a></li>' if TEAM_LIVE else ''
+
+    body += f'''<section class="section" aria-labelledby="stats-title">
   <div class="wrap">
-    {in_short('This page lists grants, permits and downtown programs for businesses, with links to apply. For help, email downtown@kalamazoocity.org.')}
-    <h2 class="h2" id="money-title" style="margin-bottom:1rem">Grants &amp; funding</h2>
-    <div class="res-grid">
-      {res('Kalamazoo Micro-Enterprise Grants', '$5,000 grants for for-profit microbusinesses in the city of Kalamazoo: open at least a year, 10 or fewer employees, and $1 million or less in yearly revenue. A partnership of the City and United Way of South Central Michigan, funded by the Foundation for Excellence. Application dates vary by round, so check the United Way page.', [('Kalamazoo Micro-Enterprise Grants', 'https://unitedforscmi.org/battle-creek-kalamazoo/kalamazoo-micro-enterprise-grants/')], 'f-green')}
-      {res('Match on Main', 'A state grant from the Michigan Economic Development Corporation for storefront businesses in downtowns and commercial corridors. The City applies on behalf of the businesses it selects. In 2026 it could request up to $25,000 for two downtown businesses, with a 10% match.', [('2026 Match on Main announcement', 'news/match-on-main-grant.html')], 'f-pink')}
-      {res('Event & marketing sponsorships', 'The DDA and DEGA sponsor downtown events: up to $2,500 for a single-day event and up to $5,000 for a multi-day event.', [('Apply for a sponsorship', BOARDS_URL + '/Apply-for-a-DDADEGA-Events-Marketing-Sponsorship'), ('About the DDA & DEGA', 'boards.html')], 'f-blue')}
-    </div>
-    <h2 class="h2" style="margin:2.5rem 0 1rem">Permits &amp; plans</h2>
-    <div class="res-grid">
-      {res('Social District permit', 'Licensed bars and restaurants inside the Social District can apply to serve drinks people can carry within the Commons Area.', [('Apply for a Social District permit', CITY + '/Community/Downtown-Kalamazoo/Central-Commons-Refreshment-Area/Apply-for-a-Social-District-Permit'), ('How the Social District works', 'social-district.html')])}
-      {res('Building or renovating', 'New construction and major changes go through the City’s site plan review. You can see recently approved downtown plans, too.', [('Site plan review', CITY + '/Business-Development/Real-Estate-Development/Apply-for-Site-Plan-Review'), ('Downtown projects', 'projects.html')])}
-      {res('City business help', 'Licenses, development and working with the City of Kalamazoo.', [('City of Kalamazoo business development', CITY + '/Business-Development')])}
-    </div>
-    <h2 class="h2" style="margin:2.5rem 0 1rem">Get the word out</h2>
-    <div class="res-grid">
-      {res('Get listed in the directory', 'Add or update your listing in the Explore downtown directory with your website, a short description and whether you take Downtown Dollars.', [('See the directory', 'directory.html')], 'f-green')}
-      {res('Accept Downtown Dollars', 'Join the businesses that take Downtown Dollars. Customers can spend them at your door for five years.', [('How Downtown Dollars work', 'dollars.html')], 'f-pink')}
-      {res('Put your event on the calendar', 'Workshops, sales, shows and celebrations. Every submission is reviewed before it’s posted.', [('Submit an event', 'submit-event.html')], 'f-blue')}
-      {res('Use the brand', 'Window decals, stickers and the downtown patterns help customers spot you. Email us for brand files and guidelines.', [('Take a pattern home', 'take-home.html')])}
-    </div>
-    <h2 class="h2" style="margin:2.5rem 0 1rem">Downtown services</h2>
-    <div class="res-grid">
-      {res('Downtown Ambassadors', 'Cleaning, snow removal, graffiti and a friendly face on the street, seven days a week.', [('About the ambassadors', 'ambassadors.html')])}
-      {res('Waste & recycling', 'Smart Bigbelly bins on downtown sidewalks, emptied when they’re full.', [('How the bins work', 'waste-recycling.html')])}
-      {res('Parking for customers and staff', 'The first 90 minutes are free in the Epic Center and Kalamazoo Mall ramps.', [('Visit & park', 'visit.html')])}
+    {in_short('This page lists programs, partners and plans for anyone starting, running or building a business in downtown Kalamazoo. For help, email downtown@kalamazoocity.org or call (269) 337-8993.')}
+    {stats}
+  </div>
+</section>
+<section class="section" style="padding-top:0" aria-labelledby="tools-title" id="tools">
+  <div class="wrap">
+    <h2 class="h2" id="tools-title">From the downtown team</h2>
+    <p class="lead-intro" style="max-width:46rem;margin:.4rem 0 1.5rem">Programs run by the City of Kalamazoo’s downtown team and the DDA &amp; DEGA, only for downtown.</p>
+    {tools}
+  </div>
+</section>
+<section class="section" style="padding-top:0" aria-labelledby="find-title" id="find">
+  <div class="wrap">
+    <h2 class="h2" id="find-title">Start or grow a business</h2>
+    <p style="max-width:46rem;margin:.4rem 0 1.25rem">Local and state partners offer free advice, loans and grants, space and networks. Choose what you need to narrow the list.</p>
+    <div class="need-tools"><span class="label" id="need-label">What do you need?</span><ul class="chips" id="res-needs" role="list" aria-labelledby="need-label">{chips}</ul></div>
+    <p class="sr-only" id="res-status" role="status" aria-live="polite"></p>
+    <ul class="res-list" id="res-list">{cards}</ul>
+  </div>
+</section>
+<section class="section" style="padding-top:0" aria-labelledby="develop-title" id="develop">
+  <div class="wrap">
+    <h2 class="h2" id="develop-title">Develop or renovate property</h2>
+    <p style="max-width:46rem;margin:.4rem 0 1.25rem">Incentives, financing and approvals for owners and developers. Talk with the downtown team early, so we can help line up the right tools.</p>
+    <ul class="res-list">{dev}</ul>
+  </div>
+</section>
+<section class="section" style="padding-top:0" aria-labelledby="space-title" id="space">
+  <div class="wrap">
+    <div class="space-band">
+      <div class="sb-copy">
+        <h2 class="h2" id="space-title">Find your space</h2>
+        <p>Looking for a storefront, an office or a site to build on? See the {n_inv} private projects taking shape downtown, then tell us what you need and we’ll help you find the right fit.</p>
+        <div class="btn-row"><a class="btn btn-primary" href="{{R}}investment.html">See investing in downtown</a><a class="btn" href="mailto:{DOWNTOWN_EMAIL}?subject=Looking%20for%20space%20downtown">Email the downtown team</a></div>
+        <p>The Kalamazoo Event Center opens in fall 2027. Businesses and suppliers can learn about working with it on the {ext('https://www.kalamazooeventcenter.com/', 'Kalamazoo Event Center website')}.</p>
+      </div>
+      <div class="sb-pat" style="background-image:url({{R}}pattern-pinstripes-sm.webp)" aria-hidden="true"></div>
     </div>
   </div>
 </section>
-<section class="section" style="padding-top:0" aria-labelledby="stay-title">
+<section class="section" aria-labelledby="research-title" id="research">
   <div class="wrap two-col">
-    <div class="prose" style="max-width:none">
-      <h2 class="h2" id="stay-title">Stay in the loop</h2>
-      <ul class="checks f-blue">
+    <div>
+      <h2 class="h2" id="research-title">Data &amp; research</h2>
+      <p style="margin:.4rem 0 1.25rem">Plans and studies that shape downtown’s future.</p>
+      <ul class="research">{research}</ul>
+      <p class="muted" style="margin-top:1rem">Presentations, data, plans and projections behind downtown marketing are in the {ext(LIBRARY_URL, 'downtown plan library')}. Budgets and reports are on the <a href="{{R}}boards.html">DDA &amp; DEGA page</a>.</p>
+    </div>
+    <div class="aside">
+      <section class="panel f-blue"><h2>Talk to the downtown team</h2><p>No matter where you are in the process, we can help you find what you need.</p><p>Email <span>{DOWNTOWN_EMAIL}</span> <button type="button" class="btn btn-small btn-quiet" data-copy="{DOWNTOWN_EMAIL}">Copy address</button></p><p>Call {DOWNTOWN_PHONE}, or 311 for City services.</p>{f"<ul>{team_link}</ul>" if team_link else ""}</section>
+      <section class="panel"><h2>Stay in the loop</h2><ul>
         <li><a href="{{R}}newsletter.html">Get the downtown newsletter</a> for events, programs and grant rounds.</li>
         <li>Come to a <a href="{{R}}boards.html">DDA &amp; DEGA board meeting</a>, the third Monday of the month.</li>
         <li>Follow {ext(STREETS_FOR_ALL, 'Streets for All construction')} if you’re on Kalamazoo Avenue.</li>
-        <li>Planning for the holidays? See the <a href="{{R}}holidays/businesses.html">holiday partner toolkit</a>.</li>
-      </ul>
-    </div>
-    <div class="aside">
-      <section class="panel f-blue"><h2>Talk to the downtown team</h2><p>Email <span>{DOWNTOWN_EMAIL}</span> <button type="button" class="btn btn-small btn-quiet" data-copy="{DOWNTOWN_EMAIL}">Copy address</button></p><p>Call {DOWNTOWN_PHONE}, or 311 for City services.</p></section>
-      <section class="panel"><h2>Marketing plan library</h2><p>Presentations, data, plans and projections behind downtown marketing.</p><p>{ext(LIBRARY_URL, 'Open the plan library')}</p></section>
+        {'<li>Planning for the holidays? See the <a href="{R}holidays/businesses.html">holiday partner toolkit</a>.</li>' if HOLIDAY_SEASON else ''}
+      </ul></section>
     </div>
   </div>
+</section>
+<section class="section" style="padding-top:0" aria-labelledby="partners-title">
+  <div class="wrap">
+    <h2 class="h2" id="partners-title" style="margin-bottom:1rem">Economic partners</h2>
+    <ul class="partners">{partners}</ul>
+  </div>
 </section>'''
-    page('businesses.html', 'Business resources', body, 'businesses', 'Grants, permits, programs and contacts for businesses in downtown Kalamazoo.')
+    page('businesses.html', 'For businesses', body, 'businesses',
+         'Grants, loans, permits, free advice, development incentives and research for businesses in downtown Kalamazoo.')
 
 
 # ---------------------------------------------------------------- Our team

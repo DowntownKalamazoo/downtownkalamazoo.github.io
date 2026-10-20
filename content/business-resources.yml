@@ -1,0 +1,397 @@
+# For businesses page (businesses.html)
+#
+# Six parts live here, in the order they appear on the page:
+#   stats      the numbers at the top
+#   tools      what the downtown team and the DDA & DEGA offer directly
+#   resources  partner organizations, with the "What do you need?" buttons
+#   develop    help for developers and property owners
+#   research   plans, studies and data
+#   partners   economic development partners
+#
+# The spaces at the start of each line matter. Copy an existing entry and keep its spacing.
+# If a line has a colon followed by a space, or starts with a quote mark, put the whole value in double quotes.
+#
+# checked: the month someone last confirmed an entry's details and link, like 2026-10.
+# Entries not checked in 12 months get a yellow warning on the Actions tab. The site still publishes.
+
+# ---------------------------------------------------------------- Stats
+# number:     what shows in large type, in quotes, e.g. "$515M"
+# label:      the words under the number
+# source:     who the number comes from. Every stat needs one.
+# source_url: a link to that source (optional)
+# as_of:      when the number is from, e.g. 2025 or 2026-06
+# draft: true keeps a stat off the page. Use it for numbers still waiting on a source.
+
+stats:
+  - number: "$515M"
+    label: "Kalamazoo Event Center, opening downtown in fall 2027"
+    source: "Kalamazoo Event Center"
+    source_url: https://www.kalamazooeventcenter.com/
+    as_of: 2026
+
+  - number: "264,000"
+    label: "people in the Kalamazoo–Portage metro area"
+    source: "U.S. Census Bureau population estimate"
+    source_url: https://www.citypopulation.de/en/usa/metro/28020__kalamazoo_portage/
+    as_of: 2025
+
+  - number: "26,000+"
+    label: "students at Western Michigan University and Kalamazoo Valley Community College"
+    source: "WMU fall 2025 census and KVCC 12-month enrollment"
+    source_url: https://wmich.edu/effectiveness/outcomes
+    as_of: 2025
+
+  # From the former downtown website. Find a source, fill it in, then delete the draft line.
+  - number: "10,570"
+    label: "employees working downtown"
+    source: ""
+    as_of: ""
+    draft: true
+
+  - number: "425+"
+    label: "residential units added downtown since 2015"
+    source: ""
+    as_of: ""
+    draft: true
+
+  - number: "35%"
+    label: "more downtown residents since 2013"
+    source: ""
+    as_of: ""
+    draft: true
+
+# ---------------------------------------------------------------- Downtown's own tools
+# group: the heading the card sits under. Cards with the same group are shown together.
+# title, text: the card. Keep text to one or two sentences.
+# links: copy a "- text:" and "url:" pair to add a link. A page on this site, like dollars.html, works too.
+
+tools:
+  - group: "Money & permits"
+    title: "Event & marketing sponsorships"
+    text: "The DDA and DEGA sponsor downtown events: up to $2,500 for a single-day event and up to $5,000 for a multi-day event."
+    links:
+      - text: "Apply for a sponsorship"
+        url: https://www.kalamazoocity.org/Government/Boards-Commissions/Downtown-Development-Authority-Downtown-Economic-Growth-Authority/Apply-for-a-DDADEGA-Events-Marketing-Sponsorship
+    checked: 2026-10
+
+  - group: "Money & permits"
+    title: "Match on Main"
+    text: "A state grant for storefront businesses. The City applies for the downtown businesses it selects. In 2026 it could request up to $25,000 for two businesses."
+    links:
+      - text: "2026 Match on Main announcement"
+        url: news/match-on-main-grant.html
+    checked: 2026-10
+
+  - group: "Money & permits"
+    title: "Social District permit"
+    text: "Licensed bars and restaurants next to the Central Commons Refreshment Area can sell drinks customers carry while they stroll. It takes City Commission approval and a state permit."
+    links:
+      - text: "Apply for a Social District permit"
+        url: https://kalamazoocity.org/Community/Downtown-Kalamazoo/Central-Commons-Refreshment-Area/Apply-for-a-Social-District-Permit
+      - text: "How the Social District works"
+        url: social-district.html
+    checked: 2026-10
+
+  - group: "Money & permits"
+    title: "Redevelopment liquor license"
+    text: "Restaurants and bars inside the DDA and DEGA districts can apply for an on-premises liquor license that isn't limited by the state's usual quota."
+    links:
+      - text: "Apply for a liquor license"
+        url: https://www.kalamazoocity.org/Business-Development/Apply-for-Business-Licenses/Apply-for-a-Liquor-License
+    checked: 2026-10
+
+  - group: "Get the word out"
+    title: "Get listed in the directory"
+    text: "Add or update your listing with your website, a short description and whether you take Downtown Dollars."
+    links:
+      - text: "See the directory"
+        url: directory.html
+    checked: 2026-10
+
+  - group: "Get the word out"
+    title: "Accept Downtown Dollars"
+    text: "Join the businesses that take Downtown Dollars. Customers can spend them at your door for five years."
+    links:
+      - text: "How Downtown Dollars work"
+        url: dollars.html
+    checked: 2026-10
+
+  - group: "Get the word out"
+    title: "Put your event on the calendar"
+    text: "Workshops, sales, shows and celebrations. Every submission is reviewed before it's posted."
+    links:
+      - text: "Submit an event"
+        url: submit-event.html
+    checked: 2026-10
+
+  - group: "Get the word out"
+    title: "Use the brand"
+    text: "Window decals, stickers and the downtown patterns help customers spot you. Email the downtown team for brand files and guidelines."
+    links:
+      - text: "Take a pattern home"
+        url: take-home.html
+    checked: 2026-10
+
+  - group: "On the street"
+    title: "Downtown Ambassadors"
+    text: "Cleaning, snow removal, graffiti and a friendly face on the street, seven days a week."
+    links:
+      - text: "About the ambassadors"
+        url: ambassadors.html
+    checked: 2026-10
+
+  - group: "On the street"
+    title: "Waste & recycling"
+    text: "Smart Bigbelly bins on downtown sidewalks, emptied when they're full."
+    links:
+      - text: "How the bins work"
+        url: waste-recycling.html
+    checked: 2026-10
+
+  - group: "On the street"
+    title: "Parking for customers and staff"
+    text: "The first 90 minutes are free in the Epic Center and Kalamazoo Mall ramps."
+    links:
+      - text: "Visit & park"
+        url: visit.html
+    checked: 2026-10
+
+# ---------------------------------------------------------------- Partner resources
+# name:   the organization or program
+# url:    its website (leave blank if it has none; the card then says to contact the downtown team)
+# what:   one or two plain sentences on what it offers
+# for:    who it's for, if it's for a particular group (optional), e.g. "WMU students"
+# cost:   "Free" if it's free (optional)
+# needs:  one or more of these, which decide the "What do you need?" buttons:
+#           start      starting a business
+#           funding    loans and grants
+#           advice     free advice and classes
+#           network    networks and connections
+#           space      space and kitchens
+#           permits    permits and City help
+#           customers  reaching customers
+#           hiring     hiring and training
+# links:  extra links, in the same - text: / url: format (optional)
+
+resources:
+  - name: "Michigan Small Business Development Center (SBDC)"
+    url: https://michigansbdc.org/southwest-region/
+    what: "Free one-on-one consulting, market research and workshops to launch or grow a business. The Southwest Region office is at Western Michigan University."
+    cost: "Free"
+    needs: [start, advice]
+    checked: 2026-10
+
+  - name: "SCORE West Michigan"
+    url: https://www.score.org/mi/west-michigan/
+    what: "Free, confidential mentoring from experienced business owners for the life of your business, plus workshops and webinars. It serves Kalamazoo along with Grand Rapids and Muskegon."
+    cost: "Free"
+    needs: [start, advice]
+    checked: 2026-10
+
+  - name: "Can-Do Kalamazoo"
+    url: https://www.candokalamazoo.org
+    what: "An entrepreneur hub at 519 S. Park St. with commercial kitchens, coaching and workshops. SCORE, the SBDC and City staff hold free walk-in office hours there Tuesday through Thursday."
+    needs: [start, space, advice]
+    links:
+      - text: "Office hours at Can-Do Kalamazoo"
+        url: https://www.kalamazoocity.org/Business-Development/Business-Support-Programs/Office-Hours-at-Can-Do-Kalamazoo
+    checked: 2026-10
+
+  - name: "City of Kalamazoo Economic Development"
+    url: https://www.kalamazoocity.org/Business-Development/Economic-Development
+    what: "The City's team helps businesses with licenses, permits and zoning, and connects them to grants, loans and training."
+    cost: "Free"
+    needs: [start, permits, funding]
+    links:
+      - text: "Apply for business licenses"
+        url: https://www.kalamazoocity.org/Business-Development/Apply-for-Business-Licenses
+    checked: 2026-10
+
+  - name: "Kalamazoo Micro-Enterprise Grants"
+    url: https://unitedforscmi.org/battle-creek-kalamazoo/kalamazoo-micro-enterprise-grants/
+    what: "$5,000 grants for for-profit microbusinesses in the city of Kalamazoo. A partnership of the City and United Way of South Central Michigan. Application dates vary by round."
+    for: "Businesses with 10 or fewer employees in the city limits"
+    needs: [funding]
+    checked: 2026-10
+
+  - name: "Economic Initiative Fund"
+    url: https://www.kalamazoocity.org/Business-Development/Business-Support-Programs/Economic-Initiative-Fund
+    what: "A City loan fund for projects that need gap financing: low-interest loans of up to $250,000, and no more than 10% of the project's cost. Projects must create or keep jobs in the city."
+    needs: [funding]
+    checked: 2026-10
+
+  - name: "LISC Kalamazoo"
+    url: https://www.lisc.org/kalamazoo/
+    what: "Flexible loans and technical help for small businesses that traditional lenders overlook, and financing for housing and real estate projects."
+    needs: [funding]
+    checked: 2026-10
+
+  - name: "Northern Initiatives"
+    url: https://www.northerninitiatives.org/
+    what: "A Michigan lender for businesses that can't get bank financing, with loans from $1,000 to $500,000 and coaching after the loan."
+    needs: [funding]
+    checked: 2026-10
+
+  - name: "Black Wall Street Kalamazoo"
+    url: https://blackwallstreetkalamazoo.org/
+    what: "Networking, the Black Business Expo and a Black business directory. Its Black Entrepreneur Training Academy, run with Sisters in Business, is a five-month virtual program that ends with a chance to pitch for up to $5,000."
+    for: "Black-owned businesses and entrepreneurs"
+    needs: [network, start, advice, funding]
+    links:
+      - text: "Black Entrepreneur Training Academy"
+        url: https://blackwallstreetkalamazoo.org/beta/
+    checked: 2026-10
+
+  - name: "Sisters in Business"
+    url: https://www.sistersinbusinessmi.com
+    what: "Workshops, pitch competitions and networking that create a welcoming space for women of color, whether they own a business or are thinking about it."
+    for: "Black and Brown women"
+    needs: [network, start]
+    checked: 2026-10
+
+  - name: "WMed Innovation Center"
+    url: https://wmedic.wmed.edu
+    what: "Kalamazoo's SmartZone: offices, labs, coworking and business support for science, technology and engineering startups."
+    for: "Science, technology and engineering startups"
+    needs: [space, start]
+    checked: 2026-10
+
+  - name: "WMU Starting Gate"
+    url: https://wmich.edu/startinggate
+    what: "A free two-semester business accelerator with mentors, speakers and workshops. At least one owner must be a WMU student, sophomore or above."
+    for: "WMU students"
+    cost: "Free"
+    needs: [start, advice]
+    checked: 2026-10
+
+  - name: "Downtown Kalamazoo Collective"
+    url: ""
+    what: "Downtown's merchant group, formerly Downtown Kalamazoo Shops. Contact the downtown team to get connected."
+    for: "Downtown business owners"
+    needs: [network, customers]
+    checked: 2026-10
+
+  - name: "Southwest Michigan First Chamber"
+    url: https://www.southwestmichiganfirst.com/chamber
+    what: "The region's chamber of commerce, with networking, events, advocacy and a member marketplace for more than 600 member businesses."
+    needs: [network]
+    checked: 2026-10
+
+  - name: "Shop Local Greater Kalamazoo"
+    url: https://www.shoplocalgreaterkalamazoo.com/
+    what: "An online marketplace where locally owned businesses and makers can sell their products, with a shared gift card. Run by the Southwest Michigan First Chamber with the City of Kalamazoo and Portage."
+    needs: [customers]
+    checked: 2026-10
+
+  - name: "Michigan Works! Southwest"
+    url: https://www.michiganworkssouthwest.org
+    what: "Help finding, hiring and training employees, including job postings and hiring events."
+    cost: "Free"
+    needs: [hiring]
+    checked: 2026-10
+
+# ---------------------------------------------------------------- Developers and property owners
+# Same format as resources above, without needs.
+
+develop:
+  - name: "DDA & DEGA"
+    url: boards.html
+    what: "Downtown's two public authorities use tax increment financing (TIF) to invest in downtown. Talk to the downtown team early about how a project fits their plans."
+    checked: 2026-10
+
+  - name: "Site plan review"
+    url: https://www.kalamazoocity.org/Business-Development/Real-Estate-Development/Apply-for-Site-Plan-Review
+    what: "New construction and major changes go through the City's site plan review."
+    links:
+      - text: "Zoning code"
+        url: https://www.kalamazoocity.org/Business-Development/Zoning-Code
+    checked: 2026-10
+
+  - name: "Brownfield Redevelopment Authority"
+    url: https://www.kalamazoocity.org/Business-Development/Brownfield-Redevelopment-Authority
+    what: "Incentives for redeveloping sites that are contaminated, blighted or functionally obsolete. The City's Economic Development Corporation shares its board."
+    checked: 2026-10
+
+  - name: "Economic Initiative Fund"
+    url: https://www.kalamazoocity.org/Business-Development/Business-Support-Programs/Economic-Initiative-Fund
+    what: "Low-interest City gap financing of up to $250,000, and no more than 10% of a project's cost."
+    checked: 2026-10
+
+  - name: "Michigan Community Revitalization Program"
+    url: https://www.miplace.org/programs/michigan-community-revitalization-program/
+    what: "State grants, loans and other help for projects on contaminated, blighted, functionally obsolete or historic properties."
+    checked: 2026-10
+
+  - name: "Revitalization and Placemaking (RAP)"
+    url: https://www.michiganbusiness.org/rap
+    what: "State gap financing for rehabilitating vacant, underused, blighted or historic buildings and for public spaces. Check with the MEDC on available funding."
+    checked: 2026-10
+
+  - name: "Opportunity Zones"
+    url: https://www.michiganbusiness.org/opportunityzones/
+    what: "A federal tax incentive for long-term investment in designated census tracts. Current zones end December 31, 2026. A new set of zones takes effect January 1, 2027, for 10 years."
+    checked: 2026-10
+
+  - name: "LISC Kalamazoo"
+    url: https://www.lisc.org/kalamazoo/
+    what: "Real estate financing, including a 0% interest, 24-month predevelopment loan for major rehabs and new affordable housing."
+    checked: 2026-10
+
+# ---------------------------------------------------------------- Data & research
+# title: the document's name
+# by:    who published it
+# year:  when
+# url:   a full link, or files/your-file.pdf for something uploaded to the files folder
+# note:  one sentence on what's inside (optional)
+
+research:
+  - title: "Imagine Kalamazoo 2035"
+    by: "City of Kalamazoo"
+    year: ""
+    url: https://www.kalamazoocity.org/IK2035
+    note: "The City's strategic vision and new master plan, being finished in 2026. The plan guides development and transportation."
+    checked: 2026-10
+
+  - title: "Downtown Kalamazoo Retail Market Analysis, 2022 update"
+    by: "Gibbs Planning Group for the City of Kalamazoo"
+    year: "2022"
+    url: https://www.kalamazoocity.org/files/assets/public/v/1/plans-amp-reports/downtown-amp-parking/gibbs-retail-market-analysis/kalamazoo-retail-market-anlysis-june-2022-update.pdf
+    note: "How much more retail and restaurant space downtown can support as its streets are rebuilt."
+    checked: 2026-10
+
+  - title: "Downtown Kalamazoo: Urban Sequences & Activation of the Public Realm"
+    by: "University of Notre Dame School of Architecture"
+    year: "2023"
+    url: https://www.kalamazoocity.org/files/assets/public/v/1/plans-amp-reports/downtown-amp-parking/downtown-kalamazoo-activation-study_may-2023.pdf
+    note: "A design study for reconnecting downtown's streets, blocks and gathering places."
+    checked: 2026-10
+
+  - title: "Kalamazoo West Gateway: Reconnecting to Downtown"
+    by: "University of Notre Dame School of Architecture"
+    year: ""
+    url: https://www.kalamazoocity.org/files/assets/public/v/1/plans-amp-reports/downtown-amp-parking/kalamazoo-west-gateway-reconnecting-to-downtown.pdf
+    note: "Ideas for the west edge of downtown, between the Event Center, Kalamazoo College and WMU."
+    checked: 2026-10
+
+  - title: "Urban Growth Initiative for Greater Downtown Kalamazoo"
+    by: "W.E. Upjohn Institute for Employment Research"
+    year: "2018"
+    url: https://research.upjohn.org/reports/231
+    note: "Strategies for new businesses, housing and access in and around downtown."
+    checked: 2026-10
+
+# ---------------------------------------------------------------- Economic partners
+
+partners:
+  - name: "City of Kalamazoo"
+    url: https://www.kalamazoocity.org
+    what: "Downtown's staff, permits, programs and public projects."
+  - name: "Discover Kalamazoo"
+    url: https://www.discoverkalamazoo.com
+    what: "The area's tourism office, bringing visitors, meetings and events to Kalamazoo."
+  - name: "Southwest Michigan First"
+    url: https://www.southwestmichiganfirst.com
+    what: "The regional economic development organization and home of the area's chamber."
+  - name: "Michigan Economic Development Corporation"
+    url: https://www.michiganbusiness.org
+    what: "The state's economic development agency, behind grants like Match on Main and RAP."

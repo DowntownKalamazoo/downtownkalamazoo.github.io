@@ -161,6 +161,74 @@ If a line has a `#` or a colon followed by a space, put the whole line in double
 
 ---
 
+## Placemaking projects
+
+Each project on the Placemaking page is one file in `content/placemaking`. Each file makes its own page, for example `downtownkalamazoo.us/placemaking/rose-street-plaza.html`. The same instructions are in `content/placemaking/README.md`.
+
+**Update a project** (new funding, a construction date, a photo): open its file, choose the pencil icon, change the top section, and commit.
+
+- `lead`: who leads it: **DEGA**, **DDA**, **DDA & DEGA** or **City**, written exactly like that
+- `funding`: **Fully funded**, **Partially funded** or **Seeking funding**, written exactly like that
+- `stage`: a few words, like **In design**, **Construction approved**, **Under construction** or **Complete**. Leave it blank if there's nothing to say yet.
+- `where`, `timeline`, `design`: plain sentences. Blank ones are left off the page.
+- `order`: where it appears on the Placemaking page. 1 comes first.
+- `links`: copy a `- text:` and `url:` pair to add a link. For a PDF you uploaded to `files`, the url looks like `files/rose-street-plaza-design.pdf`.
+- `image` and `image_alt`: a photo or rendering for the top of the page, uploaded to `files` (a wide JPG under 1 MB). Always describe it in `image_alt`.
+
+Write the project description below the second `---` line, the same way as a news story.
+
+**Add a project:** open `_TEMPLATE.md`, copy it, then choose **Add file → Create new file** in `content/placemaking`. Name it with a few words, like `exchange-alley.md`. The overview counts update on their own.
+
+**Hide a project while you work on it:** add `draft: true` to the top section.
+
+## Investing in downtown (private investment)
+
+Each building or project on the Investing in downtown page (`downtownkalamazoo.us/investment.html`) is one file in `content/investment`. This page is for private investment: restorations, new buildings and other projects by owners and developers. Projects led by the City, the DDA or the DEGA go on the Projects page instead.
+
+**Update one:** open its file, choose the pencil icon, change the top section, and commit.
+
+- `kind`: a few words, like **New development**, **Historic restoration** or **Renovation**
+- `status`: a few words, like **Site plan approved**, **Under construction**, **Planned** or **Complete**
+- `where`: the address
+- `summary`: one or two sentences
+- `order`: where it appears on the page. 1 comes first.
+- `links`: copy a `- text:` and `url:` pair to add a link. A page on this site, like `history.html`, works too.
+- `image` and `image_alt`: a photo or rendering, uploaded to `files` (a wide JPG under 1 MB). Always describe it in `image_alt`.
+
+**Add one:** open `_TEMPLATE.md`, copy it, then choose **Add file → Create new file** in `content/investment` and name it with a few words, like `edison-lofts.md`.
+
+**Remove one:** add `draft: true` to the top section to hide it, or delete the file.
+
+**Projects page cards** (Arcadia Creek, Streets for All and the others) are grouped by who leads them. Each card's `lead=` in `yearround_section.py` is `'DEGA'` or `'City'`.
+
+The Find your space box on the For businesses page counts these projects and links here.
+
+---
+
+## For businesses page
+
+Everything on the For businesses page (`downtownkalamazoo.us/businesses.html`) lives in `content/business-resources.yml`. The notes at the top of that file explain each field. The file has six parts, in the order they appear on the page: `stats`, `tools`, `resources`, `develop`, `research` and `partners`.
+
+**Change something:** open `content/business-resources.yml`, choose the pencil icon, find the entry by its name or title, edit it and commit.
+
+**Add an organization or program:** copy a whole entry, from `- name:` down to its `checked:` line, paste it below the others and change it.
+- `what` is one or two plain sentences. `for` says who it's for, if it's for a particular group.
+- `cost: "Free"` adds a Free tag.
+- `needs` decides which "What do you need?" buttons show it: `start`, `funding`, `advice`, `network`, `space`, `permits`, `customers` or `hiring`. Use as many as fit, like `needs: [start, advice]`.
+- Leave `url: ""` blank for a group with no website. The card then shows the downtown team's email.
+
+**Developer resources** go under `develop:` in the same format, without `needs`. **Plans and studies** go under `research:`. For a PDF you uploaded, the url looks like `files/downtown-plan-2027.pdf`.
+
+**Stats:** every number needs a `source`. A stat waiting on a source keeps `draft: true` and stays off the page. When you find the source, fill in `source`, `source_url` and `as_of`, then delete the `draft: true` line.
+
+**Hide something for now:** add `draft: true` to it.
+
+**Keep it current:** each entry has a `checked:` month, like `checked: 2026-10`. Once a year, open each link, confirm the details and update the month. Entries not checked in 12 months show a yellow warning on the Actions tab. The site still publishes.
+
+If a line has a colon followed by a space, put the whole value in double quotes. If something's off, the Actions tab shows a red X that names the entry and the problem.
+
+---
+
 ## Season switch
 
 When the holidays are over, open `build.py`, find `HOLIDAY_SEASON = True`, and change it to `HOLIDAY_SEASON = False`. The Holidays menu link, homepage banner and footer column go away, and the holiday pages stay online at `/holidays/`.
