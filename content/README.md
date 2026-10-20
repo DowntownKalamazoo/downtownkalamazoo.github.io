@@ -135,6 +135,32 @@ Under `members:`, change a name or `role` after an appointment, and update `boar
 
 ---
 
+## Holiday itineraries (Plan your day)
+
+All 50 plans on the Plan your day page live in one file, `content/itineraries.yml`. Each plan makes its own page, like `downtownkalamazoo.us/holidays/plan/family-afternoon.html`, and shows up in the Plan your day filters. The notes at the top of the file explain every field.
+
+**Change a plan:** open `content/itineraries.yml`, choose the pencil icon, find the plan by its `title`, edit it and commit.
+
+- **Business names link on their own.** Write a name exactly as it appears in the business directory (Sarkozy Bakery, Bell's Eccentric Café) and it links to that business's listing. The plan's "Places on this plan" list, with addresses and phone numbers, fills in from those names too. Holiday events, Santa's Workshop, the Holly Jolly Trolley and Downtown Dollars link the same way.
+- **To link other words**, write `[the words](gifts.html)` with a page on this site, like `gifts.html#foodie` for one gift guide.
+- `budget` is one of `"Free"`, `"$"`, `"$$"` or `"$$$"`, in quotes. `who` and `days` decide which filters the plan appears under.
+- `events` lists the holiday events the plan goes with. Those event pages show the plan under "Make a day of it."
+- `gifts` adds a gift guide link under the plan's stops.
+
+**Add a plan:** copy a whole plan, from `- slug:` down to the line before the next `- slug:`, paste it at the end, and change it. Give it a new `slug` (lowercase words with dashes).
+
+**Hide a plan:** add `draft: true` to it.
+
+**Build your own itinerary** (`holidays/plan/build-your-own.html`) lets visitors pick their own stops from the business directory, the holiday events and a few extras like Santa's Workshop and the trolley. It updates itself when the directory or the events change. The extras are listed in `EXPERIENCES` in `itineraries.py`.
+
+**Parking** prints at the bottom of every plan and every build-your-own itinerary. Edit it under `parking:` near the top of `content/itineraries.yml`.
+
+**Santa's Workshop and trolley hours** are at the top of the same file, under `santa:` and `trolley:`. Each plan's "Your day" box uses them to show the hours for the date someone picks.
+
+If a line has a `#` or a colon followed by a space, put the whole line in double quotes. If something's off, the Actions tab shows a red X that names the plan and the problem.
+
+---
+
 ## Season switch
 
 When the holidays are over, open `build.py`, find `HOLIDAY_SEASON = True`, and change it to `HOLIDAY_SEASON = False`. The Holidays menu link, homepage banner and footer column go away, and the holiday pages stay online at `/holidays/`.
