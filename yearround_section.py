@@ -192,7 +192,7 @@ def build_year_home():
 <section class="section" aria-labelledby="upcoming-title">
   <div class="wrap">
     <div class="section-head">
-      <div><p class="eyebrow">What’s happening</p><h2 class="h2" id="upcoming-title">Something'ss always happening. You might as well be here.</h2></div>
+      <div><p class="eyebrow">What’s happening</p><h2 class="h2" id="upcoming-title">Something's always happening. You might as well be here.</h2></div>
       <a class="btn" href="{{R}}events.html">Full events calendar</a>
     </div>
     {in_short('These are the next few events downtown. Select one to see the details.')}
