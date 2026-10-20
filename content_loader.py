@@ -165,3 +165,26 @@ def ambassador_info():
     return dict(phone=phone, hours=hours,
                 photo=str(data.get('team_photo') or '').strip(),
                 photo_alt=str(data.get('team_photo_alt') or '').strip())
+
+
+# ---------------------------------------------------------------- Placemaking projects
+FUNDING = ['Fully funded', 'Partially funded', 'Seeking funding']
+
+
+def placemaking():
+    """One Markdown file per project in content/placemaking, sorted by `order`."""
+    out = []
+    for p in load('placemaking'):
+        if not p.get('title'):
+            raise ValueError(f'{p["source_file"]}: add a title')
+        if p.get('funding') not in FUNDING:
+            raise ValueError(f'{p["source_file"]}: "funding" should be one of {", ".join(FUNDING)}, not "{p.get("funding")}"')
+        for k in ('stage', 'where', 'summary', 'timeline', 'design', 'image', 'image_alt', 'news'):
+            p[k] = str(p.get(k) or '').strip()
+        p['links'] = [l for l in (p.get('links') or []) if l and l.get('text') and l.get('url')]
+        try:
+            p['order'] = int(p.get('order') or 99)
+        except ValueError:
+            raise ValueError(f'{p["source_file"]}: "order" should be a number, not "{p.get("order")}"')
+        out.append(p)
+    return sorted(out, key=lambda p: (p['order'], p['title']))
