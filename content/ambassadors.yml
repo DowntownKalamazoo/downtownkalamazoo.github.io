@@ -1,11 +1,27 @@
 # Downtown Ambassadors page (ambassadors.html)
 #
-# Two lists live here: the team, and the monthly reports.
+# Three parts live here: hours and contact, the team, and the monthly reports.
 # The spaces at the start of each line matter. Copy an existing entry and keep its spacing.
+
+# ---------------------------------------------------------------- Hours, phone and header photo
+# phone:      the ambassadors' service line, shown at the top of the page with a call button
+# hours:      one line per group of days. Change the times here and the page updates.
+# team_photo: the group photo at the top of the page. Use a wide JPG under 500 KB in files/ambassadors/.
+# team_photo_alt: one sentence describing the photo for people who can't see it.
+
+phone: 269-568-5402
+hours:
+  - days: Sunday – Tuesday
+    time: 8 a.m. – 6:30 p.m.
+  - days: Wednesday – Saturday
+    time: 8 a.m. – 10:30 p.m.
+team_photo: files/ambassadors/ambassadors-team.jpg
+team_photo_alt: Six Downtown Ambassadors in green Downtown Kalamazoo shirts and caps stand arms crossed in a painted blue alley, between two branded cleaning carts.
 
 # ---------------------------------------------------------------- Meet the Ambassadors
 # One entry per ambassador, in the order they should appear.
 #   name:      as they'd like it shown (first name only is fine)
+#   role:      shown under their name (optional), e.g. Operations Manager. Leave blank for ambassadors.
 #   since:     the year they joined (optional)
 #   note:      a short line about them (optional), e.g. "Ask about the best tacos downtown."
 #   photo:     upload a photo to files/ambassadors/ and put its path here, e.g. files/ambassadors/skylar.jpg
@@ -15,9 +31,38 @@
 # To take someone off the page, delete their entry.
 
 team:
-  - name: Skylar Culver
+  - name: Skylar
     since: 2021
     note: Here since the program started, and a familiar face all over downtown.
+    photo: files/ambassadors/skylar.jpg
+    photo_alt: Skylar smiles while pushing a Keeping Downtown Kalamazoo Clean cart down a painted blue alley.
+
+  - name: Marquis
+    photo: files/ambassadors/marquis.jpg
+    photo_alt: Marquis grins, leaning his arms on his Keeping Downtown Kalamazoo Clean cart.
+
+  - name: Zach
+    photo: files/ambassadors/zach.jpg
+    photo_alt: Zach stands behind his cleaning cart in a painted blue alley lined with café tables.
+
+  - name: Baily
+    photo: files/ambassadors/baily.jpg
+    photo_alt: Baily, in a long-sleeved green Downtown Kalamazoo shirt, pushes a cleaning cart under strings of lights.
+
+  - name: Summer
+    photo: files/ambassadors/summer.jpg
+    photo_alt: Summer, in sunglasses and a Downtown Kalamazoo cap, smiles behind her cleaning cart.
+
+  - name: Adam
+    role: Operations Manager
+    photo: files/ambassadors/adam.jpg
+    photo_alt: Adam smiles from the driver's seat of the brightly wrapped Downtown Kalamazoo truck.
+
+  - name: Leandra
+    photo:
+    photo_alt:
+
+  - name: Kevin
     photo:
     photo_alt:
 

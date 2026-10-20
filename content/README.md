@@ -96,11 +96,14 @@ Everything on the Ambassadors page that changes lives in `content/ambassadors.ym
    - `file`: the PDF's path, `files/ambassadors/ambassador-report-2026-08.pdf`
    - `highlights`: one or two short sentences from the report's Highlights page
    - the numbers: copy them from the Total column of the report's "Stats By Zone" page (trash, recycling and litter in pounds, graffiti removed, hospitality assists, gallons of water, snow hours and special project hours)
-4. Commit. The report shows up at the top of the list, and the year's totals and chart update on their own.
+4. Commit. The report shows up first in the Monthly reports section, and the numbers in the ribbon under the page header update on their own.
+
+**Hours, phone and the header photo**
+These are at the top of `content/ambassadors.yml`. Change `phone:` or a line under `hours:` and commit. The call button and hours at the top of the page and the "Need something cleaned up?" box update together. To swap the group photo, upload a wide JPG under 500 KB to `files/ambassadors`, put its path in `team_photo:`, and update `team_photo_alt:` to describe it.
 
 **Meet the Ambassadors**
-- **Add someone:** under `team:`, copy an entry and change the name. `since` and `note` are optional.
-- **Add a photo:** upload it to `files/ambassadors` (a JPG under 500 KB, cropped taller than wide), put its path in `photo:`, and write a short `photo_alt:` description. Until there's a photo, the card shows a brand pattern with their initials.
+- **Add someone:** under `team:`, copy an entry and change the name. `role` (for example, Operations Manager) is optional and shows under their name.
+- **Add a photo:** upload it to `files/ambassadors` (a JPG under 500 KB, cropped taller than wide), put its path in `photo:`, and write a short `photo_alt:` description. Everyone with a photo appears in one line of photos. Until someone has a photo, they're listed by name under "Also on the team."
 - **Remove someone:** delete their entry.
 
 Check with each ambassador before posting their photo and full name. First names are fine.
