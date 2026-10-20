@@ -1,6 +1,7 @@
 ---
 title: Water Street
 order: 3
+lead: DEGA
 funding: Partially funded
 stage:
 where: Water Street, downtown

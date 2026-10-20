@@ -1,6 +1,7 @@
 ---
 title: South Burdick Festival Street
 order: 4
+lead: DEGA
 funding: Partially funded
 stage: In design
 where: Burdick Street, from Lovell Street to Cedar Street

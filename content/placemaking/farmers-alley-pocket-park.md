@@ -1,6 +1,7 @@
 ---
 title: Farmers Alley Pocket Park
 order: 1
+lead: DEGA
 funding: Fully funded
 stage: Construction approved
 where: Farmers Alley, with a link to Bates Alley

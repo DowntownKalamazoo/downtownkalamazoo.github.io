@@ -1,6 +1,7 @@
 ---
 title: Name of the project
 order: 5
+lead: DEGA
 funding: Fully funded
 stage: In design
 where: The street, alley or block

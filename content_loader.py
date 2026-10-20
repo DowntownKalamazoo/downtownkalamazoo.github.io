@@ -169,6 +169,14 @@ def ambassador_info():
 
 # ---------------------------------------------------------------- Placemaking projects
 FUNDING = ['Fully funded', 'Partially funded', 'Seeking funding']
+LEAD = ['City', 'DEGA', 'DDA', 'DDA & DEGA']
+
+
+def _lead(p):
+    lead = str(p.get('lead') or '').strip()
+    if lead and lead not in LEAD:
+        raise ValueError(f'{p["source_file"]}: "lead" should be one of {", ".join(LEAD)}, not "{lead}"')
+    return lead
 
 
 def placemaking():
@@ -180,6 +188,25 @@ def placemaking():
         if p.get('funding') not in FUNDING:
             raise ValueError(f'{p["source_file"]}: "funding" should be one of {", ".join(FUNDING)}, not "{p.get("funding")}"')
         for k in ('stage', 'where', 'summary', 'timeline', 'design', 'image', 'image_alt', 'news'):
+            p[k] = str(p.get(k) or '').strip()
+        p['lead'] = _lead(p)
+        p['links'] = [l for l in (p.get('links') or []) if l and l.get('text') and l.get('url')]
+        try:
+            p['order'] = int(p.get('order') or 99)
+        except ValueError:
+            raise ValueError(f'{p["source_file"]}: "order" should be a number, not "{p.get("order")}"')
+        out.append(p)
+    return sorted(out, key=lambda p: (p['order'], p['title']))
+
+
+# ---------------------------------------------------------------- Investing in downtown
+def investments():
+    """One Markdown file per private investment in content/investment, sorted by `order`."""
+    out = []
+    for p in load('investment'):
+        if not p.get('title'):
+            raise ValueError(f'{p["source_file"]}: add a title')
+        for k in ('kind', 'status', 'where', 'summary', 'image', 'image_alt'):
             p[k] = str(p.get(k) or '').strip()
         p['links'] = [l for l in (p.get('links') or []) if l and l.get('text') and l.get('url')]
         try:

@@ -1,6 +1,7 @@
 ---
 title: Rose Street Plaza
 order: 2
+lead: DEGA
 funding: Fully funded
 stage: Construction approved
 where: Rose Street at Arcadia Creek

@@ -4,6 +4,7 @@ Each project on the Placemaking page is one file in `content/placemaking`. Each 
 
 **Update a project** (new funding, a construction date, a photo): open its file, choose the pencil icon, change the top section, and commit.
 
+- `lead`: who leads it: **DEGA**, **DDA**, **DDA & DEGA** or **City**, written exactly like that
 - `funding`: **Fully funded**, **Partially funded** or **Seeking funding**, written exactly like that
 - `stage`: a few words, like **In design**, **Construction approved**, **Under construction** or **Complete**. Leave it blank if there's nothing to say yet.
 - `where`, `timeline`, `design`: plain sentences. Blank ones are left off the page.
