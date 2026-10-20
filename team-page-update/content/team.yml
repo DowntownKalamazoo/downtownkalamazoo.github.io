@@ -1,0 +1,145 @@
+# Our team page (team.html), and the board list on the DDA & DEGA page
+#
+# The spaces at the start of each line matter. Copy an existing entry and keep its spacing.
+# Anything inside square brackets, like "[Staff name 1]", is a placeholder. Replace it with the real
+# detail, and keep the quotation marks around it.
+
+# ---------------------------------------------------------------- Show or hide the page
+# draft: true keeps the Our team page off the website while you fill it in.
+# Change it to false (or delete the line) when every placeholder is replaced. The page then appears,
+# with links from the About menu, the About page and the footer.
+# The site won't publish the page while any [placeholder] is left. The Actions tab names the one to fix.
+
+draft: false
+
+# ---------------------------------------------------------------- Downtown staff
+# One entry per person, in the order they should appear.
+#   name:          their full name
+#   title:         their job title, e.g. Downtown Coordinator
+#   bio:           optional. One or two sentences about what they lead
+#   pronunciation: optional. How to say their name, e.g. "BAY-mer"
+#   pronouns:      optional. e.g. she/her
+#   handles:       two to four short lines for "Talk to me about"
+#   email:         their work email
+#   phone:         their direct line, e.g. (269) 337-8000. Optional.
+#   photo:         optional. Upload a JPG to files/team/ (cropped taller than wide, about 4:5, under 500 KB)
+#                  and put its path here, e.g. files/team/jane.jpg. Until then, a brand pattern with
+#                  their initials shows instead.
+#   photo_alt:     one sentence describing the photo, e.g. "Jane smiling on the Kalamazoo Mall."
+# Check with each person before posting their photo, email and phone.
+
+staff:
+  - name: Meghan Behymer
+    title: Downtown Coordinator
+    bio: Leads downtown strategy, budgeting and fund development, infrastructure and placemaking initiatives, and business growth efforts. Works with community partners to advance projects, programs, and investments that strengthen Downtown Kalamazoo.
+    pronunciation: ""
+    pronouns: ""
+    handles:
+      - Downtown strategy and budgets
+      - Funding and community partnerships
+      - Projects, placemaking and infrastructure
+      - Business growth
+    email: behymerm@kalamazoocity.org
+    phone: ""
+    photo: ""
+    photo_alt: ""
+
+  - name: Katrina Davidson
+    title: Downtown Projects Coordinator
+    bio: Leads downtown branding, marketing, communications, and event coordination, helping connect people with the businesses, experiences, and happenings that make Downtown Kalamazoo unique.
+    pronunciation: ""
+    pronouns: ""
+    handles:
+      - Marketing and branding
+      - News, media and communications
+      - Events and the downtown calendar
+    email: davidsonk@kalamazoocity.org
+    phone: ""
+    photo: ""
+    photo_alt: ""
+
+# ---------------------------------------------------------------- Who to contact
+# The "Who to contact" list, in order. Each line is something people need, and who to reach for it.
+#   need:   a few words, e.g. Downtown Dollars
+#   detail: one short sentence about what's included
+#   who:    one of these:
+#           - a staff member's name, written exactly as in the staff list above
+#           - Downtown Ambassadors   (shows their call button and hours, from ambassadors.yml)
+#           - DDA & DEGA page        (links to the board page, with the meeting schedule)
+#           - Downtown team          (the general email and phone)
+
+contacts:
+  - need: Events, the calendar and sponsorships
+    detail: Adding an event, or applying for a DDA and DEGA event sponsorship.
+    who: Katrina Davidson
+
+  - need: News, media and marketing
+    detail: Press questions, story ideas, and downtown branding and promotion.
+    who: Katrina Davidson
+
+  - need: Downtown Dollars
+    detail: Buying or redeeming them, or signing your business up to accept them.
+    who: Katrina Davidson
+
+  - need: Opening or growing a downtown business
+    detail: Business support, the Social District, and partnering on downtown programs.
+    who: Meghan Behymer
+
+  - need: Projects, placemaking and investment
+    detail: Plazas, streets and other downtown projects, and investing downtown.
+    who: Meghan Behymer
+
+  - need: Trash, graffiti or a mess downtown
+    detail: Litter, graffiti, spills, or a hand finding your way.
+    who: Downtown Ambassadors
+
+  - need: Board meetings, budgets and reports
+    detail: Agendas, minutes, budgets and the documents the board approves.
+    who: DDA & DEGA page
+
+  - need: Something else
+    detail: Not sure who to ask? Start here and we’ll pass it along.
+    who: Downtown team
+
+# ---------------------------------------------------------------- Office
+# office_hours: optional, e.g. Monday to Friday, 8 a.m. to 5 p.m. Leave blank to show the address only.
+
+office_hours: ""
+
+# ---------------------------------------------------------------- Work downtown
+# Optional. When both are filled in, a "Work downtown" box appears under Get involved.
+#   hiring_text: one sentence, e.g. "Downtown Ambassador and City job openings are posted on the City's jobs page."
+#   hiring_url:  the link, starting with https://
+
+hiring_text: ""
+hiring_url: ""
+
+# ---------------------------------------------------------------- The board
+# This list feeds both the DDA & DEGA page and the Our team page.
+#   board_as_of:        the month and year the list was last checked, e.g. October 2026
+#   show_board_roster:  true shows every member on the Our team page.
+#                       false shows a link to the DDA & DEGA page instead.
+#   members:            one entry per person, in order. role is Chair, Vice Chair, Secretary,
+#                       Treasurer, Member, or something like "Mayor, ex officio".
+
+board_as_of: October 2026
+show_board_roster: true
+members:
+  - name: Curtis Aardema
+    role: Chair
+  - name: Clarence Lloyd
+    role: Vice Chair
+  - name: Trisha Kidd
+    role: Secretary
+  - name: Rick Searing
+    role: Treasurer
+  - name: Connor Sampson
+    role: Member
+  - name: Harvin Sandhu
+    role: Member
+  - name: Stanley Steppes
+    role: Member
+  - name: Cheng Kidd Sun
+    role: Member
+  - name: David Anderson
+    role: Mayor, City Commission liaison
