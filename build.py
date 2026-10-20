@@ -2,8 +2,16 @@
 """Builds the Downtown Kalamazoo holiday site into ./out (full documents, ready to host)
 and ./artifact (same, with index.html stripped to page content for the artifact skeleton)."""
 import html, os, re, shutil, json, datetime as dt
-from holiday_content import EVENTS, PLANS, GIFT_GUIDES, LIBRARY_URL
+from holiday_content import EVENTS, GIFT_GUIDES, LIBRARY_URL
 import directory_page
+# Plan your day itineraries live in content/itineraries.yml (see itineraries.py and plan_section.py).
+import itineraries as IT
+PLANS, SANTA, TROLLEY, PARKING = IT.load(EVENTS)
+# Each holiday event page lists the plans built around it under "Make a day of it".
+for _e in EVENTS:
+    _paired = [p['slug'] for p in PLANS if _e['slug'] in p['events']]
+    if _paired:
+        _e['plans'] = _paired[:4]
 import weave
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -799,60 +807,7 @@ def build_event(i, e):
     page(f'holidays/events/{e["slug"]}.html', e['title'], body, 'holidays', e['summary'])
 
 # ---------------------------------------------------------------- Plans
-def build_plan_index():
-    cards = ''.join(card(f'plan/{p["slug"]}.html', p['tag'], p['title'], p['summary'], p['fill'], 'See the plan') for p in PLANS)
-    body = page_hero([('index.html', 'Home'), ('plan.html', 'Plan your day')], 'Ready-made outings', 'Plan your day',
-                     'Pick an outing, follow the stops, and leave room for the shop window that pulls you in.', 'f-blue')
-    body += f'''<section class="section" aria-labelledby="plans-title">
-  <div class="wrap">
-    <h2 class="sr-only" id="plans-title">Itineraries</h2>
-    {in_short('Each plan is a list of stops with suggested times. Choose the one that fits who you are with and how long you have.')}
-    <ul class="cards">{cards}</ul>
-    <div class="table-wrap" style="margin-top:2.5rem">
-      <table>
-        <caption>Compare the plans</caption>
-        <thead><tr><th scope="col">Plan</th><th scope="col">Best for</th><th scope="col">Time</th><th scope="col">Budget</th></tr></thead>
-        <tbody>{''.join(f'<tr><th scope="row"><a href="{{R}}plan/{p["slug"]}.html">{E(p["title"])}</a></th><td>{E(p["best_for"])}</td><td>{E(p["time"])}</td><td>{E(p["budget"])}</td></tr>' for p in PLANS)}</tbody>
-      </table>
-    </div>
-  </div>
-</section>'''
-    page('holidays/plan.html', 'Plan your day', body, 'holidays', 'Six ready-made itineraries for a holiday day in Downtown Kalamazoo.')
-
-def build_plan(i, p):
-    glance = ''.join(f'<div><dt>{E(k)}</dt><dd>{E(v)}</dd></div>' for k, v in [('Best for', p['best_for']), ('Time', p['time']), ('Budget', p['budget']), ('Best days', p['days'])])
-    stops = ''.join(f'''<li class="stop"><time>{E(s["time"])}</time><div class="body"><h3 class="h3">{s["place"]}</h3><p>{s["what"]}</p>{f'<p class="cost">{E(s["cost"])}</p>' if s.get("cost") else ''}</div></li>''' for s in p['stops'])
-    budget = ''
-    if p.get('budget_table'):
-        rows = ''.join(f'<tr><th scope="row">{E(a)}</th><td class="num">{E(b)}</td></tr>' for a, b in p['budget_table'][:-1])
-        tot = p['budget_table'][-1]
-        budget = f'<div class="table-wrap"><table><caption>A sample budget for two</caption><thead><tr><th scope="col">Item</th><th scope="col" class="num">Cost</th></tr></thead><tbody>{rows}</tbody><tfoot><tr><th scope="row">{E(tot[0])}</th><td class="num">{E(tot[1])}</td></tr></tfoot></table></div>'
-    tips = '<h2 class="h3">Good to know</h2><ul>' + ''.join(f'<li>{t}</li>' for t in p['tips']) + '</ul>' if p.get('tips') else ''
-    evs = ''.join(f'<li><a href="{{R}}events/{s}.html">{E(next(x["title"] for x in EVENTS if x["slug"] == s))}</a> <span class="muted">({E(next(x["when_short"] for x in EVENTS if x["slug"] == s))})</span></li>' for s in p.get('events', []))
-    ev_panel = f'<section class="panel" aria-labelledby="ev-title"><h2 id="ev-title">Works well with</h2><ul>{evs}</ul></section>' if evs else ''
-    others = ''.join(f'<li><a href="{{R}}plan/{x["slug"]}.html">{E(x["title"])}</a></li>' for x in PLANS if x is not p)
-    pc_panel, pc_dialog = postcard_bits(i, p)
-    body = page_hero([('index.html', 'Home'), ('plan.html', 'Plan your day'), (f'plan/{p["slug"]}.html', p['title'])],
-                     E(p['tag']), E(p['title']), E(p['summary']), p['fill'])
-    body += f'''<section class="section" aria-labelledby="glance-title"><div class="wrap"><h2 class="sr-only" id="glance-title">At a glance</h2><dl class="glance">{glance}</dl></div></section>
-<section class="section" style="padding-top:0" aria-labelledby="stops-title">
-  <div class="wrap two-col">
-    <div class="prose" style="max-width:none">
-      {in_short(E(p["plain"]))}
-      <h2 class="h2" id="stops-title">The plan</h2>
-      <ol class="timeline">{stops}</ol>
-      {budget}
-      {tips}
-    </div>
-    <div class="aside">
-      {ev_panel}
-      {GETTING_HERE}
-      {pc_panel}
-      <section class="panel" aria-labelledby="other-title"><h2 id="other-title">Other plans</h2><ul>{others}</ul></section>
-    </div>
-  </div>
-</section>{pc_dialog}'''
-    page(f'holidays/plan/{p["slug"]}.html', p['title'], body, 'holidays', p['summary'])
+# The planner and plan pages are built in plan_section.py.
 
 # ---------------------------------------------------------------- Directory
 def build_directory():
@@ -1381,6 +1336,8 @@ def postcard_bits(i, p):
     return panel, dialog + f'<script type="application/json" id="postcard-data">{data}</script>'
 
 
+exec(open(os.path.join(HERE, 'plan_section.py'), encoding='utf-8').read())
+
 # The permanent, year-round pages live in their own file so they're easier to find and edit.
 exec(open(os.path.join(HERE, 'yearround_section.py'), encoding='utf-8').read())
 
@@ -1404,5 +1361,6 @@ if __name__ == '__main__':
         shutil.copytree(os.path.join(HERE, 'files'), os.path.join(OUT, 'files'), dirs_exist_ok=True, ignore=shutil.ignore_patterns('README.md'))
     for i, e in enumerate(EVENTS): build_event(i, e)
     for i, p in enumerate(PLANS): build_plan(i, p)
+    build_builder()
     n = sum(len(f) for _, _, f in os.walk(OUT))
     print('built', n, 'files')

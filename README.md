@@ -1,23 +1,170 @@
-# Downtown Kalamazoo website
+# How to update the Downtown Kalamazoo website
 
-The source for downtownkalamazoo.us. A small Python script (`build.py`) turns the files here into the website, and GitHub publishes it automatically whenever something changes.
+Everything staff update day to day lives in this `content` folder. You edit it in your web browser on GitHub. There's nothing to install.
 
-- **Staff updates** (news, events, board documents, directory changes): see [`content/README.md`](content/README.md).
-- **Year-round pages:** `yearround_section.py`
-- **Holiday hub** (`/holidays/`): `holiday_content.py` and the holiday builders in `build.py`
-- **Styles and scripts:** `site.css` and `site.js` (included in every page)
-- **Business directory data:** `directory.json`, plus edits in `content/directory-updates.yml`
-- **Brand art** (patterns, wallpapers, coloring pages, QR signs): `make_assets.py` writes `assets_out/`. Run it only when the art changes; it needs `pip install cairosvg segno pypdf pillow`.
+When you save (GitHub calls it **Commit changes**), the site rebuilds and publishes itself in about two minutes. You can watch it happen on the repository's **Actions** tab. A green check means it's live. A red X means something in your file needs fixing, and the site keeps showing the last good version until you fix it.
 
-## Build it on your own computer (optional)
+---
 
-```
-pip install markdown pyyaml
-python build.py
-```
+## Post news, a press release or a feature story
 
-The finished site is in `out/`.
+1. Open the `content/news` folder.
+2. Open `_TEMPLATE.md`, select all the text, and copy it.
+3. Go back to `content/news` and choose **Add file → Create new file**.
+4. Name the file with the date first, then a few words: `2027-01-15-new-bakery-opens.md`
+   The words become the page address: `downtownkalamazoo.us/news/new-bakery-opens.html`
+5. Paste the template, then fill in the top section:
+   - `title`: the headline
+   - `date`: `YYYY-MM-DD`
+   - `type`: **Press release**, **News**, **Feature**, or **In the news** (a story about downtown from another outlet)
+   - `summary`: one or two sentences for the news list
+   - `source` and `source_url`: who published it first, for press releases and outside stories
+6. Write the story below the second `---` line. Leave a blank line between paragraphs.
+7. Choose **Commit changes**.
 
-## Publishing
+**"In the news" items** only need the top section. Leave the story blank and the news list links straight to the outside article.
 
-`.github/workflows/publish.yml` builds and publishes on every commit to `main`, and once a day so date-based lists stay current. In the repository's **Settings → Pages**, **Source** must be set to **GitHub Actions**.
+**To keep something private while you work on it**, add a line `draft: true` to the top section. Remove the line when it's ready.
+
+### Formatting cheat sheet
+
+| You type | You get |
+|---|---|
+| `**bold words**` | **bold words** |
+| `*slanted words*` | *slanted words* |
+| `## A subheading` | a subheading |
+| `- an item` | a bulleted list |
+| `1. a step` | a numbered list |
+| `[link text](https://example.com)` | a link to another website |
+| `[link text](../directory.html)` | a link to a page on this site |
+
+### Adding a photo
+
+1. Open the `files` folder (at the top level of the repository) and choose **Add file → Upload files**. Use a JPG under 1 MB, named simply, like `bakery-opening.jpg`.
+2. In your story's top section, add:
+   ```
+   image: files/bakery-opening.jpg
+   image_alt: The owners cut a ribbon in front of the bakery's new window.
+   ```
+   The `image_alt` sentence describes the photo for people who can't see it. Always include it.
+
+---
+
+## Add an event to the calendar
+
+1. Open `content/events`, copy `_TEMPLATE.md`, and create a new file like `summer-concert.md`.
+2. Fill in `title`, `date`, `time`, `where`, `summary` and `tags`.
+3. For something that happens every month, use `repeats: first friday` (or `second`, `third`, `fourth` or `last`, plus any day) instead of `date`. Add `until:` with the last date, and `skip:` for any dates to leave out.
+4. If you write a description below the second `---` line, the event gets its own page. Otherwise it links to `link`, or to nothing.
+
+Past events drop off the calendar on their own.
+
+**Holiday events** (Find the Holidays Downtown) are kept separately, in `holiday_content.py`. They also appear on the main calendar.
+
+---
+
+## Post a budget, report or other board document
+
+1. Upload the PDF to the `files` folder, or copy its link if it's already on the City's site.
+2. Open `content/documents.yml` and choose the pencil icon to edit.
+3. Copy one of the entries, paste it at the top of the list, and change the title, board, kind, year and url. For an uploaded file, the url looks like `files/dega-budget-2027.pdf`.
+4. Commit. It appears on the DDA & DEGA page.
+
+The spaces at the start of each line matter in this file. Copy an existing entry and keep its spacing.
+
+---
+
+## Update the business directory
+
+Small changes go in `content/directory-updates.yml`:
+
+- **Fix a listing:** under `update:`, add the business's id (the end of its directory link, for example `directory.html#b-rustica` → `rustica`) and the fields to change: `desc`, `website`, `phone`, `address`.
+- **Social District:** add or remove ids in the `social_district:` list.
+- **Add a business:** copy an entry under `add:` and change it. `cat` is one of `shop`, `dine`, `arts`, `services` or `stay`.
+
+---
+
+## Downtown Ambassadors: monthly reports and the team
+
+Everything on the Ambassadors page that changes lives in `content/ambassadors.yml`. The notes at the top of that file explain each field.
+
+**Each month's report**
+1. Open `files/ambassadors` and choose **Add file → Upload files**. Name the PDF `ambassador-report-YYYY-MM.pdf`, for example `ambassador-report-2026-08.pdf`.
+2. Open `content/ambassadors.yml` and choose the pencil icon.
+3. Under `reports:`, copy the top entry (from `- month:` down to `project_hours:`), paste it above itself, and change it:
+   - `month`: `2026-08`
+   - `file`: the PDF's path, `files/ambassadors/ambassador-report-2026-08.pdf`
+   - `highlights`: one or two short sentences from the report's Highlights page
+   - the numbers: copy them from the Total column of the report's "Stats By Zone" page (trash, recycling and litter in pounds, graffiti removed, hospitality assists, gallons of water, snow hours and special project hours)
+4. Commit. The report shows up first in the Monthly reports section, and the numbers in the ribbon under the page header update on their own.
+
+**Hours, phone and the header photo**
+These are at the top of `content/ambassadors.yml`. Change `phone:` or a line under `hours:` and commit. The call button and hours at the top of the page and the "Need something cleaned up?" box update together. To swap the group photo, upload a wide JPG under 500 KB to `files/ambassadors`, put its path in `team_photo:`, and update `team_photo_alt:` to describe it.
+
+**Meet the Ambassadors**
+- **Add someone:** under `team:`, copy an entry and change the name. `role` (for example, Operations Manager) is optional and shows under their name.
+- **Add a photo:** upload it to `files/ambassadors` (a JPG under 500 KB, cropped taller than wide), put its path in `photo:`, and write a short `photo_alt:` description. Everyone with a photo appears in one line of photos. Until someone has a photo, they're listed by name under "Also on the team."
+- **Remove someone:** delete their entry.
+
+Check with each ambassador before posting their photo and full name. First names are fine.
+
+---
+
+## Our team page and the board list
+
+Everything on the Our team page lives in `content/team.yml`. The notes at the top of that file explain each field. The same file holds the board list, which also appears on the DDA & DEGA page.
+
+**Turn the page on**
+The page stays hidden while the file says `draft: true`. Replace every placeholder in square brackets, like `"[Staff name 1]"`, with the real detail, then change the line to `draft: false` and commit. The page appears at `downtownkalamazoo.us/team.html`, with links from the About menu, the About page and the footer. If any `[placeholder]` is left, the Actions tab shows a red X naming it, and the site keeps the last good version.
+
+**Staff**
+- **Update someone:** change their `title`, `handles` (the "Talk to me about" lines), `email` or `phone` and commit. Each person also gets a "Save contact card" link that builds itself from these details.
+- **Add a photo:** upload a JPG to `files/team` (cropped taller than wide, under 500 KB), put its path in `photo:`, and describe it in `photo_alt:`. Until then, their initials show on a brand pattern.
+- **Name and pronouns:** `pronunciation` and `pronouns` are optional. Leave them as `""` to skip them.
+- **Add or remove someone:** copy or delete a whole entry under `staff:`.
+
+Check with each person before posting their photo, email and phone.
+
+**Who to contact**
+Each entry under `contacts:` is one line of the list: what people need (`need`), a short `detail`, and `who` to reach. `who` is a staff member's name written exactly as in the staff list, or one of **Downtown Ambassadors**, **DDA & DEGA page** or **Downtown team**. If someone's responsibilities change, change the name next to that line.
+
+**The board**
+Under `members:`, change a name or `role` after an appointment, and update `board_as_of:` to the month you checked. Both pages update together. Set `show_board_roster: false` to show a link to the DDA & DEGA page on the Our team page instead of the full list.
+
+**Optional extras:** `office_hours` adds hours to the "Visit the office" box. `hiring_text` and `hiring_url` together add a "Work downtown" box.
+
+---
+
+## Holiday itineraries (Plan your day)
+
+All 50 plans on the Plan your day page live in one file, `content/itineraries.yml`. Each plan makes its own page, like `downtownkalamazoo.us/holidays/plan/family-afternoon.html`, and shows up in the Plan your day filters. The notes at the top of the file explain every field.
+
+**Change a plan:** open `content/itineraries.yml`, choose the pencil icon, find the plan by its `title`, edit it and commit.
+
+- **Business names link on their own.** Write a name exactly as it appears in the business directory (Sarkozy Bakery, Bell's Eccentric Café) and it links to that business's listing. The plan's "Places on this plan" list, with addresses and phone numbers, fills in from those names too. Holiday events, Santa's Workshop, the Holly Jolly Trolley and Downtown Dollars link the same way.
+- **To link other words**, write `[the words](gifts.html)` with a page on this site, like `gifts.html#foodie` for one gift guide.
+- `budget` is one of `"Free"`, `"$"`, `"$$"` or `"$$$"`, in quotes. `who` and `days` decide which filters the plan appears under.
+- `events` lists the holiday events the plan goes with. Those event pages show the plan under "Make a day of it."
+- `gifts` adds a gift guide link under the plan's stops.
+
+**Add a plan:** copy a whole plan, from `- slug:` down to the line before the next `- slug:`, paste it at the end, and change it. Give it a new `slug` (lowercase words with dashes).
+
+**Hide a plan:** add `draft: true` to it.
+
+**Build your own itinerary** (`holidays/plan/build-your-own.html`) lets visitors pick their own stops from the business directory, the holiday events and a few extras like Santa's Workshop and the trolley. It updates itself when the directory or the events change. The extras are listed in `EXPERIENCES` in `itineraries.py`.
+
+**Parking** prints at the bottom of every plan and every build-your-own itinerary. Edit it under `parking:` near the top of `content/itineraries.yml`.
+
+**Santa's Workshop and trolley hours** are at the top of the same file, under `santa:` and `trolley:`. Each plan's "Your day" box uses them to show the hours for the date someone picks.
+
+If a line has a `#` or a colon followed by a space, put the whole line in double quotes. If something's off, the Actions tab shows a red X that names the plan and the problem.
+
+---
+
+## Season switch
+
+When the holidays are over, open `build.py`, find `HOLIDAY_SEASON = True`, and change it to `HOLIDAY_SEASON = False`. The Holidays menu link, homepage banner and footer column go away, and the holiday pages stay online at `/holidays/`.
+
+## Something went wrong?
+
+Open the **Actions** tab, select the run with the red X, and read the error. It usually names the file and the line. The most common causes are a missing `---` line, a date that isn't written as `YYYY-MM-DD`, or a colon inside a title. Put the title in quotes, like `title: "Downtown: what's new"`.

@@ -1,0 +1,992 @@
+# Plan your day: the holiday itineraries (downtownkalamazoo.us/holidays/plan.html)
+#
+# Each plan below becomes its own page, like holidays/plan/family-afternoon.html, and shows up in the
+# Plan your day filters. Copy a whole plan (from "- slug:" down to the next one) to add a new one.
+#
+# slug:          the page address. Lowercase words with dashes. Don't change it once a plan is live.
+# title:         the plan's name
+# summary:       one sentence for the plan's card and the top of its page
+# best_for:      who it suits, in plain words
+# time:          about how long it takes
+# budget:        per person, in quotes: "Free", "$" (under $25), "$$" ($25 to $60) or "$$$" (over $60)
+# who:           the "Who's coming?" filters it appears under. Any of:
+#                families, couples, friends, adults, teens, solo, visitors, pets
+# days:          the days it works, as mon tue wed thu fri sat sun, or "all"
+# when:          one line about the best days or dates
+# events:        holiday events it pairs with (the end of the event's page address, like tree-lighting).
+#                The plan is listed under "Make a day of it" on those event pages.
+# gifts:         optional. Adds a gift guide link: all, art-lover, foodie, kids, host, stocking or experiences
+# steps:         the stops, in order. Business names that match the directory link to their listing
+#                automatically, and so do holiday event names, Santa's Workshop and the Holly Jolly Trolley.
+#                To link other words, write [the words](gifts.html) with a page on this site.
+# holiday:       the holiday tie-in, one line
+# before_you_go: one line on what to check first
+# draft: true    hides a plan while you work on it
+#
+# If a line has a # or a colon followed by a space in it, put the whole line in double quotes,
+# like the two steps below that end with #SomethingNewKalamazoo.
+#
+# The slug build-your-own is taken by the build-your-own itinerary page.
+#
+# Santa's Workshop and Holly Jolly Trolley hours, used by the "When are you going?" box on each plan.
+# Each line is days: hours. Dates are written as YYYY-MM-DD.
+santa:
+  name: Santa's Workshop
+  where: City Centre, second floor, 125 S. Kalamazoo Mall
+  opens: 2026-11-28
+  closes: 2026-12-24
+  hours:
+    thu: 5 to 8 p.m.
+    fri: 5 to 8 p.m.
+    sat: Noon to 6 p.m.
+    sun: Noon to 4 p.m.
+  special:
+    2026-11-28: Noon to 6 p.m. (opening day)
+    2026-12-21: 5 to 8 p.m.
+    2026-12-22: 5 to 8 p.m.
+    2026-12-23: 5 to 8 p.m.
+    2026-12-24: Noon to 4 p.m.
+trolley:
+  name: Holly Jolly Trolley
+  where: Leaves from City Hall, 241 W. South St.
+  opens: 2026-11-27
+  closes: 2026-12-24
+  hours:
+    thu: 5 to 9 p.m.
+    fri: 5 to 9 p.m.
+    sat: Noon to 7 p.m.
+    sun: Noon to 4 p.m.
+  special:
+    2026-12-21: 5 to 9 p.m.
+    2026-12-22: 5 to 9 p.m.
+    2026-12-23: 5 to 9 p.m.
+    2026-12-24: Noon to 4 p.m.
+    2026-12-31: 6 to 11 p.m.
+
+# Parking and getting here. Prints at the bottom of every plan and every build-your-own itinerary.
+# Each line under items is one bullet. Keep them short. Put a line in double quotes if it has a colon in it.
+parking:
+  title: Parking and getting here
+  items:
+    - "Ramps: the first 90 minutes are free in the Epic Center and Kalamazoo Mall parking ramps."
+    - "Street parking: $2 an hour in the core of downtown and $1.50 an hour on surrounding streets. Meters are enforced starting at 10 a.m."
+    - Pay at a kiosk with coins or a card, or with the ParkMobile app.
+    - The free Holly Jolly Trolley leaves City Hall, 241 W. South St., Thursday to Sunday through Dec. 24, and on Dec. 31.
+    - "Accessible parking, rides and places to rest: downtownkalamazoo.us/access-guide.html"
+  more: "Maps and updates at parkkalamazoo.org. Ramp questions: Park Kalamazoo, (269) 342-6383."
+
+plans:
+- slug: family-afternoon
+  title: A family holiday afternoon
+  summary: Santa, a downtown photo hunt and a warm treat, paced for little legs.
+  best_for: Families with young kids
+  time: About 4 hours
+  budget: "Free"
+  who: [families]
+  days: [thu, fri, sat, sun]
+  when: Thursday to Sunday while Santa's Workshop is open, from Nov. 28
+  events: [small-business-saturday, gingerbread-wonderland]
+  gifts: kids
+  steps:
+    - Start at Santa's Workshop in City Centre (125 S. Kalamazoo Mall, second floor) for a visit with Santa, a letter to Santa, or a craft.
+    - Pick up a holiday photo scavenger hunt card at the workshop and look for the signature holiday items around downtown.
+    - "Take family photos at a downtown selfie station and share them with #SomethingNewKalamazoo."
+    - Warm up with a treat from Sarkozy Bakery or Cherri's Chocol'art.
+  holiday: Santa's Workshop, the holiday photo scavenger hunt and selfie stations
+  before_you_go: Check Santa's Workshop hours for the day you're going.
+
+- slug: friday-night
+  title: A Friday night downtown
+  summary: Dinner, a show and a nightcap, all a few blocks apart.
+  best_for: Couples and friends
+  time: About 5 hours
+  budget: "$$$"
+  who: [couples, friends, adults]
+  days: [fri]
+  when: Friday evenings. Art Hop is Nov. 6 and Dec. 4.
+  events: [first-friday-nov, first-friday-dec]
+  steps:
+    - Start with dinner at 600 Kitchen and Bar, Principle Food & Drink, or Rustica.
+    - Catch a performance at the Kalamazoo State Theatre, Civic Theatre, or Farmers Alley Theatre. Check current listings.
+    - Finish with drinks at Bell's Eccentric Café, Brewery Outré, or The Kalamazoo Stillhouse.
+  holiday: First Friday & Art Hop, or another Friday in the season
+  before_you_go: Confirm showtimes, make dinner reservations, and check event hours.
+
+- slug: shop-small
+  title: Shop small and dine local
+  summary: A full day of locally owned shops, with lunch and dinner in between.
+  best_for: Gift shoppers
+  time: Most of a day
+  budget: "$$"
+  who: [friends, solo, adults, families]
+  days: all
+  when: Any day. Best on Small Business Saturday, Nov. 28.
+  events: [small-business-saturday, moonlight-madness]
+  gifts: all
+  steps:
+    - Browse gifts at Kalamazoo Candle Company, Kalamazoo Dry Goods, LUXE Gift Shop & Boutique, Stewart & Company, and K'zoo in the Mitten.
+    - Find something playful at Rocket Fizz, Uncle Buddy's Toy Stash, Pop City Popcorn, or Kalamazoo Antique Mall.
+    - Pause for lunch at City Centre Market and Deli, Caffe Casa, or Water Street Coffee Joint.
+    - End with dinner at Bimbo's Pizza, Maru Sushi & Grill, or Toba Sushi and Ramen.
+  holiday: Shop Small Saturday, Nov. 28
+  before_you_go: Check each shop's hours, especially on Sundays.
+
+- slug: arts-evening
+  title: An arts and culture evening
+  summary: Galleries, a maker studio and a curtain call on a First Friday.
+  best_for: Art and theater lovers
+  time: About 5 hours
+  budget: "$$"
+  who: [couples, friends, adults, solo]
+  days: [fri]
+  when: First Fridays, Nov. 6 and Dec. 4
+  events: [first-friday-nov, first-friday-dec, new-years-fest]
+  gifts: art-lover
+  steps:
+    - Visit First Friday & Art Hop galleries and creative spaces.
+    - Explore art and maker experiences at Glass Art Kalamazoo, Combat Ready Art, or Kalamazoo Book Arts Center.
+    - See a performance at Farmers Alley Theatre, Civic Theatre, or Crawlspace Comedy Theatre.
+    - Finish with a late bite or drink at Old Dog Tavern or Shakespeare's Pub.
+  holiday: First Friday & Art Hop, Nov. 6 and Dec. 4
+  before_you_go: Check which venues are on this month's Art Hop list, and get show tickets ahead.
+
+- slug: under-50
+  title: Holiday experiences under $50
+  summary: Photo stops, holiday windows and a shared treat, with money left over.
+  best_for: Anyone on a budget
+  time: Half a day
+  budget: "Free"
+  who: [families, couples, friends, solo, visitors]
+  days: all
+  when: Any day. Add Santa's Workshop Thursday to Sunday.
+  events: [tree-lighting, december-to-remember, holiday-parade]
+  gifts: stocking
+  steps:
+    - Make a free holiday photo stop at a selfie station, or take part in the photo scavenger hunt.
+    - Browse holiday windows and small shops such as K'zoo in the Mitten, Rocket Fizz, and Kalamazoo Dry Goods.
+    - Share a coffee or bakery treat at Factory Coffee Shop, Caffe Casa, or Sarkozy Bakery.
+    - Look for free holiday programming or public art before heading home.
+  holiday: Santa's Workshop, the holiday photo scavenger hunt and selfie stations
+  before_you_go: The $50 is a guide, not a promise. Prices and event details vary.
+
+- slug: last-minute
+  title: A last-minute downtown outing
+  summary: Two easy hours for a gift, a quick meal and a look at the lights.
+  best_for: Last-minute planners
+  time: About 2 hours
+  budget: "$"
+  who: [solo, friends, couples, adults]
+  days: all
+  when: Any day, right up to Christmas Eve
+  events: [small-business-saturday]
+  gifts: stocking
+  steps:
+    - Choose one easy stop. Rocket Fizz for a fun browse, Kalamazoo Candle Company for a gift, or Cherri's Chocol'art for a sweet treat.
+    - Grab a quick meal at Benny DiCarta's, Coney Island Hot Dogs, or City Centre Market and Deli.
+    - Take a short walk along the Kalamazoo Mall to enjoy the decorations and snap a photo.
+  holiday: Holiday shopping. Downtown Dollars arrive by email, so they work as a gift even on Christmas Eve.
+  before_you_go: Check business hours before heading out.
+
+- slug: sparkle-date
+  title: A holiday date with a little sparkle
+  summary: Jewelry browsing, a nice dinner and a stroll under the lights.
+  best_for: Couples
+  time: 3 to 4 hours
+  budget: "$$$"
+  who: [couples]
+  days: all
+  when: Any evening. The trolley runs Thursday to Sunday.
+  gifts: all
+  steps:
+    - Browse jewelry at Nord Jewelers or Morrison Jewelers, and gifts at The Aroma Labs.
+    - Enjoy dinner at ROCA, Comensoli's, or 600 Kitchen and Bar.
+    - Take an evening stroll along the Kalamazoo Mall to see the decorations, and see if the Holly Jolly Trolley is running.
+  holiday: Holly Jolly Trolley, Nov. 27 to Dec. 24 and Dec. 31
+  before_you_go: Book dinner ahead and check shop hours.
+
+- slug: coffee-and-browsing
+  title: A cozy coffee and browsing day
+  summary: Good coffee, unhurried shops and something sweet for the walk.
+  best_for: Friends and solo visitors
+  time: 2 to 3 hours
+  budget: "$"
+  who: [friends, solo]
+  days: all
+  when: Any day
+  events: [first-friday-dec]
+  gifts: all
+  steps:
+    - Start with coffee at Water Street Coffee Joint, Factory Coffee Shop, or Caffe Casa.
+    - Browse books and creative finds at Kalamazoo Book Arts Center, Kalamazoo Dry Goods, or Stewart & Company.
+    - Pick up a sweet treat at Sarkozy Bakery or Cherri's Chocol'art.
+    - Take a few holiday photos along the Kalamazoo Mall.
+  holiday: First Friday & Art Hop, or a visit to the holiday selfie stations
+  before_you_go: Check shop hours.
+
+- slug: kids-craft-day
+  title: A kids' holiday craft day
+  summary: Crafts and a letter to Santa at his workshop, then a bakery snack.
+  best_for: Families with school-age kids
+  time: 2 to 4 hours
+  budget: "Free"
+  who: [families]
+  days: [thu, fri, sat, sun]
+  when: Thursday to Sunday. Ornament making Sat., Dec. 12. Holiday cards Sat., Dec. 19.
+  events: [small-business-saturday]
+  steps:
+    - Visit Santa's Workshop during its open hours.
+    - Choose a craft, or plan around ornament making on Saturday, Dec. 12, or holiday cards on Saturday, Dec. 19.
+    - Write a letter to Santa. Letters with a return address you can read get a reply through Dec. 15.
+    - Take a photo at a selfie station and enjoy a snack from Sarkozy Bakery.
+  holiday: Santa's Workshop. Ornament making Dec. 12 and holiday cards Dec. 19.
+  before_you_go: Check Santa's hours and the themed activity dates.
+
+- slug: pet-friendly
+  title: A pet-friendly holiday outing
+  summary: Pets with Santa, a pet shop stop and a coffee for you.
+  best_for: Pet owners
+  time: 2 to 3 hours
+  budget: "$"
+  who: [pets, families]
+  days: all
+  when: Any day. Pets with Santa is Saturday, Dec. 5.
+  events: [small-business-saturday]
+  steps:
+    - Visit Santa's Workshop for Pets with Santa on Saturday, Dec. 5.
+    - Browse pet supplies at Beowoof Provisions for Pets.
+    - Take a holiday photo around downtown. Keep pets leashed and respect each business's policies.
+    - Stop for coffee at Water Street Coffee Joint or Caffe Casa.
+  holiday: Pets with Santa at Santa's Workshop, Saturday, Dec. 5
+  before_you_go: Check the event details and each business's pet policy.
+
+- slug: theater-night
+  title: A holiday night for theater fans
+  summary: Dinner near the theater, a show, and a drink to talk it over.
+  best_for: Theater lovers
+  time: 4 to 5 hours
+  budget: "$$$"
+  who: [couples, friends, adults]
+  days: [thu, fri, sat, sun]
+  when: Show nights. Check the theater calendars.
+  events: [first-friday-dec, moonlight-madness]
+  gifts: experiences
+  steps:
+    - Start with dinner at Rustica, Principle Food & Drink, or Comensoli's.
+    - See a performance at Farmers Alley Theatre or Civic Theatre.
+    - Continue the evening with a drink at Bell's Eccentric Café or Old Dog Tavern.
+  holiday: First Friday & Art Hop or Moonlight Madness
+  before_you_go: Pick a show from the current theater calendar. Tickets aren't included in the budget.
+
+- slug: foodie
+  title: A foodie's downtown holiday
+  summary: Pastries, spice-shop gifts, lunch and dinner. Bring an appetite.
+  best_for: Food lovers
+  time: Half a day
+  budget: "$$$"
+  who: [couples, friends, adults]
+  days: all
+  when: Any day
+  events: [small-business-saturday, moonlight-madness]
+  gifts: foodie
+  steps:
+    - Begin with coffee and a pastry at Sarkozy Bakery or Factory Coffee Shop.
+    - Browse Kalamazoo Spice and Tea Merchants for food gifts.
+    - Have lunch at PFC Natural Grocery & Deli, Maru Sushi & Grill, or Toba Sushi and Ramen.
+    - Finish with dinner or a seasonal drink at Dabney & Co, Principle Food & Drink, or Bell's Eccentric Café.
+  holiday: Shop Small Saturday or Moonlight Madness
+  before_you_go: It's a lot of food. Skip a stop if you need to.
+
+- slug: handmade
+  title: A handmade and maker-focused route
+  summary: Glass, art, candles and books made by people who live here.
+  best_for: Shoppers who love handmade goods
+  time: 3 to 4 hours
+  budget: "$$"
+  who: [friends, solo, adults, couples]
+  days: all
+  when: Any day. Extra open doors on Art Hop Fridays.
+  events: [first-friday-nov, first-friday-dec]
+  gifts: art-lover
+  steps:
+    - Explore creative gifts and art at Glass Art Kalamazoo, Combat Ready Art, and Kalamazoo Book Arts Center.
+    - Look for locally made or distinctive finds at The Aroma Labs, Kalamazoo Candle Company, and Stewart & Company.
+    - Take a break at Caffe Casa or Factory Coffee Shop.
+  holiday: First Friday & Art Hop
+  before_you_go: Check studio and store hours, and whether any demonstrations are scheduled.
+
+- slug: teens
+  title: A holiday outing for teens
+  summary: Candy, popcorn, a climbing wall and pizza. Phones encouraged.
+  best_for: Teens and families
+  time: About 3 hours
+  budget: "$"
+  who: [teens, families, friends]
+  days: all
+  when: Any day
+  events: [small-business-saturday]
+  gifts: kids
+  steps:
+    - Browse fun gifts and candy at Rocket Fizz, Pop City Popcorn, and Uncle Buddy's Toy Stash.
+    - Try climbing at Climb Kalamazoo. Book ahead and check age rules.
+    - Grab pizza at Bimbo's Pizza or a quick bite at Benny DiCarta's.
+    - Take group photos at a holiday selfie station.
+  holiday: Holiday photo stations and Shop Small Saturday
+  before_you_go: Check climbing reservations, age rules and business hours.
+
+- slug: girls-day
+  title: A girls' day downtown
+  summary: A salon or spa visit, boutiques, lunch and chocolate.
+  best_for: Friends
+  time: 4 to 5 hours
+  budget: "$$$"
+  who: [friends, adults]
+  days: all
+  when: Any day. Book appointments ahead.
+  events: [small-business-saturday, moonlight-madness]
+  gifts: all
+  steps:
+    - Book a service at Blush Salon & Spa, Honore Salon, or The Aroma Labs.
+    - Browse fashion and accessories at Lana's Boutique, Kalamazoo Fashion House, and LUXE Gift Shop & Boutique.
+    - Enjoy lunch at 600 Kitchen and Bar or WL Social House.
+    - Finish with a sweet treat from Cherri's Chocol'art.
+  holiday: Shop Small Saturday or Moonlight Madness
+  before_you_go: Confirm appointments and shop hours.
+
+- slug: gift-mission
+  title: A guys' gift-finding mission
+  summary: Ties, shoes, coins and collectibles, then lunch and done.
+  best_for: Gift shoppers
+  time: 2 to 4 hours
+  budget: "$$"
+  who: [friends, solo, adults]
+  days: all
+  when: Any day
+  events: [small-business-saturday]
+  gifts: all
+  steps:
+    - Look for apparel and accessories at C's Perfect Tie, Kalamazoo Sportswear & Regalia, and Okun Brothers Shoes.
+    - Browse collectibles at JP Coins & Collectibles or vintage finds at Kalamazoo Antique Mall.
+    - Pick up a practical or playful gift at Rocket Fizz or Uncle Buddy's Toy Stash.
+    - Wrap up with lunch at Louie's Trophy House or The HUB Tavern and Grill.
+  holiday: Shop Small Saturday
+  before_you_go: Check stock and store hours.
+
+- slug: wellness-reset
+  title: A wellness reset
+  summary: A class, a massage and a nourishing lunch, away from the holiday rush.
+  best_for: Wellness-minded visitors
+  time: 3 to 4 hours
+  budget: "$$$"
+  who: [solo, friends, adults]
+  days: all
+  when: Any day. Weekdays are quieter.
+  gifts: experiences
+  steps:
+    - Start with a class or appointment at Urban Asanas or Counterpoint Pilates Studio.
+    - Book a massage or wellness service at Harmonic Massage & Wellness, Unwind Massage and Stretch, or Inspiring Hands Massage & Spa.
+    - Enjoy a nourishing lunch at PFC Natural Grocery & Deli or Just Fresh.
+    - Browse tea at Kalamazoo Spice and Tea Merchants.
+  holiday: A quieter weekday holiday outing
+  before_you_go: Book classes and appointments ahead. Prices vary.
+
+- slug: lights-and-trolley
+  title: A holiday lights and trolley evening
+  summary: Ride the free trolley, warm up, and end with a photo under the lights.
+  best_for: Families, couples and visitors
+  time: 2 to 4 hours
+  budget: "$"
+  who: [families, couples, visitors]
+  days: [thu, fri, sat, sun]
+  when: Thursday to Sunday, Nov. 27 to Dec. 24, and Dec. 31
+  events: [tree-lighting, december-to-remember, new-years-fest]
+  steps:
+    - Check the Holly Jolly Trolley schedule and stops before you plan your route.
+    - Start at City Hall on South Street and ride to stops that may include Santa's Workshop on the Kalamazoo Mall and Bates Alley.
+    - Get a warm drink at a nearby café, or have dinner at a downtown restaurant.
+    - Finish with a holiday photo on the Kalamazoo Mall.
+  holiday: Holly Jolly Trolley, Nov. 27 to Dec. 24 and Dec. 31
+  before_you_go: Trolley stops can change. Check service times and the route.
+
+- slug: sbs-challenge
+  title: A Small Business Saturday challenge
+  summary: Make a list, set some rules, and see who shops smallest.
+  best_for: Friends and competitive shoppers
+  time: 3 to 5 hours
+  budget: "$$"
+  who: [friends, families]
+  days: [sat]
+  when: Small Business Saturday, Nov. 28
+  events: [small-business-saturday]
+  gifts: stocking
+  steps:
+    - Make a gift list and visit at least four locally owned shops, such as Kalamazoo Candle Company, LUXE Gift Shop & Boutique, Rocket Fizz, and Stewart & Company.
+    - Find one gift under $15 and one gift for someone who's hard to shop for.
+    - Stop for lunch at City Centre Market and Deli or Caffe Casa.
+    - Look for the Downtown Dollars giveaway and the holiday shopping bag.
+  holiday: Shop Small Saturday, Nov. 28
+  before_you_go: Check giveaway rules and which businesses are taking part. Bags are available while supplies last.
+
+- slug: grandparents-and-grandkids
+  title: A holiday outing for grandparents and grandkids
+  summary: Santa, a photo hunt, toys and a relaxed café break.
+  best_for: Multigenerational families
+  time: 3 to 4 hours
+  budget: "Free"
+  who: [families, visitors]
+  days: [thu, fri, sat, sun]
+  when: Thursday to Sunday while Santa's Workshop is open
+  events: [small-business-saturday, gingerbread-wonderland]
+  gifts: kids
+  steps:
+    - Visit Santa's Workshop during its open hours.
+    - Complete part of the holiday photo scavenger hunt.
+    - Browse toys at Uncle Buddy's Toy Stash and sweets at Cherri's Chocol'art.
+    - Take a relaxed café break at Sarkozy Bakery or Factory Coffee Shop.
+  holiday: Santa's Workshop and the holiday photo scavenger hunt
+  before_you_go: Check Santa's hours and activity times.
+
+- slug: local-flavor
+  title: A local flavor gift tour
+  summary: Spices, popcorn, chocolate and coffee. Gifts that taste like Kalamazoo.
+  best_for: Food gift shoppers
+  time: 2 to 3 hours
+  budget: "$"
+  who: [solo, friends, couples, adults]
+  days: all
+  when: Any day
+  events: [small-business-saturday]
+  gifts: foodie
+  steps:
+    - Shop for spices and tea at Kalamazoo Spice and Tea Merchants.
+    - Pick up popcorn at Pop City Popcorn and chocolates at Cherri's Chocol'art.
+    - Add coffee or baked goods from Water Street Coffee Joint or Sarkozy Bakery.
+    - Finish with a meal at Bell's Eccentric Café or City Centre Market and Deli.
+  holiday: Shop Small Saturday and holiday gift shopping
+  before_you_go: Products and hours change through the season.
+
+- slug: vintage-hunt
+  title: A vintage and one-of-a-kind hunt
+  summary: Thrift, antiques, coins and boutiques for the gift nobody else has.
+  best_for: Vintage lovers and collectors
+  time: 3 to 4 hours
+  budget: "$$"
+  who: [friends, solo, couples]
+  days: all
+  when: Any day
+  events: [small-business-saturday, moonlight-madness]
+  gifts: all
+  steps:
+    - Browse vintage and secondhand finds at Great Lakes Thrift Co and Kalamazoo Antique Mall.
+    - Explore collectibles at JP Coins & Collectibles.
+    - Look for distinctive clothing and accessories at Kalamazoo Fashion House or Lana's Boutique.
+    - Take a break at Old Dog Tavern or Caffe Casa.
+  holiday: Shop Small Saturday or Moonlight Madness
+  before_you_go: Inventory changes often. Check each shop's hours.
+
+- slug: photo-op-tour
+  title: A downtown photo-op tour
+  summary: Selfie stations, holiday scenery and a drink to post with.
+  best_for: Content creators, families and friends
+  time: 1 to 3 hours
+  budget: "Free"
+  who: [families, friends, teens, solo]
+  days: all
+  when: Any day. The lights are best after dark.
+  steps:
+    - Visit the holiday selfie stations around downtown.
+    - Stop by the Kalamazoo Stoop if its holiday setup is out.
+    - Explore the Kalamazoo Mall and Bates Alley for holiday scenery.
+    - "Grab a drink at Rocket Fizz or a coffee from Water Street Coffee Joint, and share your photos with #SomethingNewKalamazoo."
+  holiday: Holiday selfie stations and decorations
+  before_you_go: Selfie station locations are posted for the season. Be mindful of people and businesses in your shots.
+
+- slug: live-entertainment
+  title: A holiday evening for live entertainment
+  summary: Dinner, a show, and dessert or a drink after.
+  best_for: Music and entertainment fans
+  time: 3 to 5 hours
+  budget: "$$"
+  who: [couples, friends, adults]
+  days: [thu, fri, sat, sun]
+  when: Show nights. Check the venue calendars.
+  events: [first-friday-dec, moonlight-madness, new-years-fest]
+  gifts: experiences
+  steps:
+    - Check current listings for the Kalamazoo State Theatre, Crawlspace Comedy Theatre, or Civic Theatre.
+    - Have dinner before the show at Bimbo's Pizza, Maru Sushi & Grill, or Principle Food & Drink.
+    - Finish with a drink or dessert after the show at Bell's Eccentric Café or Dessert First.
+  holiday: First Friday & Art Hop or Moonlight Madness
+  before_you_go: Check show times and buy tickets ahead.
+
+- slug: solo-day
+  title: A low-key solo holiday day
+  summary: Your own pace, your own coffee, and a good meal at the end.
+  best_for: Solo explorers
+  time: 2 to 4 hours
+  budget: "$"
+  who: [solo]
+  days: all
+  when: Any day
+  events: [small-business-saturday]
+  gifts: all
+  steps:
+    - Start with a warm drink at Factory Coffee Shop or Caffe Casa.
+    - Browse Kalamazoo Dry Goods, Stewart & Company, and The Aroma Labs at your own pace.
+    - Explore public art and holiday displays along the Kalamazoo Mall.
+    - End with a meal at Rustica or City Centre Market and Deli.
+  holiday: Shop Small Saturday and holiday decorations
+  before_you_go: Check hours, and book dinner if you'd like a table.
+
+- slug: book-and-art-lovers
+  title: A holiday outing for book and art lovers
+  summary: Book arts, glass art and gift shops, with coffee in the middle.
+  best_for: Readers and creatives
+  time: 3 to 4 hours
+  budget: "$"
+  who: [solo, friends, couples]
+  days: all
+  when: Any day. First Fridays add Art Hop.
+  events: [first-friday-nov, first-friday-dec]
+  gifts: art-lover
+  steps:
+    - Browse creative offerings at Kalamazoo Book Arts Center and art at Glass Art Kalamazoo.
+    - Look for gifts at Stewart & Company and Kalamazoo Candle Company.
+    - Have coffee at Caffe Casa or Water Street Coffee Joint.
+    - If the timing works, go during First Friday & Art Hop.
+  holiday: First Friday & Art Hop, Nov. 6 and Dec. 4
+  before_you_go: Check venue hours.
+
+- slug: candy-and-soda
+  title: A playful candy and soda crawl
+  summary: Rocket Fizz, popcorn and a toy store. Sugar rush included.
+  best_for: Kids, teens and candy fans
+  time: 1 to 2 hours
+  budget: "$"
+  who: [families, teens]
+  days: all
+  when: Any day
+  events: [small-business-saturday]
+  gifts: stocking
+  steps:
+    - Start at Rocket Fizz for unusual candy and soda.
+    - Pick up popcorn at Pop City Popcorn.
+    - Choose a toy or small gift at Uncle Buddy's Toy Stash.
+    - Take a fun photo at a holiday selfie station.
+  holiday: Shop Small Saturday and holiday photo stations
+  before_you_go: Check store hours.
+
+- slug: dinner-and-dessert
+  title: A downtown dinner-and-dessert date
+  summary: A reservation, a walk through the lights, and something sweet to share.
+  best_for: Couples
+  time: About 3 hours
+  budget: "$$$"
+  who: [couples]
+  days: all
+  when: Any evening. Tree Lighting week is extra pretty.
+  events: [tree-lighting]
+  steps:
+    - Book dinner at ROCA, Rustica, or Comensoli's.
+    - Take an evening walk through downtown's holiday displays.
+    - Share a dessert from Dessert First or chocolates from Cherri's Chocol'art.
+  holiday: Tree Lighting Ceremony week, Nov. 27
+  before_you_go: Make reservations and check holiday hours.
+
+- slug: with-your-dog
+  title: A holiday outing with your dog
+  summary: A pet shop, a photo with Santa, and a coffee to go.
+  best_for: Dog owners
+  time: 2 to 3 hours
+  budget: "$"
+  who: [pets]
+  days: all
+  when: Any day. Pets with Santa is Saturday, Dec. 5.
+  events: [small-business-saturday]
+  steps:
+    - Visit Beowoof Provisions for Pets for supplies and gift ideas.
+    - Bring your dog to Pets with Santa at Santa's Workshop on Saturday, Dec. 5.
+    - Take an outdoor holiday photo and stop for a coffee at Water Street Coffee Joint.
+    - Stop only where pets are welcome, on a patio or inside.
+  holiday: Pets with Santa, Saturday, Dec. 5
+  before_you_go: Check event details and each business's pet policy.
+
+- slug: staycation
+  title: A holiday staycation
+  summary: A night downtown with shopping, dinner, a show and breakfast.
+  best_for: Regional visitors and locals
+  time: Full day
+  budget: "$$$"
+  who: [visitors, couples, families]
+  days: all
+  when: Any day. Match your stay to an event.
+  events: [holiday-parade, tree-lighting, first-friday-dec]
+  gifts: all
+  steps:
+    - Plan a downtown stay at The Radisson Hotel, Hilton Garden Inn Downtown/Home2 Suites, The Desenberg, or Kalamazoo House Bed and Breakfast.
+    - Spend the afternoon [shopping at local boutiques and gift shops](gifts.html).
+    - Have dinner at 600 Kitchen and Bar, Principle Food & Drink, or Rustica.
+    - See a show or a holiday event, then have breakfast or coffee downtown the next morning.
+  holiday: First Friday & Art Hop, the Holiday Parade, or Tree Lighting
+  before_you_go: Check room rates and availability, and event tickets.
+
+- slug: parade-day
+  title: A parade-day family plan
+  summary: Curbside for the parade, then the after-party on the Kalamazoo Mall.
+  best_for: Families and visitors
+  time: 4 to 6 hours
+  budget: "Free"
+  who: [families, visitors]
+  days: [sat]
+  when: Saturday, Nov. 21
+  events: [holiday-parade, after-parade]
+  steps:
+    - Arrive early and pick a viewing spot for the Fox Motors Maple Hill Holiday Parade, 11 a.m. to 12:30 p.m.
+    - Explore the after-parade activities, noon to 3 p.m.
+    - Grab lunch at Bimbo's Pizza, Coney Island Hot Dogs, or City Centre Market and Deli.
+    - Browse a few nearby shops before heading home.
+  holiday: Fox Motors Maple Hill Holiday Parade and after-parade activities, Saturday, Nov. 21
+  before_you_go: Check the official schedule and street closures.
+
+- slug: tree-lighting-evening
+  title: A Tree Lighting evening
+  summary: The tree lighting in Bronson Park, the lights, and dinner after.
+  best_for: Families, couples and visitors
+  time: 3 to 4 hours
+  budget: "Free"
+  who: [families, couples, visitors]
+  days: [fri]
+  when: Friday, Nov. 27
+  events: [tree-lighting]
+  steps:
+    - Arrive for the Tree Lighting Ceremony, 5 to 7 p.m.
+    - Explore the nearby decorations and take photos.
+    - See if the Holly Jolly Trolley is running that evening.
+    - Warm up with dinner or a drink at Bell's Eccentric Café, Bimbo's Pizza, or Caffe Casa.
+  holiday: Tree Lighting Ceremony, Friday, Nov. 27, 5 to 7 p.m.
+  before_you_go: Check event details, trolley service and restaurant hours.
+
+- slug: first-friday-art-hop
+  title: A First Friday holiday art hop
+  summary: Galleries, shops and studios open late, then dinner downtown.
+  best_for: Art lovers and friends
+  time: 3 to 4 hours
+  budget: "$"
+  who: [friends, couples, adults, solo]
+  days: [fri]
+  when: Nov. 6, 5 to 9 p.m., and Dec. 4, 5 to 8 p.m.
+  events: [first-friday-nov, first-friday-dec]
+  gifts: art-lover
+  steps:
+    - Arrive for First Friday & Art Hop. Nov. 6 runs 5 to 9 p.m. and Dec. 4 runs 5 to 8 p.m.
+    - Explore participating galleries, shops and creative spaces.
+    - Add a visit to Glass Art Kalamazoo, Combat Ready Art, or Kalamazoo Book Arts Center if they're open.
+    - Finish with dinner at Dabney & Co or drinks at Bell's Eccentric Café.
+  holiday: First Friday & Art Hop, Nov. 6 and Dec. 4
+  before_you_go: Check the dates, hours and participating venues.
+
+- slug: moonlight-madness-night
+  title: A Moonlight Madness shopping night
+  summary: Shops open late, dinner in the middle, and a last drink.
+  best_for: Night shoppers and friends
+  time: 3 to 5 hours
+  budget: "$$"
+  who: [friends, adults, couples]
+  days: [sat]
+  when: Saturday, Dec. 12, 6 to 11 p.m.
+  events: [moonlight-madness]
+  gifts: all
+  steps:
+    - Plan an evening shopping route through Kalamazoo Candle Company, LUXE Gift Shop & Boutique, Stewart & Company, and Rocket Fizz.
+    - Take a break for dinner at 600 Kitchen and Bar, WL Social House, or Maru Sushi & Grill.
+    - Go back to shopping, or end with a drink at a participating business.
+  holiday: Moonlight Madness, Saturday, Dec. 12, 6 to 11 p.m.
+  before_you_go: Check which shops are open late.
+
+- slug: gingerbread-outing
+  title: A Gingerbread Wonderland outing
+  summary: Gingerbread creations, a photo hunt and a sweet stop.
+  best_for: Families and holiday fans
+  time: 2 to 4 hours
+  budget: "Free"
+  who: [families, visitors]
+  days: all
+  when: Any day, Dec. 5 to 21
+  events: [gingerbread-wonderland]
+  gifts: kids
+  steps:
+    - Plan your visit during Gingerbread Wonderland, Dec. 5 to 21.
+    - Pair it with the holiday photo scavenger hunt or a selfie station.
+    - Browse nearby shops such as Uncle Buddy's Toy Stash, Rocket Fizz, or Kalamazoo Candle Company.
+    - Enjoy a treat at Sarkozy Bakery or Cherri's Chocol'art.
+  holiday: Gingerbread Wonderland, Dec. 5 to 21
+  before_you_go: Check display locations and hours.
+
+- slug: december-to-remember-evening
+  title: A December to Remember evening
+  summary: An early bite, hot cocoa in Bronson Park, and the lights after.
+  best_for: Families and holiday visitors
+  time: 2 to 3 hours
+  budget: "Free"
+  who: [families, visitors]
+  days: [thu]
+  when: Thursday, Dec. 10
+  events: [december-to-remember]
+  steps:
+    - Plan for December to Remember, 5:30 to 6:30 p.m.
+    - Arrive early for a coffee or quick meal at Caffe Casa or City Centre Market and Deli.
+    - Explore the holiday displays and nearby businesses afterward.
+  holiday: December to Remember, Thursday, Dec. 10, 5:30 to 6:30 p.m.
+  before_you_go: Check event details and location.
+
+- slug: new-years-eve
+  title: A New Year's Eve downtown plan
+  summary: Dinner, New Year's Fest and a trolley ride to midnight.
+  best_for: Couples and friends
+  time: Evening
+  budget: "$$$"
+  who: [couples, friends, adults]
+  days: [thu]
+  when: Thursday, Dec. 31
+  events: [new-years-fest]
+  steps:
+    - Check the details for New Year's Fest, 6 p.m. to midnight.
+    - Start with dinner at Rustica, ROCA, or 600 Kitchen and Bar.
+    - Enjoy the festivities, and ride the Holly Jolly Trolley's special New Year's Eve run, 6 to 11 p.m.
+  holiday: New Year's Fest and the Holly Jolly Trolley's New Year's Eve run
+  before_you_go: Check the lineup, admission and trolley details.
+
+- slug: shopping-sprint
+  title: A holiday shopping sprint
+  summary: Three stops, a stocking stuffer and coffee for the walk.
+  best_for: Busy shoppers
+  time: 90 minutes to 2 hours
+  budget: "$"
+  who: [solo, friends, adults]
+  days: all
+  when: Any day
+  events: [small-business-saturday]
+  gifts: all
+  steps:
+    - Make a short list and focus on three stops. Kalamazoo Candle Company, K'zoo in the Mitten, and LUXE Gift Shop & Boutique.
+    - Add a quick candy or stocking-stuffer stop at Rocket Fizz.
+    - Pick up coffee from Factory Coffee Shop for the walk between shops.
+  holiday: Shop Small Saturday, or any weekday holiday shopping trip
+  before_you_go: Check store hours.
+
+- slug: gifts-for-the-home
+  title: A gifts for the home route
+  summary: Candles, fireside finds and vintage pieces for the person who hosts.
+  best_for: Home décor shoppers
+  time: 2 to 3 hours
+  budget: "$$"
+  who: [solo, couples, friends]
+  days: all
+  when: Any day
+  events: [small-business-saturday]
+  gifts: host
+  steps:
+    - Browse home and gift finds at Fireplace & Grill Shoppe, Kalamazoo Candle Company, and The Aroma Labs.
+    - Look for vintage pieces at Kalamazoo Antique Mall or Great Lakes Thrift Co.
+    - Pause for coffee at Water Street Coffee Joint.
+  holiday: Shop Small Saturday and holiday gift shopping
+  before_you_go: Check stock and hours.
+
+- slug: fashion-route
+  title: A fashion and accessories route
+  summary: Boutiques, jewelers and a tailor, with lunch between.
+  best_for: Fashion-focused shoppers
+  time: 2 to 4 hours
+  budget: "$$$"
+  who: [friends, solo, adults]
+  days: all
+  when: Any day
+  events: [small-business-saturday, moonlight-madness]
+  gifts: all
+  steps:
+    - Browse clothing at Lana's Boutique and Kalamazoo Fashion House.
+    - Look for accessories at Morrison Jewelers or Nord Jewelers.
+    - Visit Golden Needle Tailor Shop or Kalamazoo Custom Tailoring for alterations. Ask about turnaround times.
+    - Take a lunch break at WL Social House or 600 Kitchen and Bar.
+  holiday: Shop Small Saturday or Moonlight Madness
+  before_you_go: Tailoring times and holiday hours vary.
+
+- slug: creative-afternoon
+  title: A creative afternoon with friends
+  summary: Make something together, then dinner and a drink.
+  best_for: Creative adults
+  time: 3 to 4 hours
+  budget: "$$$"
+  who: [friends, adults, couples]
+  days: all
+  when: Any day. Book a workshop ahead.
+  events: [first-friday-dec]
+  gifts: experiences
+  steps:
+    - Book a creative experience at Colors & Cocktails or Glass Art Kalamazoo.
+    - Browse art and handmade finds at Combat Ready Art.
+    - Enjoy dinner at Brewery Outré, Bell's Eccentric Café, or Old Dog Tavern.
+  holiday: First Friday & Art Hop
+  before_you_go: Confirm workshops, reservations, age rules and holiday hours.
+
+- slug: music-fans
+  title: A holiday outing for music fans
+  summary: A concert at the State Theatre with dinner before.
+  best_for: Music lovers
+  time: 3 to 5 hours
+  budget: "$$$"
+  who: [friends, couples, adults]
+  days: [thu, fri, sat, sun]
+  when: Concert nights. Check the State Theatre calendar.
+  events: [new-years-fest, first-friday-dec]
+  gifts: experiences
+  steps:
+    - Check the Kalamazoo State Theatre calendar for concerts and holiday performances.
+    - Browse for music gifts and local merchandise at downtown shops.
+    - Have dinner at Bell's Eccentric Café, The Kalamazoo Stillhouse, or Bimbo's Pizza.
+  holiday: First Friday & Art Hop, or a holiday concert
+  before_you_go: Check venue listings and buy tickets ahead.
+
+- slug: history-and-museum
+  title: A local-history and museum afternoon
+  summary: A free museum, downtown architecture and a few antiques.
+  best_for: Curious visitors and families
+  time: 2 to 4 hours
+  budget: "Free"
+  who: [families, visitors, solo]
+  days: all
+  when: Any day the museum is open
+  events: [holiday-parade, first-friday-dec]
+  steps:
+    - Check hours and exhibits at the Kalamazoo Valley Museum.
+    - Explore downtown architecture and public spaces on foot.
+    - Browse Kalamazoo Antique Mall or JP Coins & Collectibles.
+    - Stop for a snack at Sarkozy Bakery or Factory Coffee Shop.
+  holiday: Holiday Parade weekend or First Friday & Art Hop
+  before_you_go: Check museum hours and exhibits.
+
+- slug: rainy-day
+  title: A cozy rainy-day downtown plan
+  summary: Coffee, indoor shops, a climbing wall and a warm dinner.
+  best_for: Couples, friends and solo visitors
+  time: 3 to 4 hours
+  budget: "$$"
+  who: [couples, friends, solo, teens]
+  days: all
+  when: Any day the weather won't cooperate
+  steps:
+    - Start with coffee at Factory Coffee Shop or Caffe Casa.
+    - Browse indoor shops including Kalamazoo Dry Goods, Kalamazoo Antique Mall, and Stewart & Company.
+    - Choose an indoor activity at Climb Kalamazoo or a creative studio.
+    - Have dinner at Maru Sushi & Grill, Toba Sushi and Ramen, or Rustica.
+  holiday: Santa's Workshop or First Friday & Art Hop, depending on the day
+  before_you_go: Check reservations and hours.
+
+- slug: lunch-break
+  title: A downtown lunch-break gift run
+  summary: Lunch, one gift and back to your desk in an hour.
+  best_for: Downtown employees
+  time: 45 to 75 minutes
+  budget: "$"
+  who: [solo, adults]
+  days: [mon, tue, wed, thu, fri]
+  when: Weekdays
+  gifts: stocking
+  steps:
+    - Pick up lunch from City Centre Market and Deli, Just Fresh, or Caffe Casa.
+    - Visit one nearby shop for a quick gift. Rocket Fizz, Kalamazoo Candle Company, or Cherri's Chocol'art.
+    - Save a few minutes for the decorations on the Kalamazoo Mall.
+  holiday: A weekday lunch-break gift run
+  before_you_go: Pick stops near your work and check opening hours.
+
+- slug: treat-crawl
+  title: A holiday treat crawl
+  summary: Bakery, chocolates, candy, popcorn and coffee. Pace yourself.
+  best_for: Sweet-tooth fans
+  time: 1 to 3 hours
+  budget: "$"
+  who: [families, friends, teens, couples]
+  days: all
+  when: Any day
+  events: [small-business-saturday]
+  gifts: stocking
+  steps:
+    - Start with a baked good at Sarkozy Bakery.
+    - Pick up chocolates from Cherri's Chocol'art.
+    - Browse candy and soda at Rocket Fizz.
+    - Add popcorn from Pop City Popcorn and a coffee from Water Street Coffee Joint.
+  holiday: Shop Small Saturday and holiday shopping
+  before_you_go: It's a tasting route. Share, and skip a stop if you need to.
+
+- slug: comedy-night
+  title: A holiday evening for comedy fans
+  summary: Pizza, a comedy show and a drink after.
+  best_for: Friends and couples
+  time: 3 to 4 hours
+  budget: "$$$"
+  who: [friends, couples, adults]
+  days: [thu, fri, sat, sun]
+  when: Show nights. Check the Crawlspace calendar.
+  events: [first-friday-dec]
+  gifts: experiences
+  steps:
+    - Find a show at Crawlspace Comedy Theatre.
+    - Eat beforehand at Bimbo's Pizza, Benny DiCarta's, or The HUB Tavern and Grill.
+    - Finish with a drink at Old Dog Tavern or Bell's Eccentric Café.
+  holiday: First Friday & Art Hop, or another holiday-season evening
+  before_you_go: Check show times and buy tickets ahead.
+
+- slug: brunch-and-browse
+  title: A festive brunch and browse
+  summary: A late breakfast, gift shops and a photo on the Mall.
+  best_for: Friends and families
+  time: 3 to 4 hours
+  budget: "$$"
+  who: [friends, families]
+  days: [sat, sun]
+  when: Weekend mornings
+  events: [small-business-saturday]
+  gifts: all
+  steps:
+    - Start with brunch at a downtown restaurant such as 600 Kitchen and Bar or WL Social House.
+    - Browse gift shops such as LUXE Gift Shop & Boutique, Stewart & Company, and Kalamazoo Candle Company.
+    - Take holiday photos along the Kalamazoo Mall.
+    - Pick up a sweet treat at Cherri's Chocol'art.
+  holiday: Shop Small Saturday and holiday shopping
+  before_you_go: Check brunch hours and book a table.
+
+- slug: out-of-town-guests
+  title: A holiday outing for out-of-town guests
+  summary: Show off downtown with coffee, local shops, lunch and an event.
+  best_for: Hosting visiting guests
+  time: Half a day
+  budget: "$$"
+  who: [visitors, families, friends]
+  days: all
+  when: Any day. Plan around an event if you can.
+  events: [holiday-parade, tree-lighting, first-friday-dec]
+  gifts: all
+  steps:
+    - Start with coffee at Water Street Coffee Joint or Factory Coffee Shop.
+    - Show your guests local shops like Kalamazoo Dry Goods, K'zoo in the Mitten, and Kalamazoo Antique Mall.
+    - Have lunch at Principle Food & Drink, Bimbo's Pizza, or Maru Sushi & Grill.
+    - Finish with a holiday event or a show, if one is on.
+  holiday: First Friday & Art Hop, Holiday Parade weekend, or Tree Lighting
+  before_you_go: Build around the date and check event listings.
+
+- slug: local-makers
+  title: A holiday route for local makers
+  summary: Gifts from Kalamazoo makers, a stroll down the Mall, and coffee.
+  best_for: Support-local shoppers
+  time: 2 to 4 hours
+  budget: "$$"
+  who: [solo, friends, couples, adults]
+  days: all
+  when: Any day. First Fridays add Art Hop.
+  events: [first-friday-nov, first-friday-dec, small-business-saturday]
+  gifts: art-lover
+  steps:
+    - Visit The Aroma Labs, Kalamazoo Candle Company, Glass Art Kalamazoo, and Kalamazoo Book Arts Center for distinctive gifts.
+    - Browse more [local businesses](directory.html) on the Kalamazoo Mall.
+    - Stop for coffee at Caffe Casa or Water Street Coffee Joint.
+  holiday: First Friday & Art Hop or Shop Small Saturday
+  before_you_go: Check products and hours, and whether any makers are giving demonstrations.
