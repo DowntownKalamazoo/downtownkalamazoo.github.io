@@ -1024,3 +1024,66 @@ a[href^="tel:"] { white-space: nowrap; }
 .amb-rep .amb-rep-link { margin: 0; gap: .5rem .8rem; }
 .amb-rep .meta { font-family: var(--font-ui); font-size: .8125rem; color: var(--muted); }
 .amb-hl ul { margin: .4rem 0 0; padding-left: 1.1rem; font-size: .95rem; display: grid; gap: .3rem; }
+
+/* Our team (team.html) */
+.jump { margin-top: 1.25rem; }
+.jump .chip { background: var(--bg); }
+.org-map { display: flex; flex-wrap: wrap; gap: 1rem; align-items: stretch; }
+.org-board { flex: 2 1 30rem; min-width: 0; border: 2px solid var(--fg); border-radius: 12px; padding: 1rem; display: grid; gap: .75rem; align-content: start; }
+.org-k { font-family: var(--font-ui); font-weight: 800; font-size: .8125rem; letter-spacing: .08em; text-transform: uppercase; }
+.org-pair { display: flex; flex-wrap: wrap; gap: .75rem; }
+.org-card { flex: 1 1 13rem; min-width: 0; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--bg); }
+.org-card .card-top { min-height: 0; font-size: 1.6rem; line-height: 1; padding: .85rem 1rem; }
+.org-card .card-body p { font-size: 1rem; }
+.org-city { flex: 1 1 15rem; align-self: center; }
+.org-city .card-top { font-size: 1.15rem; }
+.org-link { flex: 0 1 8rem; display: grid; place-items: center; align-content: center; gap: .35rem; text-align: center; font-family: var(--font-ui); font-weight: 700; font-size: .8125rem; line-height: 1.3; padding: .5rem 0; }
+@media (max-width: 860px) { .org-link { flex-basis: 100%; } .org-link svg { transform: rotate(90deg); margin-block: 1.4rem; } }
+
+.who-list { list-style: none; padding: 0; margin: 0; border-top: 2px solid var(--fg); }
+.who { display: flex; flex-wrap: wrap; gap: .5rem 2rem; padding-block: 1.15rem; border-bottom: 1px solid var(--line); }
+.who-need { flex: 1 1 18rem; min-width: 0; display: grid; gap: .25rem; align-content: start; }
+.who-need h3 { font-size: 1.25rem; line-height: 1.25; }
+.who-need p { font-size: 1rem; }
+.who-reach { flex: 1 1 21rem; min-width: 0; display: grid; gap: .3rem; align-content: start; }
+.who-name { font-weight: 700; }
+.who-small { font-size: .95rem; }
+.who-strong { font-weight: 700; }
+.copy-row { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .75rem; }
+.copy-row a { overflow-wrap: anywhere; }
+
+.team-band { background: var(--surface); border-block: 1px solid var(--line); }
+.staff-list { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 1.25rem; }
+.staff { flex: 1 1 28rem; min-width: 0; display: flex; flex-wrap: wrap; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.staff-pic { flex: 1 1 11rem; max-width: 14rem; min-height: 15rem; margin: 0; background: var(--accent); position: relative; overflow: hidden; }
+.staff-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+@media (max-width: 520px) { .staff-pic { max-width: none; flex-basis: 100%; min-height: 0; aspect-ratio: 16 / 9; } .staff-pic .amb-initials { width: 30%; } }
+.staff-body { flex: 999 1 15rem; min-width: 0; padding: 1.1rem 1.25rem 1.25rem; display: grid; gap: .75rem; align-content: start; border-top: 6px solid var(--accent); }
+.staff-id { display: grid; gap: .1rem; }
+.staff-name { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; font-size: 1.25rem; line-height: 1.15; }
+.staff-title { font-weight: 600; }
+.staff-say { font-family: var(--font-ui); font-weight: 600; font-size: .8125rem; color: var(--muted); }
+.staff-bio { font-size: 1rem; }
+.staff-handles { display: grid; gap: .25rem; }
+.staff-handles h4 { font-family: var(--font-ui); font-weight: 800; font-size: .8125rem; letter-spacing: .06em; text-transform: uppercase; margin: 0; }
+.staff-handles ul { padding-inline-start: 1.1rem; font-size: 1rem; }
+.staff-reach { display: grid; gap: .2rem; border-top: 1px solid var(--line); padding-top: .75rem; }
+.staff-card-link { font-family: var(--font-ui); font-weight: 700; font-size: .875rem; margin-top: .25rem; }
+
+.board-list { list-style: none; padding: 0; margin: 0 0 .75rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: .75rem; }
+.board-list li { min-width: 0; border: 1px solid var(--line); border-radius: var(--radius); padding: .85rem 1rem; display: grid; gap: .35rem; align-content: start; background: var(--bg); }
+.board-name { font-weight: 700; font-size: 1.1rem; line-height: 1.25; }
+.board-role { font-family: var(--font-ui); font-weight: 600; font-size: .8125rem; }
+.board-go { display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: center; justify-content: space-between; }
+.board-go > div { flex: 999 1 22rem; display: grid; gap: .35rem; }
+
+.team-amb { display: flex; flex-wrap: wrap; gap: 1.75rem 2.5rem; align-items: center; }
+.team-amb-photo { flex: 1 1 27rem; min-width: 0; width: 100%; max-width: 38rem; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 12px; display: block; }
+.team-amb-text { flex: 1 1 21rem; min-width: 0; display: grid; gap: .75rem; }
+
+.involve-row { display: flex; flex-wrap: wrap; gap: 1rem; }
+.involve { flex: 1 1 15rem; min-width: 0; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: grid; gap: .5rem; align-content: start; padding: 0 1.1rem 1.15rem; background: var(--bg); }
+.involve::before { content: ""; display: block; height: 10px; margin-inline: -1.1rem; margin-bottom: .5rem; background: var(--accent); }
+.involve h3 { font-family: var(--font-ui); font-weight: 800; font-size: .95rem; letter-spacing: .04em; text-transform: uppercase; }
+.involve p { font-size: 1rem; }
+.involve p:last-child { font-weight: 600; }

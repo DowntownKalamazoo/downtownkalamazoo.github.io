@@ -98,6 +98,8 @@ PROGRAMS = [
     ('boards.html', 'DDA & DEGA', 'The boards that invest in downtown, with their budgets, reports and meetings.', 'f-mist', 'stripes'),
     ('history.html', 'History', 'From the Village of Bronson to the nation’s first pedestrian mall.', 'f-blue', 'quilt'),
 ]
+if TEAM_LIVE:
+    PROGRAMS.insert(0, ('team.html', 'Our team', 'The City staff who serve the DDA and DEGA, the board, and who to contact for what.', 'f-pink', 'loops'))
 
 
 def program_card(href, title, text, fill, pat, heading='h3'):
@@ -455,9 +457,9 @@ def build_history():
 
 
 # ---------------------------------------------------------------- DDA & DEGA
-BOARD = [('Curtis Aardema', 'Chair'), ('Clarence Lloyd', 'Vice Chair'), ('Trisha Kidd', 'Secretary'), ('Rick Searing', 'Treasurer'),
-         ('Connor Sampson', 'Member'), ('Harvin Sandhu', 'Member'), ('Stanley Steppes', 'Member'), ('Cheng Kidd Sun', 'Member'),
-         ('David Anderson', 'Mayor, City Commission liaison')]
+# The board list lives in content/team.yml, shared with the Our team page.
+TEAM = CL.team()
+BOARD = [(m['name'], m['role']) for m in TEAM['members']]
 
 
 def build_boards():
@@ -495,7 +497,7 @@ def build_boards():
 
       <h2 class="h2" id="board-title" style="margin-top:2rem">The board</h2>
       <p>One board of nine members serves both authorities. A majority must have an interest in property in the downtown district, at least one must live in the district, and the mayor serves ex officio. Terms are four years, with a limit of two in a row.</p>
-      <div class="table-wrap"><table><caption>DDA and DEGA board members, October 2026</caption><thead><tr><th scope="col">Name</th><th scope="col">Role</th></tr></thead><tbody>{rows}</tbody></table></div>
+      <div class="table-wrap"><table><caption>DDA and DEGA board members{(", " + E(TEAM["board_as_of"])) if TEAM["board_as_of"] else ""}</caption><thead><tr><th scope="col">Name</th><th scope="col">Role</th></tr></thead><tbody>{rows}</tbody></table></div>
       <p class="muted">A City of Kalamazoo downtown coordinator serves as staff liaison to the board.</p>
 
       <h2 class="h2" id="spon-title" style="margin-top:2rem">Event &amp; marketing sponsorships</h2>
@@ -1118,6 +1120,214 @@ def build_business_resources():
     page('businesses.html', 'Business resources', body, 'businesses', 'Grants, permits, programs and contacts for businesses in downtown Kalamazoo.')
 
 
+# ---------------------------------------------------------------- Our team
+GENERAL_PHONE = '(269) 337-8000'
+STAFF_FILLS = ['f-blue', 'f-green', 'f-pink', 'f-red']
+STAFF_PATTERNS = ['dots', 'arcs', 'loops', 'confetti']
+NUMBER_WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
+
+
+def _slug(text):
+    return re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-') or 'contact'
+
+
+def _vcard_text(v):
+    return v.replace('\\', '\\\\').replace(',', '\\,').replace(';', '\\;')
+
+
+def write_vcard(p):
+    """A contact card people can save to their phone or address book: out/team/<name>.vcf"""
+    parts = p['name'].split()
+    first, last = (' '.join(parts[:-1]), parts[-1]) if len(parts) > 1 else (p['name'], '')
+    lines = ['BEGIN:VCARD', 'VERSION:3.0', f'FN:{_vcard_text(p["name"])}', f'N:{_vcard_text(last)};{_vcard_text(first)};;;',
+             f'TITLE:{_vcard_text(p["title"])}', 'ORG:City of Kalamazoo;Downtown Kalamazoo', f'EMAIL;TYPE=WORK:{p["email"]}']
+    if p['phone']:
+        lines.append(f'TEL;TYPE=WORK,VOICE:{_tel(p["phone"])}')
+    lines += ['ADR;TYPE=WORK:;;241 W. South St.;Kalamazoo;MI;49007;USA', f'URL:{SITE_URL}team.html', 'END:VCARD']
+    path = f'team/{_slug(p["name"])}.vcf'
+    os.makedirs(os.path.join(OUT, 'team'), exist_ok=True)
+    with open(os.path.join(OUT, path), 'w', newline='') as f:
+        f.write('\r\n'.join(lines) + '\r\n')
+    return path
+
+
+def copy_row(email, whose, strong=False):
+    link = f'<a href="mailto:{E(email)}"{" class=\"who-strong\"" if strong else ""}>{E(email)}</a>'
+    return (f'<p class="copy-row">{link} <button type="button" class="btn btn-small btn-quiet" data-copy="{E(email)}" '
+            f'aria-label="Copy email for {E(whose)}">Copy email</button></p>')
+
+
+def staff_card(p, i):
+    fill = STAFF_FILLS[i % len(STAFF_FILLS)]
+    pat = STAFF_PATTERNS[i % len(STAFF_PATTERNS)]
+    if p['photo']:
+        pic = f'<img src="{{R}}{E(p["photo"])}" alt="{E(p["photo_alt"])}" loading="lazy" width="400" height="500">'
+    else:
+        pic = (f'<div class="amb-ph" style="background-image:url({{R}}pattern-{pat}.webp)" aria-hidden="true">'
+               f'<span class="amb-initials">{E(_initials(p["name"]))}</span></div>')
+    say = [f'Say it: {E(p["pronunciation"])}'] if p['pronunciation'] else []
+    say += [E(p['pronouns'])] if p['pronouns'] else []
+    say = f'<p class="staff-say">{" · ".join(say)}</p>' if say else ''
+    bio = f'<p class="staff-bio">{E(p["bio"])}</p>' if p['bio'] else ''
+    handles = ''.join(f'<li>{E(h)}</li>' for h in p['handles'])
+    handles = f'<div class="staff-handles"><h4>Talk to me about</h4><ul>{handles}</ul></div>' if handles else ''
+    phone = f'<p><a href="tel:{_tel(p["phone"])}">{E(p["phone"])}</a></p>' if p['phone'] else ''
+    card = write_vcard(p)
+    return f'''<li class="staff {fill}">
+        <figure class="staff-pic">{pic}</figure>
+        <div class="staff-body">
+          <div class="staff-id"><h3 class="staff-name">{E(p["name"])}</h3><p class="staff-title">{E(p["title"])}</p>{say}</div>
+          {bio}
+          {handles}
+          <div class="staff-reach">
+            {copy_row(p["email"], p["name"])}
+            {phone}
+            <p class="staff-card-link"><a href="{{R}}{card}" download>Save contact card<span class="sr-only"> for {E(p["name"])}</span></a></p>
+          </div>
+        </div>
+      </li>'''
+
+
+def who_reach(who, staff_by_name, amb):
+    if who in staff_by_name:
+        p = staff_by_name[who]
+        phone = f'<p><a href="tel:{_tel(p["phone"])}">{E(p["phone"])}</a></p>' if p['phone'] else ''
+        return f'<p class="who-name">{E(p["name"])}, {E(p["title"])}</p>{copy_row(p["email"], p["name"])}{phone}'
+    if who == 'Downtown Ambassadors':
+        call = (f'<p><a class="btn btn-primary" href="tel:{_tel(amb["phone"])}">{PHONE_ICON}Call {E(amb["phone"])}</a></p>'
+                if amb['phone'] else '<p>Call 311</p>')
+        hours = ' · '.join(f'{E(str(h["days"]))}, {E(str(h["time"]))}' for h in amb['hours'])
+        hours = f'<p class="muted who-small">{hours}</p>' if hours else ''
+        return f'<p class="who-name">Downtown Ambassadors</p>{call}{hours}'
+    if who == 'DDA & DEGA page':
+        return ('<p class="who-name"><a href="{R}boards.html">DDA &amp; DEGA page</a></p>'
+                '<p class="muted who-small">Meetings are the third Monday of the month, 3 to 5 p.m., at City Hall.</p>')
+    return (f'{copy_row(DOWNTOWN_EMAIL, "the downtown team", strong=True)}'
+            f'<p>Call <a href="tel:311">311</a> or <a href="tel:{_tel(GENERAL_PHONE)}">{GENERAL_PHONE}</a></p>')
+
+
+def build_team():
+    t = TEAM
+    if t['draft']:
+        return
+    amb = CL.ambassador_info()
+    staff_by_name = {p['name']: p for p in t['staff']}
+
+    jump = [('how-title', 'How downtown is organized'), ('contact-title', 'Who to contact')]
+    if t['staff']:
+        jump.append(('staff-title', 'Downtown staff'))
+    jump += [('board-title', 'The board'), ('amb-title', 'Downtown Ambassadors'), ('involved-title', 'Get involved')]
+    jump = ('<nav class="jump" aria-label="On this page"><ul class="chips">'
+            + ''.join(f'<li><a class="chip" href="#{h}">{E(x)}</a></li>' for h, x in jump) + '</ul></nav>')
+    body = page_hero([('index.html', 'Home'), ('about.html', 'About'), ('team.html', 'Our team')], 'About downtown', 'Our team',
+                     'The people behind downtown Kalamazoo: City of Kalamazoo staff who serve the DDA and DEGA, the board that guides them, '
+                     'and the Downtown Ambassadors you see on the street every day.', 'f-pink', extra=jump)
+
+    # How downtown is organized
+    body += f'''<section class="section" aria-labelledby="how-title">
+  <div class="wrap">
+    {in_short('Downtown staff work for the City of Kalamazoo and serve the DDA and DEGA, two public authorities governed by one board. Below is who to contact for what.')}
+    <div class="section-head"><div class="narrow"><h2 class="h2" id="how-title">How downtown is organized</h2>
+      <p>Two public authorities invest in downtown, and one board governs both. The City of Kalamazoo provides their staff through a service agreement, so the people you reach are City employees working for the DDA and DEGA.</p></div></div>
+    <div class="org-map">
+      <div class="org-board">
+        <p class="org-k">One shared board of {NUMBER_WORDS[len(t["members"])] if len(t["members"]) < len(NUMBER_WORDS) else len(t["members"])} members</p>
+        <div class="org-pair">
+          <section class="org-card f-blue" aria-labelledby="org-dda"><div class="card-top" aria-hidden="true">DDA</div><div class="card-body">
+            <h3 class="h3" id="org-dda">Downtown Development Authority</h3><p>Invests in the downtown district, funded by tax increment financing and a 2-mill levy.</p></div></section>
+          <section class="org-card f-green" aria-labelledby="org-dega"><div class="card-top" aria-hidden="true">DEGA</div><div class="card-body">
+            <h3 class="h3" id="org-dega">Downtown Economic Growth Authority</h3><p>Invests along downtown’s commercial corridors. Created by the City Commission in 2018.</p></div></section>
+        </div>
+      </div>
+      <p class="org-link"><svg aria-hidden="true" width="64" height="20" viewBox="0 0 64 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h56M12 3 4 10l8 7M52 3l8 7-8 7"/></svg><span>Service agreement</span></p>
+      <section class="org-card org-city f-pink" aria-labelledby="org-city"><div class="card-top" aria-hidden="true">City of Kalamazoo</div><div class="card-body">
+        <h3 class="h3" id="org-city"><span class="sr-only">City of Kalamazoo: </span>Employs downtown staff</h3><p>Staff are City employees who serve as staff to the DDA and DEGA and support the board day to day.</p></div></section>
+    </div>
+  </div>
+</section>'''
+
+    # Who to contact
+    rows = ''.join(f'''<li class="who">
+        <div class="who-need"><h3>{E(c["need"])}</h3>{f'<p class="muted">{E(c["detail"])}</p>' if c["detail"] else ''}</div>
+        <div class="who-reach">{who_reach(c["who"], staff_by_name, amb)}</div>
+      </li>''' for c in t['contacts'])
+    body += f'''<section class="section" style="padding-top:0" aria-labelledby="contact-title">
+  <div class="wrap">
+    <div class="section-head"><div class="narrow"><h2 class="h2" id="contact-title">Who to contact</h2>
+      <p>Find what you need, and the right person is next to it. Every address and number is written out, so you can copy it or read it aloud.</p></div></div>
+    <ul class="who-list">{rows}</ul>
+  </div>
+</section>'''
+
+    # Downtown staff
+    if t['staff']:
+        cards = ''.join(staff_card(p, i) for i, p in enumerate(t['staff']))
+        body += f'''<section class="section team-band" aria-labelledby="staff-title">
+  <div class="wrap">
+    <div class="section-head"><div class="narrow"><h2 class="h2" id="staff-title">Downtown staff</h2>
+      <p>City of Kalamazoo employees who serve as staff to the DDA and DEGA.</p></div></div>
+    <ul class="staff-list">{cards}</ul>
+  </div>
+</section>'''
+
+    # The board
+    if t['show_board_roster'] and t['members']:
+        def member(m):
+            role = (f'<span class="tag">{E(m["role"])}</span>' if m['role'] != 'Member'
+                    else f'<span class="board-role muted">{E(m["role"])}</span>')
+            return f'<li><span class="board-name">{E(m["name"])}</span>{role}</li>'
+        as_of = f', {E(t["board_as_of"])}' if t['board_as_of'] else ''
+        board = (f'<ul class="board-list" aria-label="DDA and DEGA board members{as_of}">{"".join(member(m) for m in t["members"])}</ul>'
+                 + (f'<p class="muted who-small">Board members as of {E(t["board_as_of"])}.</p>' if t['board_as_of'] else ''))
+    else:
+        board = '''<div class="panel board-go"><div><h3 class="h3">Meet the board on the DDA &amp; DEGA page</h3>
+      <p>See every member and their role, along with meeting dates, agendas, budgets and reports.</p></div>
+      <p><a class="btn btn-primary" href="{R}boards.html">Go to DDA &amp; DEGA</a></p></div>'''
+    body += f'''<section class="section" aria-labelledby="board-title">
+  <div class="wrap">
+    <div class="section-head"><div class="narrow"><h2 class="h2" id="board-title">The board</h2>
+      <p>One board serves both the DDA and DEGA. Members are appointed to four-year terms, and the mayor serves ex officio.</p></div>
+      <a class="btn" href="{{R}}boards.html">Meetings, budgets and reports</a></div>
+    {board}
+  </div>
+</section>'''
+
+    # Downtown Ambassadors
+    photo = f'<img class="team-amb-photo" src="{{R}}{E(amb["photo"])}" alt="{E(amb["photo_alt"])}" loading="lazy">' if amb['photo'] else ''
+    call = f'<a class="btn btn-primary" href="tel:{_tel(amb["phone"])}">{PHONE_ICON}Call {E(amb["phone"])}</a>' if amb['phone'] else ''
+    body += f'''<section class="section amb-band" aria-labelledby="amb-title">
+  <div class="wrap team-amb">
+    {photo}
+    <div class="team-amb-text">
+      <p class="eyebrow">On the street seven days a week</p>
+      <h2 class="h2" id="amb-title">Downtown Ambassadors</h2>
+      <p>The Ambassadors pick up litter, remove graffiti, help visitors find their way and keep an eye on downtown. If something needs cleaning up, call them directly.</p>
+      <div class="btn-row">{call}<a class="btn" href="{{R}}ambassadors.html">Meet the Ambassadors</a></div>
+    </div>
+  </div>
+</section>'''
+
+    # Get involved
+    work = ''
+    if t['hiring_text'] and t['hiring_url']:
+        link = ext(t['hiring_url'], 'See openings') if t['hiring_url'].startswith('http') else f'<a href="{{R}}{E(t["hiring_url"])}">See openings</a>'
+        work = f'''<section class="involve f-red" aria-labelledby="gi-work"><h3 id="gi-work">Work downtown</h3><p>{E(t["hiring_text"])}</p><p>{link}</p></section>'''
+    hours = f'<br>{E(t["office_hours"])}' if t['office_hours'] else ''
+    body += f'''<section class="section" aria-labelledby="involved-title">
+  <div class="wrap">
+    <h2 class="h2" id="involved-title" style="margin-bottom:1.5rem">Get involved</h2>
+    <div class="involve-row">
+      <section class="involve f-blue" aria-labelledby="gi-board"><h3 id="gi-board">Join the board</h3><p>Board members are appointed. Anyone interested can apply through the City.</p><p>{ext(CITY + '/Government/Boards-Commissions/Apply-to-Join-a-Board-or-Commission', 'Apply to join a board')}</p></section>
+      <section class="involve f-green" aria-labelledby="gi-meet"><h3 id="gi-meet">Come to a meeting</h3><p>Board meetings are open to the public, the third Monday of the month from 3 to 5 p.m.</p><p>{ext(CITY + '/Government/Boards-Commissions/Minutes-Agendas', 'Agendas and minutes')}</p></section>
+      {work}
+      <section class="involve f-pink" aria-labelledby="gi-visit"><h3 id="gi-visit">Visit the office</h3><p>City Hall, 241 W. South St.{hours}</p><p><a href="{{R}}visit.html">Directions and parking</a></p></section>
+    </div>
+  </div>
+</section>'''
+    page('team.html', 'Our team', body, None,
+         'Who to contact downtown: the City of Kalamazoo staff who serve the DDA and DEGA, the board and the Downtown Ambassadors.')
+
+
 # ---------------------------------------------------------------- About
 def build_about():
     programs = ''.join(program_card(*p, heading='h2') for p in PROGRAMS)
@@ -1138,4 +1348,4 @@ def build_about():
 
 def build_year_round():
     build_year_home(); build_calendar(); build_cal_event_pages(); build_news(); build_history(); build_boards()
-    build_ambassadors(); build_waste(); build_social(); build_projects(); build_placemaking(); build_investment(); build_business_resources(); build_about()
+    build_team(); build_ambassadors(); build_waste(); build_social(); build_projects(); build_placemaking(); build_investment(); build_business_resources(); build_about()

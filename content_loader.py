@@ -167,8 +167,76 @@ def ambassador_info():
                 photo_alt=str(data.get('team_photo_alt') or '').strip())
 
 
+# ---------------------------------------------------------------- Our team
+TEAM_WHO = ['Downtown Ambassadors', 'DDA & DEGA page', 'Downtown team']
+_PLACEHOLDER = re.compile(r'\[[^\]]*\]')
+
+
+def _s(v):
+    return str(v if v is not None else '').strip()
+
+
+def team():
+    """Staff, the contact list and the board from content/team.yml.
+    The board list is used even while the page itself is a draft (the DDA & DEGA page shows it)."""
+    f = 'content/team.yml'
+    data = load_yaml('team.yml', {}) or {}
+    draft = bool(data.get('draft'))
+
+    staff = []
+    for i, s in enumerate(data.get('staff') or [], 1):
+        if not s:
+            continue
+        p = {k: _s(s.get(k)) for k in ('name', 'title', 'bio', 'pronunciation', 'pronouns', 'email', 'phone', 'photo', 'photo_alt')}
+        for k in ('name', 'title', 'email'):
+            if not p[k]:
+                raise ValueError(f'{f}: staff member {i} needs a {k}')
+        if p['photo'] and not p['photo_alt']:
+            raise ValueError(f'{f}: add a photo_alt sentence describing {p["name"]}’s photo')
+        p['handles'] = [_s(h) for h in (s.get('handles') or []) if _s(h)]
+        staff.append(p)
+    names = {p['name'] for p in staff}
+
+    contacts = []
+    for i, c in enumerate(data.get('contacts') or [], 1):
+        if not c:
+            continue
+        need, who = _s(c.get('need')), _s(c.get('who'))
+        if not need or not who:
+            raise ValueError(f'{f}: contact {i} needs both "need" and "who"')
+        if who not in names and who not in TEAM_WHO:
+            raise ValueError(f'{f}: in "{need}", who should be a staff name from the list above or one of '
+                             f'{", ".join(TEAM_WHO)}, not "{who}"')
+        contacts.append(dict(need=need, detail=_s(c.get('detail')), who=who))
+
+    members = []
+    for i, m in enumerate(data.get('members') or [], 1):
+        if not m or not _s(m.get('name')):
+            continue
+        members.append(dict(name=_s(m.get('name')), role=_s(m.get('role')) or 'Member'))
+
+    out = dict(draft=draft, staff=staff, contacts=contacts, members=members,
+               board_as_of=_s(data.get('board_as_of')),
+               show_board_roster=data.get('show_board_roster', True) is not False,
+               office_hours=_s(data.get('office_hours')),
+               hiring_text=_s(data.get('hiring_text')), hiring_url=_s(data.get('hiring_url')))
+
+    if not draft:
+        left = []
+        for p in staff:
+            left += [v for k, v in p.items() if k != 'handles' and isinstance(v, str) and _PLACEHOLDER.search(v)]
+            left += [h for h in p['handles'] if _PLACEHOLDER.search(h)]
+        for c in contacts:
+            left += [v for v in c.values() if _PLACEHOLDER.search(v)]
+        left += [v for k, v in out.items() if isinstance(v, str) and _PLACEHOLDER.search(v)]
+        if left:
+            raise ValueError(f'{f}: replace the placeholder "{left[0]}" before publishing the page, '
+                             f'or set draft: true to keep it hidden')
+    return out
+
+
 # ---------------------------------------------------------------- Placemaking projects
-FUNDING = ['Fully funded', 'Partially funded', 'Seeking funding']
+FUNDING =['Fully funded', 'Partially funded', 'Seeking funding']
 LEAD = ['City', 'DEGA', 'DDA', 'DDA & DEGA']
 
 

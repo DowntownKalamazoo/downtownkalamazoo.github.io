@@ -31,7 +31,7 @@ PATH_PATTERN = {'index.html': 'squiggle', 'holidays/index.html': 'squiggle', 'ho
                 'accessibility.html': 'loops', 'access-guide.html': 'loops', 'take-home.html': 'quilt',
                 'holidays/find-the-ks.html': 'dots', 'holidays/found.html': 'dots', 'your-downtown.html': 'squiggle', '404.html': 'quilt',
                 'about.html': 'squiggle', 'history.html': 'quilt', 'boards.html': 'stripes', 'projects.html': 'arcs',
-                'ambassadors.html': 'dashes', 'waste-recycling.html': 'dots', 'social-district.html': 'waves'}
+                'ambassadors.html': 'dashes', 'team.html': 'loops', 'waste-recycling.html': 'dots', 'social-district.html': 'waves'}
 PATTERNS = ['squiggle', 'confetti', 'arcs', 'dots', 'quilt', 'stripes', 'waves', 'speckle', 'loops', 'maze', 'pinstripes', 'dashes']
 FOOTER_PATCH = ['squiggle', 'confetti', 'dots', 'arcs', 'speckle', 'maze', 'stripes', 'quilt', 'dashes', 'waves', 'loops', 'pinstripes']
 
@@ -85,6 +85,11 @@ ABOUT_MENU = [
     ('waste-recycling.html', 'Waste & recycling'),
     ('social-district.html', 'Social District'),
 ]
+# The Our team page joins the About menu and footer once content/team.yml is out of draft.
+import content_loader as _CL
+TEAM_LIVE = not _CL.team()['draft']
+if TEAM_LIVE:
+    ABOUT_MENU.insert(1, ('team.html', 'Our team'))
 HOLIDAY_NAV = [
     ('holidays/index.html', 'Find the Holidays Downtown'),
     ('holidays/events.html', 'Holiday events'),
@@ -152,7 +157,7 @@ def footer(r):
         <li><a href="{r}access-guide.html">Accessible downtown</a></li>
       </ul></nav>
       <nav aria-label="About downtown"><h2>Downtown</h2><ul>
-        <li><a href="{r}news.html">News &amp; stories</a></li>
+        <li><a href="{r}news.html">News &amp; stories</a></li>{f'{chr(10)}        <li><a href="{r}team.html">Our team</a></li>' if TEAM_LIVE else ''}
         <li><a href="{r}history.html">History</a></li>
         <li><a href="{r}projects.html">Projects</a></li>
         <li><a href="{r}boards.html">DDA &amp; DEGA</a></li>

@@ -110,6 +110,31 @@ Check with each ambassador before posting their photo and full name. First names
 
 ---
 
+## Our team page and the board list
+
+Everything on the Our team page lives in `content/team.yml`. The notes at the top of that file explain each field. The same file holds the board list, which also appears on the DDA & DEGA page.
+
+**Turn the page on**
+The page stays hidden while the file says `draft: true`. Replace every placeholder in square brackets, like `"[Staff name 1]"`, with the real detail, then change the line to `draft: false` and commit. The page appears at `downtownkalamazoo.us/team.html`, with links from the About menu, the About page and the footer. If any `[placeholder]` is left, the Actions tab shows a red X naming it, and the site keeps the last good version.
+
+**Staff**
+- **Update someone:** change their `title`, `handles` (the "Talk to me about" lines), `email` or `phone` and commit. Each person also gets a "Save contact card" link that builds itself from these details.
+- **Add a photo:** upload a JPG to `files/team` (cropped taller than wide, under 500 KB), put its path in `photo:`, and describe it in `photo_alt:`. Until then, their initials show on a brand pattern.
+- **Name and pronouns:** `pronunciation` and `pronouns` are optional. Leave them as `""` to skip them.
+- **Add or remove someone:** copy or delete a whole entry under `staff:`.
+
+Check with each person before posting their photo, email and phone.
+
+**Who to contact**
+Each entry under `contacts:` is one line of the list: what people need (`need`), a short `detail`, and `who` to reach. `who` is a staff member's name written exactly as in the staff list, or one of **Downtown Ambassadors**, **DDA & DEGA page** or **Downtown team**. If someone's responsibilities change, change the name next to that line.
+
+**The board**
+Under `members:`, change a name or `role` after an appointment, and update `board_as_of:` to the month you checked. Both pages update together. Set `show_board_roster: false` to show a link to the DDA & DEGA page on the Our team page instead of the full list.
+
+**Optional extras:** `office_hours` adds hours to the "Visit the office" box. `hiring_text` and `hiring_url` together add a "Work downtown" box.
+
+---
+
 ## Season switch
 
 When the holidays are over, open `build.py`, find `HOLIDAY_SEASON = True`, and change it to `HOLIDAY_SEASON = False`. The Holidays menu link, homepage banner and footer column go away, and the holiday pages stay online at `/holidays/`.
