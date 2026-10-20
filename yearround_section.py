@@ -145,7 +145,7 @@ def build_year_home():
       <p class="eyebrow">Downtown Kalamazoo</p>
       <h1 class="display" id="page-title">Find it downtown</h1>
       <p class="tagline">A little different. A lot to love.</p>
-      <p class="lede">Locally owned shops, good food, creative people, and a few surprises. All within a few walkable blocks. in the heart of Kalamazoo.</p>
+      <p class="lede">Locally owned shops, good food, creative people, and a few surprises. All within a few walkable blocks.</p>
       <form class="hero-search" action="{{R}}directory.html" method="get" role="search" aria-label="Search the business directory">
         <label for="home-q">Find a business</label>
         <div class="hs-row"><input type="search" id="home-q" name="q" placeholder="Coffee, gifts, pizza, a name…" autocomplete="off"><button class="btn btn-primary" type="submit">Search</button></div>
