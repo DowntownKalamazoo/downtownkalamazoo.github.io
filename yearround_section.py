@@ -91,10 +91,10 @@ CATEGORY_TILES = [
 ]
 
 PROGRAMS = [
-    ('ambassadors.html', 'Downtown Ambassadors', 'The crew in blue and gray who keep downtown clean, bright and easy to find your way around.', 'f-blue', 'dashes'),
+    ('ambassadors.html', 'Downtown Ambassadors', 'The crew in green and gray who keep downtown clean, bright and easy to find your way around.', 'f-blue', 'dashes'),
     ('waste-recycling.html', 'Waste & recycling', 'Smart Bigbelly bins on downtown sidewalks, and how to keep recycling out of the trash.', 'f-green', 'dots'),
     ('social-district.html', 'Social District', 'Grab a drink from a participating business and take it for a stroll.', 'f-pink', 'waves'),
-    ('projects.html', 'Projects', 'New plazas and pocket parks, rebuilt streets, a creekside festival site and new signs on the way.', 'f-red', 'arcs'),
+    ('projects.html', 'Projects', 'New gathering spaces, rebuilt streets, better connections, and a few good things on the way.', 'f-red', 'arcs'),
     ('boards.html', 'DDA & DEGA', 'The boards that invest in downtown, with their budgets, reports and meetings.', 'f-mist', 'stripes'),
     ('history.html', 'History', 'From the Village of Bronson to the nation’s first pedestrian mall.', 'f-blue', 'quilt'),
 ]
@@ -117,7 +117,7 @@ def holiday_banner():
       <div class="hf-copy">
         <p class="eyebrow">November 6 – December 31</p>
         <h2 class="display" id="hol-title">Find the Holidays Downtown</h2>
-        <p>The Holiday Parade, the Tree Lighting, Small Business Saturday, gift guides, ready-made outings and a K hunt hidden around downtown.</p>
+        <p>The traditions you love. A few new ones in the making. Find parades, tree lighting, local gifts, holiday outings, and a little something hidden along the way.</p>
         <div class="btn-row"><a class="btn btn-primary" href="{{R}}holidays/index.html">Explore the holidays</a><a class="btn" href="{{R}}holidays/events.html">Holiday events</a></div>
       </div>
       <div class="hf-quilt" aria-hidden="true">{''.join(f'<span style="background-image:url({{R}}pattern-{n}-sm.webp)"></span>' for n in ['squiggle', 'confetti', 'speckle', 'dots', 'arcs', 'stripes'])}</div>
@@ -144,8 +144,8 @@ def build_year_home():
     <div class="hero-card">
       <p class="eyebrow">Downtown Kalamazoo</p>
       <h1 class="display" id="page-title">Find it downtown</h1>
-      <p class="tagline">Creative. Welcoming. Rooted.</p>
-      <p class="lede">Locally owned shops, restaurants, studios and stages, all a few blocks apart in the heart of Kalamazoo.</p>
+      <p class="tagline">A little different. A lot to love.</p>
+      <p class="lede">Locally owned shops, good food, creative people, and a few surprises. All within a few walkable blocks. in the heart of Kalamazoo.</p>
       <form class="hero-search" action="{{R}}directory.html" method="get" role="search" aria-label="Search the business directory">
         <label for="home-q">Find a business</label>
         <div class="hs-row"><input type="search" id="home-q" name="q" placeholder="Coffee, gifts, pizza, a name…" autocomplete="off"><button class="btn btn-primary" type="submit">Search</button></div>
@@ -171,7 +171,7 @@ def build_year_home():
     <div class="prose">
       <p class="eyebrow">Find something local</p>
       <h2 class="h2" id="discover-title">Around every corner</h2>
-      <p>Downtown is full of small surprises: a candle you pour yourself, a toy store full of things you forgot you loved, a glass studio hidden in an old factory. Turn the corner and see what turns up.</p>
+      <p>A candle you pour yourself. A toy store full of things you forgot you loved. A glass studio tucked inside an old factory. Downtown has a way of surprising you. Turn the corner and see what turns up.</p>
       <div class="btn-row"><button class="btn btn-primary" type="button" id="discover-next">Turn the corner</button><a class="btn" href="{{R}}directory.html">See all {n_biz} businesses</a></div>
       <p class="discover-count" id="discover-count" aria-live="polite">One of {len(finds)} downtown finds.</p>
     </div>
@@ -192,7 +192,7 @@ def build_year_home():
 <section class="section" aria-labelledby="upcoming-title">
   <div class="wrap">
     <div class="section-head">
-      <div><p class="eyebrow">What’s happening</p><h2 class="h2" id="upcoming-title">Coming up downtown</h2></div>
+      <div><p class="eyebrow">What’s happening</p><h2 class="h2" id="upcoming-title">Something'ss always happening. You might as well be here.</h2></div>
       <a class="btn" href="{{R}}events.html">Full events calendar</a>
     </div>
     {in_short('These are the next few events downtown. Select one to see the details.')}
@@ -236,7 +236,7 @@ def build_year_home():
       <div class="copy">
         <p class="eyebrow" style="color:var(--ink)">For businesses, groups and neighbors</p>
         <h2 id="host-title">Make something happen downtown</h2>
-        <p>Add an event to the calendar, find grants and permits for your business, or tell us what you love about downtown.</p>
+        <p>Got an event, a business, or an idea worth sharing? There's room for that here. Find resources, get involved, or tell us what makes downtown yours.</p>
         <div class="btn-row"><a class="btn btn-primary" href="{{R}}submit-event.html">Submit an event</a><a class="btn" href="{{R}}businesses.html">Business resources</a></div>
         <p style="margin-top:1rem"><a href="{{R}}newsletter.html">Get the downtown newsletter</a> · <a href="{{R}}your-downtown.html">Share your downtown</a></p>
       </div>
