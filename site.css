@@ -790,11 +790,18 @@ input, select, textarea, button { box-sizing: border-box; }
 .hf-copy h2 { font-size: clamp(1.6rem, 1.1rem + 2.2vw, 2.7rem); line-height: 1.02; }
 .holiday-feature .btn { color: #fff; border-color: #fff; }
 .holiday-feature .btn-primary { background: var(--dk-pink); border-color: var(--dk-pink); color: var(--ink); }
-.hf-quilt { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); min-height: 14rem;
+/* Photo with the same hand-painted (chalky) left edge the pattern quilt had */
+.hf-photo { position: relative; min-height: 16rem; background: var(--dk-navy);
   -webkit-mask: var(--brush-v) left / 36px 100% no-repeat, linear-gradient(#000, #000) 35px 0 / 100% 100% no-repeat;
           mask: var(--brush-v) left / 36px 100% no-repeat, linear-gradient(#000, #000) 35px 0 / 100% 100% no-repeat; }
-.hf-quilt span { background-size: cover; background-position: center; }
-@media (max-width: 760px) { .holiday-feature { grid-template-columns: 1fr; } .hf-quilt { min-height: 7rem; order: -1; -webkit-mask: none; mask: none; } }
+.hf-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 52% 50%; }
+@media (max-width: 760px) {
+  .holiday-feature { grid-template-columns: 1fr; }
+  /* Stacked: photo sits under the copy with a painted top edge, like the page-hero pattern bands */
+  .hf-photo { min-height: 0; aspect-ratio: 3 / 2;
+    -webkit-mask: var(--brush-h) top / 100% 22px no-repeat, linear-gradient(#000, #000) 0 21px / 100% 100% no-repeat;
+            mask: var(--brush-h) top / 100% 22px no-repeat, linear-gradient(#000, #000) 0 21px / 100% 100% no-repeat; }
+}
 .dd-band { position: relative; border-radius: 18px; overflow: hidden; background: var(--dk-blue); color: var(--ink); display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
 .dd-band > div:first-child { padding: clamp(1.5rem, 4vw, 2.75rem); display: grid; gap: .9rem; align-content: start; }
 .dd-band h2 { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: clamp(1.45rem, 1.1rem + 1.5vw, 2.2rem); line-height: 1.05; }

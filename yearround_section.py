@@ -120,7 +120,7 @@ def holiday_banner():
         <p>The traditions you love. A few new ones in the making. Find parades, tree lighting, local gifts, holiday outings, and a little something hidden along the way.</p>
         <div class="btn-row"><a class="btn btn-primary" href="{{R}}holidays/index.html">Explore the holidays</a><a class="btn" href="{{R}}holidays/events.html">Holiday events</a></div>
       </div>
-      <div class="hf-quilt" aria-hidden="true">{''.join(f'<span style="background-image:url({{R}}pattern-{n}-sm.webp)"></span>' for n in ['squiggle', 'confetti', 'speckle', 'dots', 'arcs', 'stripes'])}</div>
+      <div class="hf-photo"><img src="{{R}}files/holidays-home-1400.jpg" srcset="{{R}}files/holidays-home-800.jpg 800w, {{R}}files/holidays-home-1400.jpg 1400w" sizes="(max-width: 760px) 100vw, 32rem" width="1400" height="934" loading="lazy" decoding="async" alt="Three smiling friends crouch in the snow with two dogs in holiday scarves, a black poodle and a Bernese mountain dog, in front of giant red-and-white candy cane columns downtown."></div>
     </div>
   </div>
 </section>'''
