@@ -80,7 +80,7 @@ Small changes go in `content/directory-updates.yml`:
 
 - **Fix a listing:** under `update:`, add the business's id (the end of its directory link, for example `directory.html#b-rustica` → `rustica`) and the fields to change: `desc`, `website`, `phone`, `address`.
 - **Social District:** add or remove ids in the `social_district:` list.
-- **Add a business:** copy an entry under `add:` and change it. `cat` is one of `shop`, `dine`, `arts`, `services` or `stay`.
+- **Add a business:** copy an entry under `add:` and change it. `cat` is one of `shop`, `dine`, `arts`, `services`, `stay`, `offices` (offices & professional) or `orgs` (organizations). Offices and organizations show in the directory but not in Plan your day.
 
 ---
 

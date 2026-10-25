@@ -24,6 +24,8 @@ CATS = {  # spreadsheet "Public category" -> (id, label, brand fill)
     'Arts & Entertainment': ('arts', 'Arts & Entertainment', 'f-red'),
     'Services': ('services', 'Services', 'f-blue'),
     'Stay': ('stay', 'Stay', 'f-mist'),
+    'Offices & professional': ('offices', 'Offices & professional', 'f-blue'),
+    'Organizations': ('orgs', 'Organizations', 'f-green'),
 }
 
 # dropped row name -> row it merges into

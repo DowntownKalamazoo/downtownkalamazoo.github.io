@@ -74,7 +74,7 @@ def build_plan_index():
     {in_short('There are two ways to plan. “Pick for me” uses the questions below: choose the days you can go, your budget and who is coming, and three plans that fit show up, picked at random. “Build my own” lets you choose every stop yourself. Every plan can be printed or shared.')}
     <ul class="paths" aria-label="Two ways to plan your day">
       <li><a class="path is-here" href="#planner" aria-describedby="path-1"><span class="path-ic" aria-hidden="true" style="background-image:url({{R}}pattern-confetti-sm.webp)"></span><span class="path-name">Pick for me</span><span class="path-go" aria-hidden="true">↓</span><span class="path-text" id="path-1">Choose a day, budget and who’s coming. We’ll pull three plans that fit.</span><span class="path-badge">You’re here</span></a></li>
-      <li><a class="path is-byo" href="{{R}}plan/build-your-own.html" aria-describedby="path-2"><span class="path-ic" aria-hidden="true" style="background-image:url({{R}}pattern-squiggle-sm.webp)"></span><span class="path-name">Build my own</span><span class="path-go" aria-hidden="true">Start →</span><span class="path-text" id="path-2">Pick your own stops from {len(directory_page.BIZ)} businesses and every holiday event, then print it with parking.</span></a></li>
+      <li><a class="path is-byo" href="{{R}}plan/build-your-own.html" aria-describedby="path-2"><span class="path-ic" aria-hidden="true" style="background-image:url({{R}}pattern-squiggle-sm.webp)"></span><span class="path-name">Build my own</span><span class="path-go" aria-hidden="true">Start →</span><span class="path-text" id="path-2">Pick your own stops from {sum(1 for b in directory_page.BIZ if b['cat'] in directory_page.VISITOR_CATS)} businesses and every holiday event, then print it with parking.</span></a></li>
     </ul>
     <form class="planner-form" id="planner" novalidate>
       <div class="pf-head"><h2 class="h2" id="build-title">Tell us about your day</h2><p class="help">Choose as many as you like in each row. Leave a row empty if anything works.</p></div>
@@ -238,7 +238,7 @@ def _builder_data():
     for x in IT.EXPERIENCES:
         h = x['h'] if (not x['h'] or x['h'].startswith('http')) else '{R}' + x['h']
         items.append(dict(k='x', id=x['id'], n=x['n'], c='Holiday experience', g='holiday', w=x['w'], h=h, d=x['d']))
-    for b in directory_page.BIZ:
+    for b in [b for b in directory_page.BIZ if b['cat'] in directory_page.VISITOR_CATS]:
         street = re.sub(r',\s*Kalamazoo,\s*MI\s*\d{5}$', '', b['address']) if b['address'] else (b.get('where') or '')
         items.append(dict(k='b', id=b['id'], n=b['name'], c=b['cat_label'], g=b['cat'], w=street, ph=b['phone'], tel=b['tel'],
                           dd=bool(b['dd']), d=(b['desc'] or '')[:150], h=f'{{R}}directory.html#b-{b["id"]}'))
@@ -248,11 +248,11 @@ def _builder_data():
 
 
 def build_builder():
-    chips = [('all', 'Everything'), ('holiday', 'Holiday events & experiences')] + [(c, l) for c, l in directory_page.BIZ_CATS] + [('dd', 'Takes Downtown Dollars')]
+    chips = [('all', 'Everything'), ('holiday', 'Holiday events & experiences')] + [(c, l) for c, l in directory_page.BIZ_CATS if c in directory_page.VISITOR_CATS] + [('dd', 'Takes Downtown Dollars')]
     chip_html = ''.join(f'<li><button type="button" class="chip" data-g="{c}" aria-pressed="{"true" if c == "all" else "false"}">{E(l)}</button></li>' for c, l in chips)
     plan_opts = ''.join(f'<option value="{p["slug"]}">{E(p["title"])}</option>' for p in PLANS)
     data = json.dumps(_builder_data(), ensure_ascii=False).replace('</', '<\\/')
-    n_biz = len(directory_page.BIZ)
+    n_biz = sum(1 for b in directory_page.BIZ if b['cat'] in directory_page.VISITOR_CATS)
     body = page_hero([('index.html', 'Home'), ('plan.html', 'Plan your day'), ('plan/build-your-own.html', 'Build your own')],
                      'Plan your day', 'Build your own itinerary',
                      f'Pick your stops from {n_biz} downtown businesses and every holiday event, put them in order, and print your day with addresses, hours and parking.',

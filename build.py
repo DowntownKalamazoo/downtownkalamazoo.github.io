@@ -437,7 +437,7 @@ def pillar(i, p):
 
 
 def discover_data():
-    picks = [b for b in directory_page.BIZ if b['desc']]
+    picks = [b for b in directory_page.BIZ if b['desc'] and b['cat'] in directory_page.VISITOR_CATS]
     return [dict(id=b['id'], n=b['name'], c=b['cat_label'], f=b['fill'], d=b['desc'], w=b['where'], dd=b['dd']) for b in picks]
 
 

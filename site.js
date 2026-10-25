@@ -224,7 +224,7 @@
       chips.forEach(c => c.setAttribute('aria-pressed', String(c.dataset.cat === cat)));
       ddChip.setAttribute('aria-pressed', String(ddOnly));
       if (sdChip) sdChip.setAttribute('aria-pressed', String(sdOnly));
-      const label = cat === 'all' ? 'businesses' : (chips.find(c => c.dataset.cat === cat).dataset.label + ' businesses');
+      const label = cat === 'all' ? 'businesses' : (chips.find(c => c.dataset.cat === cat).dataset.noun || (chips.find(c => c.dataset.cat === cat).dataset.label + ' businesses'));
       count.textContent = `Showing ${n} of ${cards.length} ${n === cards.length ? 'businesses' : label}${ddOnly ? ' that accept Downtown Dollars' : ''}${sdOnly ? ' in the Social District' : ''}`;
       empty.hidden = n > 0;
     }

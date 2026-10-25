@@ -41,11 +41,16 @@ def _apply_updates():
                  desc_es='', includes='', dd=bool(a.get('downtown_dollars')), featured=False, sd=bool(a.get('social_district')))
         BIZ.append(b); by_id[bid] = b
     BIZ.sort(key=lambda b: re.sub(r'^the\s+', '', b['name'].lower()))
-BIZ_CATS = [('shop', 'Shop'), ('dine', 'Dine'), ('arts', 'Arts & Entertainment'), ('services', 'Services'), ('stay', 'Stay')]
+BIZ_CATS = [('shop', 'Shop'), ('dine', 'Dine'), ('arts', 'Arts & Entertainment'), ('services', 'Services'), ('stay', 'Stay'),
+            ('offices', 'Offices & professional'), ('orgs', 'Organizations')]
+# Kinds of places a visitor would plan a stop around. Offices and organizations stay out of Plan your day and the homepage picks.
+VISITOR_CATS = {'shop', 'dine', 'arts', 'services', 'stay'}
+# How the result count names a category when the label alone would read oddly ("Showing 3 of 206 organizations")
+CAT_NOUN = {'offices': ' data-noun="offices and professional firms"', 'orgs': ' data-noun="organizations"'}
 _apply_updates()
 
 # Each kind of business has its own brand pattern, so categories differ by texture as well as color.
-CAT_PATTERN = {'shop': 'confetti', 'dine': 'dots', 'arts': 'arcs', 'services': 'dashes', 'stay': 'loops'}
+CAT_PATTERN = {'shop': 'confetti', 'dine': 'dots', 'arts': 'arcs', 'services': 'dashes', 'stay': 'loops', 'offices': 'pinstripes', 'orgs': 'quilt'}
 FLIP_ICON = ('<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" '
              'stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/>'
              '<path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg>')
@@ -117,13 +122,13 @@ def directory_body(page_hero, in_short):
     n_sd = sum(1 for b in BIZ if b.get('sd'))
     counts = {c: sum(1 for b in BIZ if b['cat'] == c) for c, _ in BIZ_CATS}
     chips = (f'<li><button type="button" class="chip" data-cat="all" data-label="All" aria-pressed="true">All<span class="n">{total}</span></button></li>'
-             + ''.join(f'<li><button type="button" class="chip" data-cat="{c}" data-label="{E(l)}" aria-pressed="false"><span class="chip-swatch" aria-hidden="true" style="background-image:url({{R}}pattern-{CAT_PATTERN[c]}-sm.webp)"></span>{E(l)}'
+             + ''.join(f'<li><button type="button" class="chip" data-cat="{c}" data-label="{E(l)}"{CAT_NOUN.get(c, '')} aria-pressed="false"><span class="chip-swatch" aria-hidden="true" style="background-image:url({{R}}pattern-{CAT_PATTERN[c]}-sm.webp)"></span>{E(l)}'
                        f'<span class="n">{counts[c]}</span></button></li>' for c, l in BIZ_CATS))
     cards = ''.join(biz_card(b) for b in BIZ)
     stats = (f'<p class="dir-stats"><span><b>{total}</b>businesses</span><span><b>{n_dd}</b>accept Downtown Dollars</span>'
              f'<span><b>{n_sd}</b>in the Social District</span></p>')
     body = page_hero([('index.html', 'Home'), ('directory.html', 'Explore downtown')], 'Business directory', 'Explore downtown',
-                     'Shops, restaurants, studios, salons and places to stay in the heart of Kalamazoo. Hover over a card, or tap it, to see what each business offers and how to reach it.',
+                     'Shops, restaurants, studios, salons, places to stay, offices and community organizations in the heart of Kalamazoo. Hover over a card, or tap it, to see what each one offers and how to reach it.',
                      'f-mist', stats)
     body += f'''<section class="section" aria-labelledby="dir-title">
   <div class="wrap">

@@ -7,7 +7,7 @@
 #                  fields: name, desc, website, phone, address, dd (Downtown Dollars), sd (Social District)
 # social_district: extra ids to tag as Social District
 # add:             businesses that aren't in the spreadsheet yet (name, cat, address, phone, website, desc,
-#                  social_district: true, downtown_dollars: true). cat is shop, dine, arts, services or stay.
+#                  social_district: true, downtown_dollars: true). cat is shop, dine, arts, services, stay, offices or orgs.
 
 hide: {}
 
