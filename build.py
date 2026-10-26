@@ -33,7 +33,7 @@ HOLIDAY_SEASON = True
 
 # Pages that are switched off for now. Their content stays in this repository. To bring one back,
 # change False to True and commit; every menu, footer and page link to it comes back with it.
-SHOW_NEWS = False            # News & stories (news.html, made from content/news)
+SHOW_NEWS = True            # News & stories (news.html, made from content/news)
 SHOW_HISTORY = False         # History of downtown (history.html)
 SHOW_ACCESS_GUIDE = False    # Accessible downtown guide (access-guide.html)
 SHOW_ACCOMMODATION = False   # "Need an accommodation?" box on event, plan and Visit pages
