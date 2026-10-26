@@ -152,8 +152,9 @@ PROGRAMS = [
     ('social-district.html', 'Social District', 'Grab a drink from a participating business and take it for a stroll.', 'f-pink', 'waves'),
     ('projects.html', 'Projects', 'New gathering spaces, rebuilt streets, better connections, and a few good things on the way.', 'f-red', 'arcs'),
     ('boards.html', 'DDA & DEGA', 'The boards that invest in downtown, with their budgets, reports and meetings.', 'f-mist', 'stripes'),
-    ('history.html', 'History', 'From the Village of Bronson to the nation’s first pedestrian mall.', 'f-blue', 'quilt'),
 ]
+if SHOW_HISTORY:
+    PROGRAMS.append(('history.html', 'History', 'From the Village of Bronson to the nation’s first pedestrian mall.', 'f-blue', 'quilt'))
 if TEAM_LIVE:
     PROGRAMS.insert(0, ('team.html', 'Our team', 'The City staff who serve the DDA and DEGA, the board, and who to contact for what.', 'f-pink', 'loops'))
 
@@ -191,6 +192,14 @@ def build_year_home():
     tiles = ''.join(f'<li><a class="cat-tile {fill}" href="{{R}}{h}"><span class="ct-pat" style="background-image:url({{R}}pattern-{pat}-sm.webp)" aria-hidden="true"></span><span class="ct-name">{E(t)}</span></a></li>'
                     for h, t, pat, fill in CATEGORY_TILES)
     latest = ''.join(news_card(p) for p in NEWS[:3])
+    news_section = f'''<section class="section" aria-labelledby="news-title">
+  <div class="wrap">
+    <div class="section-head"><div><p class="eyebrow">News &amp; stories</p><h2 class="h2" id="news-title">The latest from downtown</h2></div>
+      <a class="btn" href="{{R}}news.html">All news</a></div>
+    <ul class="news-list news-cards">{latest}</ul>
+  </div>
+</section>
+''' if SHOW_NEWS and latest else ''
     programs = ''.join(program_card(*p) for p in PROGRAMS)
     n_biz = len(directory_page.BIZ)
     body = f'''<section class="hero-weave" aria-labelledby="page-title" id="hero-weave">
@@ -270,14 +279,7 @@ def build_year_home():
   </div>
 </section>
 
-<section class="section" aria-labelledby="news-title">
-  <div class="wrap">
-    <div class="section-head"><div><p class="eyebrow">News &amp; stories</p><h2 class="h2" id="news-title">The latest from downtown</h2></div>
-      <a class="btn" href="{{R}}news.html">All news</a></div>
-    <ul class="news-list news-cards">{latest}</ul>
-  </div>
-</section>
-
+{news_section}
 <section class="section band" aria-labelledby="programs-title">
   <div class="wrap">
     <div class="section-head"><div><p class="eyebrow">Behind the scenes</p><h2 class="h2" id="programs-title">Who keeps downtown going</h2></div>
@@ -302,7 +304,7 @@ def build_year_home():
 </section>
 ''' + (welcome_dialog() if HOLIDAY_SEASON else '')
     page('index.html', 'Downtown Kalamazoo', body, None,
-         'Downtown Kalamazoo: local shops, restaurants and stages, the business directory, events, Downtown Dollars, news and how downtown works.')
+         'Downtown Kalamazoo: local shops, restaurants and stages, the business directory, events, Downtown Dollars and how downtown works.')
 
 
 # ---------------------------------------------------------------- Events calendar
@@ -490,7 +492,7 @@ def build_cal_event_pages():
 <section class="section" style="padding-top:0" aria-label="About this event">
   <div class="wrap two-col">
     <div class="prose">{about}</div>
-    <div class="aside">{upcoming}<section class="panel"><h2>Getting here</h2><p><a href="{{R}}visit.html">Parking and getting around</a> · <a href="{{R}}access-guide.html">Accessible downtown</a></p></section></div>
+    <div class="aside">{upcoming}<section class="panel"><h2>Getting here</h2><p><a href="{{R}}visit.html">Parking and getting around</a>{ACCESS_GUIDE_LINK}</p></section></div>
   </div>
 </section>
 {lineup_section(ev)}
@@ -514,7 +516,7 @@ def build_night_page(ev, n):
     more_html = ('<h3 class="h3" style="font-size:1.05rem">More nights</h3><ul class="lineup lineup-compact">' + ''.join(lineup_item(ev, x) for x in more) + '</ul>') if more else ''
     aside = (f'<section class="panel"><h2>Part of {E(ev["title"])}</h2><p>{E(ev.get("summary") or "")}</p>'
              f'<p><a href="{{R}}events/{ev["slug"]}.html">See the whole {E(ev["title"])} season</a></p>{more_html}</section>'
-             f'<section class="panel"><h2>Getting here</h2><p><a href="{{R}}visit.html">Parking and getting around</a> · <a href="{{R}}access-guide.html">Accessible downtown</a></p></section>')
+             f'<section class="panel"><h2>Getting here</h2><p><a href="{{R}}visit.html">Parking and getting around</a>{ACCESS_GUIDE_LINK}</p></section>')
     photo = (n['image'], n.get('image_alt') or '') if n.get('image') else None
     body = page_hero([('index.html', 'Home'), ('events.html', 'Events'), (f'events/{ev["slug"]}.html', ev['title']), (f'events/{n["slug"]}.html', n['lineup'])],
                      f'{E(ev["title"])} · {E(day)}', E(n['lineup']), E(n.get('summary') or ''), n.get('fill') or 'f-green', photo=photo)
@@ -653,7 +655,7 @@ def build_history():
       {sources_list(used)}
     </div>
     <div class="aside">
-      {f'<section class="panel f-blue"><h2>Read the story</h2><p><a href="{{R}}news/{feature["slug"]}.html">{E(feature["title"])}</a></p></section>' if feature else ''}
+      {f'<section class="panel f-blue"><h2>Read the story</h2><p><a href="{{R}}news/{feature["slug"]}.html">{E(feature["title"])}</a></p></section>' if feature and SHOW_NEWS else ''}
       <section class="panel"><h2>Dig deeper</h2><p>The Kalamazoo Public Library’s local history room has photos, maps and stories about nearly every downtown block.</p><p>{ext('https://www.kpl.gov/local-history/', 'Kalamazoo Public Library local history')}</p></section>
       <section class="panel f-pink"><h2>Your downtown memory</h2><p>Remember a store, a parade or a first date downtown? <a href="{{R}}your-downtown.html">Tell us about it</a>.</p></section>
     </div>
@@ -699,7 +701,7 @@ def build_boards():
       <div class="table-wrap"><table class="docs" id="docs-table"><caption>Budgets, reports and governing documents</caption>
         <thead><tr><th scope="col">Document</th><th scope="col">Board</th><th scope="col">Type</th><th scope="col" class="num">Year</th></tr></thead>
         <tbody>{doc_rows}</tbody></table></div>
-      <p class="muted">More financial reports are on the {ext(CITY + '/Government/Budgets-and-Financial-Reports', 'City of Kalamazoo’s budgets and financial reports page')}. Plans, presentations and data behind downtown marketing are in the {ext(LIBRARY_URL, 'downtown plan library')}.</p>
+      <p class="muted">More financial reports are on the {ext(CITY + '/Government/Budgets-and-Financial-Reports', 'City of Kalamazoo’s budgets and financial reports page')}.</p>
 
       <h2 class="h2" id="board-title" style="margin-top:2rem">The board</h2>
       <p>One board of nine members serves both authorities. A majority must have an interest in property in the downtown district, at least one must live in the district, and the mayor serves ex officio. Terms are four years, with a limit of two in a row.</p>
@@ -965,7 +967,7 @@ def build_waste():
     <div class="aside">
       <section class="panel f-green"><h2>Bin full or broken?</h2><p>Email {DOWNTOWN_EMAIL} or call 311 with the location.</p></section>
       <section class="panel"><h2>Businesses</h2><p>Questions about trash and recycling for your business? Email {DOWNTOWN_EMAIL}.</p></section>
-      <section class="panel"><h2>Related</h2><ul><li><a href="{{R}}ambassadors.html">Downtown Ambassadors</a></li><li><a href="{{R}}news/more-smart-recycling-units.html">More smart recycling units coming downtown</a></li></ul></section>
+      <section class="panel"><h2>Related</h2><ul><li><a href="{{R}}ambassadors.html">Downtown Ambassadors</a></li>{'<li><a href="{R}news/more-smart-recycling-units.html">More smart recycling units coming downtown</a></li>' if SHOW_NEWS else ''}</ul></section>
     </div>
   </div>
 </section>'''
@@ -1087,7 +1089,7 @@ def lead_key(leads):
 
 def project_card(p):
     links = ''.join(f'<li>{ext(h, E(t))}</li>' for t, h in p['links'])
-    if p.get('news'):
+    if p.get('news') and SHOW_NEWS:
         links = f'<li><a href="{{R}}news/{p["news"]}.html">Read our story</a></li>' + links
     if p.get('page'):
         links = f'<li><a href="{{R}}{p["page"]}">{E(p.get("page_label") or "Learn more")}</a></li>' + links
@@ -1211,7 +1213,7 @@ def build_place(i, p):
     glance = [('Led by', LEADS[p['lead']]['label'].replace('Led by the ', '').replace('Led by ', '') if p['lead'] in LEADS else ''), ('Where', p['where']), ('Timeline', p['timeline']), ('Design', p['design'])]
     gl = ''.join(f'<div><dt>{k}</dt><dd>{E(v)}</dd></div>' for k, v in glance if v)
     links = ''.join(link_item(l['text'], str(l['url']).strip()) for l in p['links'])
-    if p['news']:
+    if p['news'] and SHOW_NEWS:
         links = f'<li><a href="{{R}}news/{E(p["news"])}.html">Read our story</a></li>' + links
     others = ''.join(f'<li><a href="{{R}}placemaking/{q["slug"]}.html">{E(q["title"])}</a></li>' for q in PLACEMAKING if q is not p)
     photo = (p['image'], p['image_alt']) if p['image'] else None
@@ -1449,7 +1451,7 @@ def build_business_resources():
       <h2 class="h2" id="research-title">Data &amp; research</h2>
       <p style="margin:.4rem 0 1.25rem">Plans and studies that shape downtown’s future.</p>
       <ul class="research">{research}</ul>
-      <p class="muted" style="margin-top:1rem">Presentations, data, plans and projections behind downtown marketing are in the {ext(LIBRARY_URL, 'downtown plan library')}. Budgets and reports are on the <a href="{{R}}boards.html">DDA &amp; DEGA page</a>.</p>
+      <p class="muted" style="margin-top:1rem">Budgets and reports are on the <a href="{{R}}boards.html">DDA &amp; DEGA page</a>.</p>
     </div>
     <div class="aside">
       <section class="panel f-blue"><h2>Talk to the downtown team</h2><p>No matter where you are in the process, we can help you find what you need.</p><p>Email <span>{DOWNTOWN_EMAIL}</span> <button type="button" class="btn btn-small btn-quiet" data-copy="{DOWNTOWN_EMAIL}">Copy address</button></p><p>Call {DOWNTOWN_PHONE}, or 311 for City services.</p>{f"<ul>{team_link}</ul>" if team_link else ""}</section>
@@ -1690,8 +1692,8 @@ def build_about():
     {in_short('This section explains who looks after downtown and how. Choose a topic to learn more.')}
     <ul class="programs">{programs}</ul>
     <div class="two-col" style="margin-top:2.5rem">
-      <section class="panel f-blue"><h2>Contact the downtown team</h2><p>City of Kalamazoo, City Hall, 241 W. South St.</p><p>Email {DOWNTOWN_EMAIL}<br>Call {DOWNTOWN_PHONE}, or 311 for City services.</p></section>
-      <section class="panel"><h2>More about downtown</h2><ul><li><a href="{{R}}news.html">News &amp; stories</a></li><li><a href="{{R}}businesses.html">Business resources</a></li><li><a href="{{R}}access-guide.html">Accessible downtown</a></li><li><a href="{{R}}accessibility.html">This website’s accessibility</a></li></ul></section>
+      <section class="panel f-blue"><h2>Contact the downtown team</h2><p>City of Kalamazoo, City Hall, 241 W. South St.</p><p>Email {DOWNTOWN_EMAIL}<br>Call {DOWNTOWN_PHONE}, or 311 for City services.</p>{'<p><strong>Follow downtown</strong></p>' + social_links() if SOCIAL else ''}</section>
+      <section class="panel"><h2>More about downtown</h2><ul>{'<li><a href="{R}news.html">News &amp; stories</a></li>' if SHOW_NEWS else ''}<li><a href="{{R}}businesses.html">Business resources</a></li>{'<li><a href="{R}access-guide.html">Accessible downtown</a></li>' if SHOW_ACCESS_GUIDE else ''}<li><a href="{{R}}accessibility.html">This website’s accessibility</a></li></ul></section>
     </div>
   </div>
 </section>'''
@@ -1699,5 +1701,9 @@ def build_about():
 
 
 def build_year_round():
-    build_year_home(); build_calendar(); build_cal_event_pages(); build_news(); build_history(); build_boards()
+    build_year_home(); build_calendar(); build_cal_event_pages(); build_boards()
+    if SHOW_NEWS:
+        build_news()
+    if SHOW_HISTORY:
+        build_history()
     build_team(); build_ambassadors(); build_waste(); build_social(); build_projects(); build_placemaking(); build_investment(); build_business_resources(); build_about()

@@ -2,8 +2,6 @@
 the Arts Council of Greater Kalamazoo, Discover Kalamazoo and WWMT coverage. Where a 2026 detail
 is not yet public, the copy says so rather than guessing."""
 
-LIBRARY_URL = 'https://claude.ai/artifact/CrW3UDwfafXpXLAMtDEwms'
-
 TBA = 'To be announced'
 BRONSON = 'Bronson Park, 200 S. Rose St.'
 TROLLEY_TIP = 'The free Holly Jolly Trolley runs Thursday through Sunday, so it’s a warm way to hop between stops.'

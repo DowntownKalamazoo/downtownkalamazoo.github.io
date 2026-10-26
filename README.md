@@ -8,7 +8,7 @@ The source for downtownkalamazoo.us. A small Python script (`build.py`) turns th
 - **Plan your day itineraries:** `content/itineraries.yml` (the plans), `itineraries.py` (checks and links them), `plan_section.py`, `plan.css` and `plan.js` (the planner and plan pages)
 - **Styles and scripts:** `site.css` and `site.js` (included in every page)
 - **Business directory data:** `directory.json`, plus edits in `content/directory-updates.yml`
-- **Brand art** (patterns, wallpapers, coloring pages, QR signs): `make_assets.py` writes `assets_out/`. Run it only when the art changes; it needs `pip install cairosvg segno pypdf pillow`.
+- **Brand art** (patterns, wallpapers, coloring pages, QR signs): `make_assets.py` writes `assets_out/`. Run it only when the art changes; it needs `pip install cairosvg pypdf pillow`.
 
 ## Build it on your own computer (optional)
 

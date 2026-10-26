@@ -2,7 +2,7 @@
 """Builds the Downtown Kalamazoo holiday site into ./out (full documents, ready to host)
 and ./artifact (same, with index.html stripped to page content for the artifact skeleton)."""
 import html, os, re, shutil, json, datetime as dt
-from holiday_content import EVENTS, GIFT_GUIDES, LIBRARY_URL
+from holiday_content import EVENTS, GIFT_GUIDES
 import directory_page
 # Plan your day itineraries live in content/itineraries.yml (see itineraries.py and plan_section.py).
 import itineraries as IT
@@ -30,6 +30,19 @@ import random as _random
 # The holiday hub (holidays/) is promoted across the site while this is True: a "Holidays" link in the
 # main menu, a banner on the homepage and a Holidays column in the footer. Set it to False after the season.
 HOLIDAY_SEASON = True
+
+# Pages that are switched off for now. Their content stays in this repository. To bring one back,
+# change False to True and commit; every menu, footer and page link to it comes back with it.
+SHOW_NEWS = False            # News & stories (news.html, made from content/news)
+SHOW_HISTORY = False         # History of downtown (history.html)
+SHOW_ACCESS_GUIDE = False    # Accessible downtown guide (access-guide.html)
+SHOW_ACCOMMODATION = False   # "Need an accommodation?" box on event, plan and Visit pages
+
+# Downtown's social media accounts. They show in the footer of every page and on the About page.
+SOCIAL = [
+    ('Facebook', 'https://www.facebook.com/downtownkalamazoo/'),
+    ('Instagram', 'https://www.instagram.com/downtownkalamazoo/'),
+]
 SITE_URL = 'https://downtownkalamazoo.us/'
 
 # Each part of the site has its own brand pattern, so people can tell where they are by texture as well as color.
@@ -37,7 +50,7 @@ SECTION_PATTERN = {'directory': 'maze', 'events': 'confetti', 'plan': 'arcs', 'g
                    'visit': 'waves', 'businesses': 'pinstripes', 'news': 'speckle'}
 PATH_PATTERN = {'index.html': 'squiggle', 'holidays/index.html': 'squiggle', 'holidays/sbs.html': 'quilt', 'newsletter.html': 'speckle',
                 'accessibility.html': 'loops', 'access-guide.html': 'loops', 'take-home.html': 'quilt',
-                'holidays/find-the-ks.html': 'dots', 'holidays/found.html': 'dots', 'your-downtown.html': 'squiggle', '404.html': 'quilt',
+                'your-downtown.html': 'squiggle', '404.html': 'quilt',
                 'about.html': 'squiggle', 'history.html': 'quilt', 'boards.html': 'stripes', 'projects.html': 'arcs',
                 'ambassadors.html': 'dashes', 'team.html': 'loops', 'waste-recycling.html': 'dots', 'social-district.html': 'waves'}
 PATTERNS = ['squiggle', 'confetti', 'arcs', 'dots', 'quilt', 'stripes', 'waves', 'speckle', 'loops', 'maze', 'pinstripes', 'dashes']
@@ -80,13 +93,13 @@ NAV = [
     ('directory.html', 'Explore downtown', 'directory'),
     ('events.html', 'Events', 'events'),
     ('dollars.html', 'Downtown Dollars', 'dollars'),
-    ('news.html', 'News', 'news'),
+] + ([('news.html', 'News', 'news')] if SHOW_NEWS else []) + [
     ('visit.html', 'Visit', 'visit'),
     ('businesses.html', 'For businesses', 'businesses'),
 ]
 ABOUT_MENU = [
     ('about.html', 'About downtown'),
-    ('history.html', 'History of downtown'),
+] + ([('history.html', 'History of downtown')] if SHOW_HISTORY else []) + [
     ('boards.html', 'DDA & DEGA'),
     ('projects.html', 'Projects'),
     ('ambassadors.html', 'Downtown Ambassadors'),
@@ -104,12 +117,30 @@ HOLIDAY_NAV = [
     ('holidays/plan.html', 'Plan your day'),
     ('holidays/gifts.html', 'Gift guides'),
     ('holidays/sbs.html', 'Small Business Saturday'),
-    ('holidays/find-the-ks.html', 'Find the K’s'),
 ]
 
 def ext(href, text, cls=''):
     c = f' class="{cls}"' if cls else ''
     return f'<a{c} href="{E(href)}" target="_blank" rel="noopener">{text}<span class="sr-only"> (opens in a new tab)</span></a>'
+
+
+SOCIAL_ICONS = {
+    'Facebook': '<path fill="currentColor" d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.5-1.5h1.6V4.4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H7.8v3h2.6V21h3.1z"/>',
+    'Instagram': '<rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="2"/>'
+                 '<circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.3" cy="6.7" r="1.2" fill="currentColor"/>',
+}
+
+
+def social_links(label='Downtown Kalamazoo on social media'):
+    """Facebook and Instagram, with visible names so they never rely on an icon alone."""
+    if not SOCIAL:
+        return ''
+    items = ''.join(
+        f'<li><a href="{E(url)}" target="_blank" rel="noopener me">'
+        f'<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">{SOCIAL_ICONS.get(name, "")}</svg>'
+        f'{E(name)}<span class="sr-only">: Downtown Kalamazoo (opens in a new tab)</span></a></li>'
+        for name, url in SOCIAL)
+    return f'<ul class="social" aria-label="{E(label)}">{items}</ul>'
 
 def header(r, current, path=''):
     cur = lambda key: ' aria-current="page"' if key == current else ''
@@ -155,18 +186,16 @@ def footer(r):
         <p class="footer-word">Downtown<br>Kalamazoo</p>
         <p>Creative. Welcoming. Rooted.</p>
         <p style="margin-top:.75rem">City Hall, 241 W. South St.<br>Email downtown@kalamazoocity.org, or call 311 or (269) 337-8000.</p>
+        {social_links('Follow Downtown Kalamazoo')}
       </div>
       <nav aria-label="Explore"><h2>Explore</h2><ul>
         <li><a href="{r}directory.html">Business directory</a></li>
         <li><a href="{r}events.html">Events calendar</a></li>
         <li><a href="{r}dollars.html">Downtown Dollars</a></li>
         <li><a href="{r}social-district.html">Social District</a></li>
-        <li><a href="{r}visit.html">Visit &amp; park</a></li>
-        <li><a href="{r}access-guide.html">Accessible downtown</a></li>
+        <li><a href="{r}visit.html">Visit &amp; park</a></li>{f'{chr(10)}        <li><a href="{r}access-guide.html">Accessible downtown</a></li>' if SHOW_ACCESS_GUIDE else ''}
       </ul></nav>
-      <nav aria-label="About downtown"><h2>Downtown</h2><ul>
-        <li><a href="{r}news.html">News &amp; stories</a></li>{f'{chr(10)}        <li><a href="{r}team.html">Our team</a></li>' if TEAM_LIVE else ''}
-        <li><a href="{r}history.html">History</a></li>
+      <nav aria-label="About downtown"><h2>Downtown</h2><ul>{f'{chr(10)}        <li><a href="{r}news.html">News &amp; stories</a></li>' if SHOW_NEWS else ''}{f'{chr(10)}        <li><a href="{r}team.html">Our team</a></li>' if TEAM_LIVE else ''}{f'{chr(10)}        <li><a href="{r}history.html">History</a></li>' if SHOW_HISTORY else ''}
         <li><a href="{r}projects.html">Projects</a></li>
         <li><a href="{r}boards.html">DDA &amp; DEGA</a></li>
         <li><a href="{r}ambassadors.html">Downtown Ambassadors</a></li>
@@ -209,7 +238,7 @@ def display_dialog(r):
 
 HOLIDAY_SLUGS = [e['slug'] for e in EVENTS]
 _MOVE_EVENTS = re.compile(r'(\{R\}|^)events/(' + '|'.join(map(re.escape, HOLIDAY_SLUGS)) + r')\.html')
-_MOVE_PAGES = re.compile(r'(\{R\}|^)(plan\.html|plan/|gifts\.html|sbs\.html|find-the-ks\.html|found\.html)')
+_MOVE_PAGES = re.compile(r'(\{R\}|^)(plan\.html|plan/|gifts\.html|sbs\.html)')
 
 
 def relink(html_, holiday=False):
@@ -407,7 +436,9 @@ GETTING_HERE = '''<section class="panel" aria-labelledby="gh-title">
 ACCOMMODATION = '''<section class="panel" aria-labelledby="acc-title">
   <h2 id="acc-title">Need an accommodation?</h2>
   <p>Ask about seating, interpreters, quiet spaces or anything else that would help you enjoy the event. Email downtown@kalamazoocity.org or call 311 ahead of time.</p>
-</section>'''
+</section>''' if SHOW_ACCOMMODATION else ''
+# The access guide link, for pages that point people to it. Empty while the guide is switched off.
+ACCESS_GUIDE_LINK = ' · <a href="{R}access-guide.html">Accessible downtown</a>' if SHOW_ACCESS_GUIDE else ''
 
 # ---------------------------------------------------------------- Home
 STREETS_FOR_ALL = 'https://www.kalamazoocity.org/Community/Projects/Streets-for-All/Streets-for-All-Kalamazoo-Ave-2026-2028'
@@ -423,8 +454,8 @@ PILLARS = [
          text='Keep the ones you love, like the parade and the tree lighting, or start a new one.',
          links=[('Holiday Parade', 'events/holiday-parade.html'), ('Tree Lighting', 'events/tree-lighting.html'), ('New Year’s Fest', 'events/new-years-fest.html')]),
     dict(fill='f-blue', title='Find your way',
-         text='Parking, the free trolley, accessibility and what to know about street construction.',
-         links=[('Visit & park', 'visit.html'), ('Accessible downtown', 'access-guide.html')]),
+         text='Parking, the free trolley, accessibility and what to know about street construction.' if SHOW_ACCESS_GUIDE else 'Parking, the free trolley and what to know about street construction.',
+         links=[('Visit & park', 'visit.html')] + ([('Accessible downtown', 'access-guide.html')] if SHOW_ACCESS_GUIDE else [])),
 ]
 
 
@@ -942,7 +973,7 @@ def build_visit():
         <li>Bronson Park: 200 S. Rose St.</li>
         <li>Santa’s Workshop, City Centre: 125 S. Kalamazoo Mall</li>
       </ul></section>
-      <section class="panel f-blue"><h2>Accessible downtown</h2><p>Accessible parking, rides, places to rest and quieter times to visit. <a href="{{R}}access-guide.html">See the access guide</a>.</p></section>
+      {'<section class="panel f-blue"><h2>Accessible downtown</h2><p>Accessible parking, rides, places to rest and quieter times to visit. <a href="{R}access-guide.html">See the access guide</a>.</p></section>' if SHOW_ACCESS_GUIDE else ''}
       {ACCOMMODATION}
       <section class="panel"><h2>Questions</h2><p>Call 311 or (269) 337-8000, or email 311@kalamazoocity.org.</p></section>
     </div>
@@ -983,9 +1014,7 @@ def build_businesses():
     </div>
     <div class="aside">
       <section class="panel"><h2>Have an event?</h2><p><a href="{{R}}submit-event.html">Submit it for the holiday calendar</a>.</p></section>
-      <section class="panel f-green"><h2>Host a K</h2><p>Put one of the <a href="{{R}}find-the-ks.html">Find the K’s</a> signs in your window and send hunters through your door. Email downtown@kalamazoocity.org to claim one.</p></section>
       <section class="panel f-pink"><h2>Get started</h2><p>Email <span>downtown@kalamazoocity.org</span> <button type="button" class="btn btn-small btn-quiet" data-copy="downtown@kalamazoocity.org">Copy address</button></p><p>Tell us your business name, address, and which ways you want to take part.</p></section>
-      <section class="panel"><h2>Marketing plan library</h2><p>Presentations, data, plans and projections behind the holiday campaign, including the brand guidelines.</p><p>{ext(LIBRARY_URL, "Open the plan library")}</p><p class="muted" style="font-size:.9rem">For the marketing team and partners with access.</p></section>
     </div>
   </div>
 </section>'''
@@ -997,7 +1026,7 @@ def build_accessibility():
         ('Standard', 'Written to meet WCAG 2.2 Level AA. Text is checked against contrast minimums in the light, dark and high-contrast themes. Brand colors appear as fills behind dark blue text so they stay readable.'),
         ('Display settings', 'Text size, theme, high contrast, reduced motion, extra text spacing, a plain typeface, underlined links, plain-language summaries, visible image descriptions and a reading ruler. Your choices are saved only in your browser and carry across every page.'),
         ('Built with', 'Native HTML links, buttons and form fields, a skip link on every page, labeled landmarks and breadcrumbs, and tables for schedules and prices so screen readers can read them row by row.'),
-        ('Events', 'Every event page has a way to ask for an accommodation before you go.'),
+    ] + ([('Events', 'Every event page has a way to ask for an accommodation before you go.')] if SHOW_ACCOMMODATION else []) + [
         ('Found a barrier?', 'Email downtown@kalamazoocity.org or call 311 with what happened and what you were using. The downtown team will reply and work on a fix.'),
         ('Last reviewed', 'October 2026'),
     ]
@@ -1013,8 +1042,7 @@ def build_accessibility():
 </section>'''
     page('accessibility.html', 'Accessibility', body, None, 'Accessibility statement for the Downtown Kalamazoo website.')
 
-# ---------------------------------------------------------------- Brand extras: K window, hunt, take-home, voices, access, 404
-import hunt_data as HD
+# ---------------------------------------------------------------- Brand extras: K window, take-home, voices, access, 404
 
 _KSVG = open(os.path.join(HERE, 'k-shape.svg')).read()
 _KVB = [float(v) for v in re.search(r'viewBox="([^"]+)"', _KSVG).group(1).split()]
@@ -1051,82 +1079,6 @@ def build_404():
   </div>
 </section>'''
     page('404.html', 'Wrong turn', body, None, 'This page isn’t here, but something else downtown is.', root='/')
-
-
-# ---------------------------------------------------------------- Find the K's
-def k_board():
-    items = ''.join(
-        f'<li data-k="{k}"><span class="k-badge" style="background-image:url({{R}}pattern-{HD.PATTERNS[k - 1]}-sm.webp)" aria-hidden="true"></span>'
-        f'<span class="k-label">K {k}</span><span class="k-state">Not found yet</span></li>' for k in range(1, HD.N + 1))
-    return f'<ol class="k-board" id="k-board" data-total="{HD.N}">{items}</ol>'
-
-
-def hunt_json():
-    return json.dumps(dict(n=HD.N, codes=[HD.code_hash(c) for c in HD.CODES], fact=list(SD.POOL.keys())[:HD.N * 2])).replace('</', '<\\/')
-
-
-def build_hunt():
-    prize = f'<section class="panel f-green"><h2>The prize</h2><p>{E(HD.PRIZE)}</p></section>' if HD.PRIZE else ''
-    body = K_CLIP + page_hero([('index.html', 'Home'), ('find-the-ks.html', 'Find the K’s')], 'A holiday scavenger hunt', 'Find the K’s',
-                              f'This season, {HD.N} K signs are popping up in shop windows and around downtown. Scan each one with your phone to collect it, and see what you find along the way.', 'f-blue')
-    body += f'''<section class="section" aria-labelledby="how-title">
-  <div class="wrap">
-    {in_short(f'Look for signs with the Downtown Kalamazoo K and a QR code. Scan each one with your phone camera to collect it. There are {HD.N} to find. Your progress is saved on your phone.')}
-    <h2 class="h2" id="how-title" style="margin-bottom:1.25rem">How it works</h2>
-    <ol class="strip" style="list-style:none">
-      <li class="f-blue"><span class="big">1. Look for the K</span><span>Signs with the big brush-stroke K and a QR code, in shop windows and around downtown.</span></li>
-      <li class="f-pink"><span class="big">2. Scan it</span><span>Point your phone camera at the code. The page that opens collects that K for you.</span></li>
-      <li class="f-green"><span class="big">3. Collect all {HD.N}</span><span>Each K comes with a little downtown discovery. Come back here to see how many you have.</span></li>
-    </ol>
-  </div>
-</section>
-<section class="section" style="padding-top:0" aria-labelledby="board-title">
-  <div class="wrap two-col">
-    <div>
-      <h2 class="h2" id="board-title">Your K’s</h2>
-      <p class="k-progress" id="k-progress" role="status">You haven’t found any yet. They’re out there.</p>
-      {k_board()}
-      <form class="form k-code" id="k-code" novalidate>
-        <h3 class="h3">Can’t scan the code?</h3>
-        <p class="help" id="k-code-help">Every sign also has a code word printed under the QR code. Type it here to collect that K.</p>
-        <div class="news-row">
-          <div class="field"><label for="k-word">Code word</label><input type="text" id="k-word" name="word" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="k-code-help k-word-err"><p class="err-msg" id="k-word-err" hidden></p></div>
-          <button class="btn btn-primary" type="submit">Collect it</button>
-        </div>
-      </form>
-    </div>
-    <div class="aside">
-      {prize}
-      <section class="panel"><h2>Good to know</h2><ul>
-        <li>Your K’s are saved in this browser on this phone. Nothing is sent anywhere.</li>
-        <li>Signs are in public windows and spaces. You never need to buy anything to find one.</li>
-        <li>Spotted a sign that’s damaged or missing? Email downtown@kalamazoocity.org.</li>
-      </ul></section>
-      <section class="panel f-pink"><h2>Own a downtown business?</h2><p>Host a K in your window and send hunters through your door. Email downtown@kalamazoocity.org.</p></section>
-    </div>
-  </div>
-  <script type="application/json" id="hunt-data">{hunt_json()}</script>
-</section>'''
-    page('holidays/find-the-ks.html', 'Find the K’s', body, 'holidays', f'A holiday scavenger hunt: find {HD.N} K signs around Downtown Kalamazoo.')
-
-
-def build_found():
-    body = f'''{K_CLIP}<section class="found" aria-labelledby="page-title">
-  <div class="wrap found-grid">
-    <div class="found-k" id="found-k" style="background-image:url({{R}}pattern-dots.webp)" aria-hidden="true"></div>
-    <div>
-      <p class="eyebrow" id="found-eyebrow">Find the K’s</p>
-      <h1 class="display h1" id="page-title">You found a K!</h1>
-      <p class="lede" id="found-text">Scan a K sign downtown to collect it.</p>
-      <p class="k-progress" id="k-progress" role="status"></p>
-      <div class="found-fact" id="found-fact" hidden></div>
-      <div class="btn-row" style="margin-top:1.25rem"><a class="btn btn-primary" href="{{R}}find-the-ks.html">See all your K’s</a><a class="btn" href="{{R}}directory.html">Find something nearby</a></div>
-    </div>
-  </div>
-  <script type="application/json" id="hunt-data">{hunt_json()}</script>
-  <script type="application/json" id="hunt-patterns">{json.dumps(HD.PATTERNS)}</script>
-</section>'''
-    page('holidays/found.html', 'You found a K', body, 'holidays', 'You found one of the K signs hidden around Downtown Kalamazoo.')
 
 
 # ---------------------------------------------------------------- Take a pattern home
@@ -1351,11 +1303,12 @@ if __name__ == '__main__':
     assets = os.path.join(HERE, 'assets_out')   # made by make_assets.py
     for root_, _, fs in os.walk(assets):
         for f in fs:
-            if f.startswith(('find-the-ks-signs', 'hunt-sign')): continue   # staff-only print files, sent separately
             src = os.path.join(root_, f); dst = os.path.join(OUT, os.path.relpath(src, assets))
             os.makedirs(os.path.dirname(dst), exist_ok=True); shutil.copy(src, dst)
     build_home(); build_submit(); build_newsletter(); build_events(); build_plan_index(); build_directory(); build_gifts(); build_sbs(); build_dollars(); build_visit(); build_businesses(); build_accessibility()
-    build_404(); build_hunt(); build_found(); build_take_home(); build_voices(); build_access()
+    build_404(); build_take_home(); build_voices()
+    if SHOW_ACCESS_GUIDE:
+        build_access()
     build_year_round()
     if os.path.isdir(os.path.join(HERE, 'files')):
         shutil.copytree(os.path.join(HERE, 'files'), os.path.join(OUT, 'files'), dirs_exist_ok=True, ignore=shutil.ignore_patterns('README.md'))

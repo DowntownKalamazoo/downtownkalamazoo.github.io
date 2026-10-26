@@ -79,7 +79,7 @@ tools:
     text: "A state grant for storefront businesses. The City applies for the downtown businesses it selects. In 2026 it could request up to $25,000 for two businesses."
     links:
       - text: "2026 Match on Main announcement"
-        url: news/match-on-main-grant.html
+        url: https://www.kalamazoocity.org/News-articles/Downtown-Businesses-Invited-to-Apply-for-Match-on-Main-Grant
     checked: 2026-10
 
   - group: "Money & permits"

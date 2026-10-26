@@ -1,4 +1,6 @@
 ---
+# Hidden: this duplicated kalamazoo-state-theatre.md. Its source link was moved there.
+draft: true
 title: Kalamazoo State Theatre restoration
 order: 1
 kind: Historic restoration
@@ -8,6 +10,4 @@ summary: The 1927 movie palace on South Burdick has new owners, who plan to rest
 links:
   - text: Signature Associates (September 2025)
     url: https://www.signatureassociates.com/historic-kalamazoo-state-theatre-sold-new-owners-plan-to-reopen-in-2027/
-  - text: The State Theatre in downtown history
-    url: history.html
 ---

@@ -9,7 +9,7 @@ Each building or project on the Investing in downtown page (`downtownkalamazoo.u
 - `where`: the address
 - `summary`: one or two sentences
 - `order`: where it appears on the page. 1 comes first.
-- `links`: copy a `- text:` and `url:` pair to add a link. A page on this site, like `history.html`, works too.
+- `links`: copy a `- text:` and `url:` pair to add a link. A page on this site, like `projects.html`, works too.
 - `image` and `image_alt`: a photo or rendering, uploaded to `files` (a wide JPG under 1 MB). Always describe it in `image_alt`.
 
 **Add one:** open `_TEMPLATE.md`, copy it, then choose **Add file → Create new file** in this folder and name it with a few words, like `edison-lofts.md`.

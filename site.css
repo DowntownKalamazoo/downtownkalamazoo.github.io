@@ -676,28 +676,24 @@ dialog::backdrop { background: var(--scrim); }
 @keyframes kw-drift { from { transform: translate(-7%, -5%) rotate(-4deg); } to { transform: translate(7%, 6%) rotate(4deg); } }
 
 /* 404 */
-.lost, .found { padding-block: clamp(2.5rem, 6vw, 5rem); }
+.lost { padding-block: clamp(2.5rem, 6vw, 5rem); }
 .lost-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(12rem, 21rem); gap: 2.5rem; align-items: center; }
-.found-grid { display: grid; grid-template-columns: minmax(9rem, 17rem) minmax(0, 1fr); gap: 2.5rem; align-items: center; }
-@media (max-width: 760px) { .lost-grid, .found-grid { grid-template-columns: 1fr; } .lost .k-window { width: min(64%, 15rem); grid-row: 1; } .found-k { width: min(52%, 12rem); } }
-.lost-find, .found-fact { margin-top: 1.75rem; background: var(--surface); border-left: 6px solid var(--dk-pink); border-radius: 12px; padding: 1rem 1.2rem; display: grid; gap: .4rem; max-width: 36rem; }
-.lost-find .kicker, .found-fact .kicker { font-family: var(--font-ui); font-weight: 800; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--link); }
-.lost-find .t, .found-fact .t { font-weight: 700; font-size: 1.1rem; }
+@media (max-width: 760px) { .lost-grid { grid-template-columns: 1fr; } .lost .k-window { width: min(64%, 15rem); grid-row: 1; } }
+.lost-find { margin-top: 1.75rem; background: var(--surface); border-left: 6px solid var(--dk-pink); border-radius: 12px; padding: 1rem 1.2rem; display: grid; gap: .4rem; max-width: 36rem; }
+.lost-find .kicker { font-family: var(--font-ui); font-weight: 800; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--link); }
+.lost-find .t { font-weight: 700; font-size: 1.1rem; }
 
-/* Find the K's */
-.k-board { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(6.25rem, 1fr)); gap: .8rem; margin-block: 1rem 1.5rem; }
-.k-board li { display: grid; justify-items: center; gap: .15rem; text-align: center; padding: .8rem .4rem .7rem; border: 2px dashed var(--line); border-radius: 12px; }
-.k-board li.is-found { border-style: solid; border-color: var(--fg); background: var(--surface); }
-.k-badge { width: 3.4rem; aspect-ratio: 1; clip-path: url(#k-clip); background-size: cover; background-position: center; filter: grayscale(1); opacity: .3; }
-.is-found .k-badge { filter: none; opacity: 1; }
-.just-found .k-badge, .found-k { animation: k-pop .7s cubic-bezier(.2, 1.4, .4, 1); }
-@keyframes k-pop { from { transform: scale(.4) rotate(-12deg); opacity: 0; } to { transform: none; opacity: 1; } }
-.k-label { font-family: var(--font-display); font-weight: 900; font-size: .95rem; text-transform: uppercase; }
-.k-state { font-size: .8rem; color: var(--muted); }
-.is-found .k-state { color: var(--fg); font-weight: 700; }
-.k-progress { font-weight: 700; font-size: 1.1rem; margin-top: .5rem; }
-.k-code { margin-top: .5rem; padding: 1.1rem 1.2rem; border: 2px solid var(--line); border-radius: var(--radius); gap: .6rem; }
-.found-k { width: 100%; aspect-ratio: 1; clip-path: url(#k-clip); background-size: cover; background-position: center; }
+/* Social media links */
+.social { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .9rem; }
+.social a { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; padding: .3rem .75rem .3rem .5rem; border-radius: 999px; font-family: var(--font-ui); font-weight: 700; font-size: .9rem; text-decoration: none; border: 2px solid currentColor; }
+.social a:hover { text-decoration: underline; }
+.social svg { width: 20px; height: 20px; flex: none; }
+.panel ul.social li { margin: 0; }
+.panel ul.social li::before { content: none; }
+.site-footer ul.social, .panel ul.social { display: flex; gap: .5rem; padding: 0; margin-inline: 0; }
+.site-footer .social a { color: #fff; border-color: rgba(231,245,245,.55); }
+.site-footer .social a:hover, .site-footer .social a:focus-visible { border-color: #fff; background: rgba(255,255,255,.08); }
+.panel .social a { color: var(--fg); }
 
 /* Take a pattern home */
 .pattern-intro { display: grid; grid-template-columns: minmax(0, 1fr) 15rem; gap: 2.5rem; align-items: center; }

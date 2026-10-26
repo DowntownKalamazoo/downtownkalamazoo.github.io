@@ -7,11 +7,10 @@ Outputs (into ./assets_out, copied to out/ by build.py):
   downloads/call-<name>.jpg   video-call backgrounds with the logo
   downloads/*-thumb.webp      previews for the take-home page
   downloads/coloring-pages.pdf
-  downloads/find-the-ks-signs.pdf   printable QR signs for the K hunt
 Run once whenever the source art changes:  python3 make_assets.py
 """
 import base64, io, os, re, shutil
-import cairosvg, segno
+import cairosvg
 from PIL import Image
 from pypdf import PdfWriter, PdfReader
 
@@ -128,39 +127,6 @@ def coloring():
     # preview of page 1 for the site
     prev = render(pages[0], 612 * 1, 792 * 1).convert('RGB')
     prev.thumbnail((360, 470)); prev.save(os.path.join(DL, 'coloring-thumb.webp'), 'WEBP', quality=78)
-
-
-import hunt_data as HD
-HUNT_N = HD.N
-HUNT_PATTERNS = HD.PATTERNS  # only patterns where the logo stays readable on top (brand rule)
-
-
-def hunt_signs():
-    rev, (rw, rh) = png_uri(LOGO_REV, 600)
-    grn, (gw, gh) = png_uri(LOGO_GREEN, 600)
-    pages = []
-    for k in range(1, HUNT_N + 1):
-        pat = HUNT_PATTERNS[k - 1]
-        url = f'{SITE}holidays/found.html?k={k}'
-        q = segno.make(url, error='m')
-        b = io.BytesIO(); q.save(b, kind='png', scale=24, border=2, dark=NAVY, light='#ffffff')
-        qr = 'data:image/png;base64,' + base64.b64encode(b.getvalue()).decode()
-        logo, lw, lh = (grn, gw, gh) if pat in LIGHT else (rev, rw, rh)
-        LW = 250
-        body = (f'<rect width="612" height="792" fill="#fff"/>'
-                f'{nested(pat, 0, 0, 612, 300)}'
-                f'<image x="{(612 - LW) / 2}" y="{150 - LW * lh / lw / 2:.1f}" width="{LW}" height="{LW * lh / lw:.1f}" xlink:href="{logo}"/>'
-                f'<text x="306" y="362" text-anchor="middle" font-family="Unbounded" font-weight="900" font-size="34" fill="{NAVY}">YOU FOUND A K</text>'
-                f'<text x="306" y="392" text-anchor="middle" font-family="Jost" font-weight="bold" font-size="17" fill="{NAVY}">K {k} of {HUNT_N}. Scan to collect it.</text>'
-                f'<image x="{306 - 115}" y="408" width="230" height="230" xlink:href="{qr}"/>'
-                f'<text x="306" y="664" text-anchor="middle" font-family="Jost" font-size="15" fill="{NAVY}">Find all {HUNT_N} around downtown this holiday season.</text>'
-                f'<text x="306" y="688" text-anchor="middle" font-family="Jost" font-size="13" fill="{NAVY}">Can’t scan? Enter the code <tspan font-weight="bold">{HD.CODES[k - 1]}</tspan> at downtownkalamazoo.us/holidays/find-the-ks.html</text>'
-                f'<rect x="0" y="742" width="612" height="50" fill="{NAVY}"/>'
-                f'<text x="306" y="773" text-anchor="middle" font-family="Jost" font-weight="bold" font-size="14" fill="#ffffff" letter-spacing="1">FIND THE HOLIDAYS DOWNTOWN · #SOMETHINGNEWKALAMAZOO</text>')
-        pages.append(doc(612, 792, body))
-    pdf_from_pages(pages, os.path.join(DL, 'find-the-ks-signs.pdf'))
-    prev = render(pages[0], 612, 792).convert('RGB'); prev.thumbnail((360, 470))
-    prev.save(os.path.join(DL, 'hunt-sign-thumb.webp'), 'WEBP', quality=78)
 
 
 # ---------------------------------------------------------------- Holiday coloring & craft pack
@@ -317,7 +283,6 @@ if __name__ == '__main__':
     smalls(); print('swatches')
     wallpapers(); print('wallpapers')
     coloring(); print('coloring')
-    hunt_signs(); print('hunt signs')
     social_and_icon(); print('share image and icon')
     holiday_pack(); print('holiday color & craft pack')
     for root, _, fs in os.walk(OUT):

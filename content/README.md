@@ -8,6 +8,8 @@ When you save (GitHub calls it **Commit changes**), the site rebuilds and publis
 
 ## Post news, a press release or a feature story
 
+**The News page is switched off for now** (see *Pages that are switched off* below). You can still write and save posts here. They appear on the site once the News page is switched back on.
+
 1. Open the `content/news` folder.
 2. Open `_TEMPLATE.md`, select all the text, and copy it.
 3. Go back to `content/news` and choose **Add file → Create new file**.
@@ -209,7 +211,7 @@ Each building or project on the Investing in downtown page (`downtownkalamazoo.u
 - `where`: the address
 - `summary`: one or two sentences
 - `order`: where it appears on the page. 1 comes first.
-- `links`: copy a `- text:` and `url:` pair to add a link. A page on this site, like `history.html`, works too.
+- `links`: copy a `- text:` and `url:` pair to add a link. A page on this site, like `projects.html`, works too.
 - `image` and `image_alt`: a photo or rendering, uploaded to `files` (a wide JPG under 1 MB). Always describe it in `image_alt`.
 
 **Add one:** open `_TEMPLATE.md`, copy it, then choose **Add file → Create new file** in `content/investment` and name it with a few words, like `edison-lofts.md`.
@@ -245,6 +247,28 @@ Everything on the For businesses page (`downtownkalamazoo.us/businesses.html`) l
 If a line has a colon followed by a space, put the whole value in double quotes. If something's off, the Actions tab shows a red X that names the entry and the problem.
 
 ---
+
+## Pages that are switched off
+
+A few parts of the site are turned off for now. Their content stays in the repository, so nothing is lost. Open `build.py` and find these lines near the top:
+
+```
+SHOW_NEWS = False
+SHOW_HISTORY = False
+SHOW_ACCESS_GUIDE = False
+SHOW_ACCOMMODATION = False
+```
+
+- `SHOW_NEWS`: the News & stories page and every post in `content/news`
+- `SHOW_HISTORY`: the History of downtown page
+- `SHOW_ACCESS_GUIDE`: the Accessible downtown guide
+- `SHOW_ACCOMMODATION`: the "Need an accommodation?" box on event, plan and Visit pages
+
+To bring one back, change `False` to `True` and commit. Its menu, footer and page links come back with it.
+
+## Facebook and Instagram
+
+The links in the footer and on the About page come from `SOCIAL` near the top of `build.py`. Change an address there and commit. To add another account, copy a line and change the name and address.
 
 ## Season switch
 
