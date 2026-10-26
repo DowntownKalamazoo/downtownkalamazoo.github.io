@@ -5,7 +5,7 @@ import content_loader as CL
 
 TODAY = dt.date.fromisoformat(os.environ['DK_TODAY']) if os.environ.get('DK_TODAY') else dt.date.today()
 DOWNTOWN_EMAIL = 'downtown@kalamazoocity.org'
-DOWNTOWN_PHONE = '(269) 337-8993'
+DOWNTOWN_PHONE = '(269) 337-8000'
 CITY = 'https://www.kalamazoocity.org'
 BOARDS_URL = CITY + '/Government/Boards-Commissions/Downtown-Development-Authority-Downtown-Economic-Growth-Authority'
 DAY_NAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
