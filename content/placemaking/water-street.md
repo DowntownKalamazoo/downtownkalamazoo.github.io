@@ -14,4 +14,4 @@ links:
 ---
 Water Street is part of downtown's placemaking work. We'll share the design, what's changing and when construction is expected here as details are confirmed.
 
-Questions in the meantime? Email downtown@kalamazoocity.org or call (269) 337-8993.
+Questions in the meantime? Email downtown@kalamazoocity.org or call (269) 337-8000.
