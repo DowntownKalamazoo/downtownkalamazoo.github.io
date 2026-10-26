@@ -1405,7 +1405,7 @@ def build_business_resources():
 
     body += f'''<section class="section" aria-labelledby="stats-title">
   <div class="wrap">
-    {in_short('This page lists programs, partners and plans for anyone starting, running or building a business in downtown Kalamazoo. For help, email downtown@kalamazoocity.org or call (269) 337-8993.')}
+    {in_short('This page lists programs, partners and plans for anyone starting, running or building a business in downtown Kalamazoo. For help, email downtown@kalamazoocity.org or call (269) 337-8000.')}
     {stats}
   </div>
 </section>
