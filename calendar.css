@@ -62,3 +62,11 @@
 .cal-row.is-cont .h3 { font-size: 1.05rem; }
 @media (max-width: 560px) { .cal-today-btn { margin-inline-start: 0; } .cal-nav h2 { min-width: 0; flex: 1; } }
 
+/* Series lineups (series pages and each night's page) */
+.lineup { list-style: none; padding: 0; margin: 0 0 1.75rem; display: grid; border-top: 1px solid var(--line); }
+.lineup li { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: .25rem 1rem; padding: .7rem .25rem; border-bottom: 1px solid var(--line); align-items: baseline; }
+.lineup time { font-family: var(--font-ui); font-weight: 700; font-size: .9rem; }
+.lineup a { font-weight: 600; }
+.lineup-compact li { grid-template-columns: 1fr; gap: .1rem; padding: .5rem 0; }
+@media (max-width: 560px) { .lineup li { grid-template-columns: 1fr; gap: .1rem; } }
+.panel .lineup { padding-left: 0; margin-bottom: 0; }

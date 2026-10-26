@@ -5,6 +5,8 @@ title: Name of the event
 date: 2027-06-12          # YYYY-MM-DD
 # end: 2027-06-13         # optional: the last day, for events longer than one day
 # repeats: first friday   # use instead of date for monthly events (first/second/third/fourth/last + day)
+# repeats: every wednesday  # or use this for weekly events, with starts: and until:
+# starts: 2027-06-02      # first date for a repeating event (optional)
 # until: 2027-12-31       # last date for a repeating event
 time: 6–9 p.m.
 where: Bronson Park

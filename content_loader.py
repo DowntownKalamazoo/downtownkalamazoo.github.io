@@ -86,21 +86,30 @@ def _nth_weekday(year, month, nth, weekday):
     return dt.date(year, month, days[nth - 1] if nth > 0 else days[-1])
 
 
-def occurrences(ev, start, months_ahead=9):
+def occurrences(ev, start, months_ahead=12):
     """Dates for one event. A one-off event uses `date` (and `end`); a repeating one uses
-    `repeats: first friday` (or second/third/fourth/last + any weekday), with optional `until` and `skip` dates."""
+    `repeats: first friday` (or second/third/fourth/last + any weekday) for monthly events, or
+    `repeats: every wednesday` for weekly ones, with optional `starts`, `until` and `skip` dates."""
     rule = str(ev.get('repeats') or '').strip().lower()
     if not rule:
         d = _date(ev.get('date'))
         return [(d, _date(ev.get('end')))] if d else []
     nth, _, day = rule.partition(' ')
-    if nth not in ORD or day not in DAYS:
-        raise ValueError(f'{ev.get("source_file")}: "repeats" should look like "first friday", not "{rule}"')
+    if (nth not in ORD and nth != 'every') or day not in DAYS:
+        raise ValueError(f'{ev.get("source_file")}: "repeats" should look like "first friday" or "every wednesday", not "{rule}"')
     until = _date(ev.get('until'))
     skip = {_date(s) for s in (ev.get('skip') or [])}
     first = _date(ev.get('starts')) or start
     out, y, m = [], start.year, start.month
     limit = (start.year * 12 + start.month - 1) + months_ahead
+    if nth == 'every':
+        d = max(first, start)
+        d += dt.timedelta(days=(DAYS[day] - d.weekday()) % 7)
+        while d.year * 12 + d.month - 1 <= limit and (not until or d <= until):
+            if d not in skip:
+                out.append((d, None))
+            d += dt.timedelta(days=7)
+        return out
     while y * 12 + m - 1 <= limit:
         d = _nth_weekday(y, m, ORD[nth], DAYS[day])
         if d >= first and (not until or d <= until) and d not in skip:

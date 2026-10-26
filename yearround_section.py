@@ -39,7 +39,44 @@ def status_tag(text):
 
 # ---------------------------------------------------------------- Calendar data
 NEWS = CL.news()
-CAL_EVENTS = CL.events()
+ALL_EVENT_FILES = CL.events()
+
+
+def _split_series(files):
+    """A file with `series: beats-on-bates` is one night of that series: it fills in that date's
+    lineup and write-up, and borrows anything it leaves out (time, place, tags...) from the series file."""
+    regular = [e for e in files if not e.get('series')]
+    slugs = {e['slug'] for e in regular}
+    weeks = {}
+    for w in files:
+        if not w.get('series'):
+            continue
+        s_ = str(w['series']).strip()
+        if s_ not in slugs:
+            raise ValueError(f'{w["source_file"]}: "series: {s_}" doesn\'t match an event file. Use the series file\'s name without .md, like "series: beats-on-bates".')
+        if not CL._date(w.get('date')):
+            raise ValueError(f'{w["source_file"]}: a night in a series needs a date, like "date: 2027-06-02".')
+        if not str(w.get('title') or '').strip():
+            raise ValueError(f'{w["source_file"]}: add a title with the night\'s lineup, like "title: Chris Canas Band and DJ No Limit".')
+        weeks.setdefault(s_, {})[CL._date(w['date'])] = w
+    return regular, weeks
+
+
+CAL_EVENTS, SERIES_WEEKS = _split_series(ALL_EVENT_FILES)
+INHERIT = ('time', 'where', 'tags', 'fill', 'link', 'link_text', 'summary')
+
+
+def night(series_ev, w):
+    """One night of a series, with the series filling in whatever the night's file leaves out."""
+    m = {k: series_ev.get(k) for k in INHERIT}
+    m.update({k: w[k] for k in INHERIT if w.get(k) not in (None, '', [])})
+    m.update(slug=w['slug'], lineup=str(w['title']).strip(), date=CL._date(w['date']), series=series_ev,
+             body_html=w.get('body_html') or '', image=w.get('image'), image_alt=w.get('image_alt'))
+    return m
+
+
+def full_title(o):
+    return f'{o["title"]}: {o["lineup"]}' if o.get('lineup') else o['title']
 
 
 def calendar_items():
@@ -48,13 +85,20 @@ def calendar_items():
         time = e['when_short'].split('·', 1)[1].strip() if '·' in e['when_short'] else ''
         items.append(dict(date=e['date'], end=e.get('end'), title=e['title'], when=e['when_short'], time=time, where=e['where_short'],
                           summary=e['summary'], href=f'holidays/events/{e["slug"]}.html', external=False, fill=e['fill'], tags=['Holidays']))
+    first = TODAY.replace(day=1)
     for ev in CAL_EVENTS:
-        for d, end in CL.occurrences(ev, TODAY.replace(day=1)):
+        weeks = SERIES_WEEKS.get(ev['slug'], {})
+        occ = CL.occurrences(ev, first)
+        have = {d for d, _ in occ}
+        occ += [(d, None) for d in weeks if d not in have and d >= first]  # an extra night outside the usual schedule
+        for d, end in sorted(occ):
             # Every calendar event has its own page (see build_cal_event_pages), even without a description.
-            when = f'{DOW[d.weekday()]}, {MON[d.month]} {d.day}' + (f' · {ev["time"]}' if ev.get('time') else '')
-            items.append(dict(date=d.isoformat(), end=end.isoformat() if end and end > d else None, title=ev['title'], when=when,
-                              time=str(ev.get('time') or ''), where=ev.get('where', ''), summary=ev.get('summary', ''),
-                              href=f'events/{ev["slug"]}.html', external=False, fill=ev.get('fill', 'f-green'), tags=ev['tags']))
+            # A series night with its own file links to that night's page and shows its lineup.
+            o = night(ev, weeks[d]) if d in weeks else dict({k: ev.get(k) for k in INHERIT}, slug=ev['slug'], lineup='')
+            when = f'{DOW[d.weekday()]}, {MON[d.month]} {d.day}' + (f' · {o["time"]}' if o.get('time') else '')
+            items.append(dict(date=d.isoformat(), end=end.isoformat() if end and end > d else None, title=ev['title'], lineup=o['lineup'],
+                              when=when, time=str(o.get('time') or ''), where=o.get('where') or '', summary=o.get('summary') or '',
+                              href=f'events/{o["slug"]}.html', external=False, fill=o.get('fill') or 'f-green', tags=o.get('tags') or []))
     items = [o for o in items if dt.date.fromisoformat(o['end'] or o['date']) >= TODAY]
     return sorted(items, key=lambda o: (o['date'], o['title']))
 
@@ -62,11 +106,11 @@ def calendar_items():
 def cal_row(o, heading='h3', show_tags=True):
     end = o['end'] or o['date']
     if o['external']:
-        title = ext(o['href'], E(o['title']))
+        title = ext(o['href'], E(full_title(o)))
     elif o['href']:
-        title = f'<a href="{{R}}{o["href"]}">{E(o["title"])}</a>'
+        title = f'<a href="{{R}}{o["href"]}">{E(full_title(o))}</a>'
     else:
-        title = E(o['title'])
+        title = E(full_title(o))
     tags = ''.join(f'<span class="mini-tag">{E(t)}</span>' for t in o['tags']) if show_tags else ''
     return f'''<li class="event-row" data-end="{end}" data-tags="{E('|'.join(o['tags']))}">
   {date_tile(o)}
@@ -285,7 +329,7 @@ def cal_list_row(o, i, day):
     summary = '' if cont else f'<p>{E(o["summary"])}</p>'
     return f'''<li class="event-row cal-row {o['fill']}{' is-cont' if cont else ''}" data-occ="{i}" data-tags="{E('|'.join(o['tags']))}">
   <div class="body">
-    <h4 class="h3"><a href="{{R}}{o["href"]}">{E(o["title"])}</a></h4>
+    <h4 class="h3"><a href="{{R}}{o["href"]}">{E(full_title(o))}</a></h4>
     <p class="meta">{''.join(f'<span>{m}</span>' for m in meta)}</p>
     {summary}
     {f'<p class="tags">{tags}</p>' if tags and not cont else ''}
@@ -317,7 +361,7 @@ def build_calendar():
     months = {}
     for d in sorted(by_day):
         # Events that started earlier come first, so a festival in progress leads the day.
-        ids = sorted(by_day[d], key=lambda i: (items[i]['date'] == d.isoformat(), items[i]['date'], items[i]['title']))
+        ids = sorted(by_day[d], key=lambda i: (items[i]['date'] == d.isoformat(), items[i]['date'], full_title(items[i])))
         months.setdefault((d.year, d.month), []).append(
             f'<section class="cal-day" id="d-{d.isoformat()}" data-day="{d.isoformat()}" aria-labelledby="dh-{d.isoformat()}">'
             f'<h3 class="cal-day-head" id="dh-{d.isoformat()}" tabindex="-1">{DAY_NAMES[d.weekday()]}, {MONTH_NAMES[d.month]} {d.day}</h3>'
@@ -330,7 +374,7 @@ def build_calendar():
                      f'<span class="muted cal-count">{n} event{"s" if n != 1 else ""}</span></div>{"".join(days)}</section>')
 
     # Month view: drawn in the browser from this data, so it can switch between a full grid and a tap-a-day grid.
-    data = json.dumps([dict(s=o['date'], e=o['end'] or o['date'], t=o['title'], time=o['time'], where=o['where'],
+    data = json.dumps([dict(s=o['date'], e=o['end'] or o['date'], t=o['title'], l=o.get('lineup') or '', time=o['time'], where=o['where'],
                             href=o['href'], fill=o['fill'], tags=o['tags']) for o in items], ensure_ascii=False).replace('</', '<\\/')
     last = max([dt.date.fromisoformat(o['end'] or o['date']) for o in items] or [TODAY])
     first_m, last_m = f'{TODAY.year}-{TODAY.month:02d}', f'{last.year}-{last.month:02d}'
@@ -373,12 +417,59 @@ def build_calendar():
     page('events.html', 'Events', body, 'events', 'The Downtown Kalamazoo events calendar: Art Hop, holiday events, festivals and public meetings.')
 
 
+def cal_style():
+    return '<style>' + open(os.path.join(HERE, 'calendar.css'), encoding='utf-8').read() + '</style>'
+
+
+def series_dates(ev):
+    """Every date in a series' current season, from its first night (or `starts`) on, plus any extra nights."""
+    weeks = SERIES_WEEKS.get(ev['slug'], {})
+    first = CL._date(ev.get('starts')) or (min(weeks) if weeks else TODAY)
+    first = min(first, TODAY)
+    months = (TODAY.year - first.year) * 12 + TODAY.month - first.month + 12
+    dates = {d for d, _ in CL.occurrences(ev, first.replace(day=1), months_ahead=months)} | set(weeks)
+    start = CL._date(ev.get('starts')) or (min(weeks) if weeks else TODAY)
+    return sorted(d for d in dates if d >= start)
+
+
+def lineup_item(ev, d, link_open=True):
+    w = SERIES_WEEKS.get(ev['slug'], {}).get(d)
+    day = f'<time datetime="{d.isoformat()}">{DOW[d.weekday()]}, {MON[d.month]} {d.day}</time>'
+    if w:
+        who = f'<a href="{{R}}events/{w["slug"]}.html">{E(str(w["title"]).strip())}</a>'
+    else:
+        who = '<span class="muted">Lineup to come</span>'
+    return f'<li>{day}<span>{who}</span></li>'
+
+
+def lineup_section(ev):
+    """This season's lineup on a series page: what's coming, then the nights that already happened."""
+    weeks = SERIES_WEEKS.get(ev['slug'], {})
+    if not weeks:
+        return ''
+    dates = series_dates(ev)
+    coming = [d for d in dates if d >= TODAY]
+    played = [d for d in dates if d < TODAY and d in weeks]
+    html = '<section class="section" style="padding-top:0" aria-labelledby="lineup-title"><div class="wrap">'
+    html += f'<h2 class="h2" id="lineup-title">This season’s lineup</h2>'
+    if coming:
+        html += '<h3 class="cal-day-head">Coming up</h3><ul class="lineup">' + ''.join(lineup_item(ev, d) for d in coming) + '</ul>'
+    if played:
+        html += '<h3 class="cal-day-head">Earlier this season</h3><ul class="lineup lineup-past">' + ''.join(lineup_item(ev, d) for d in reversed(played)) + '</ul>'
+    return html + '</div></section>'
+
+
 def build_cal_event_pages():
     for ev in CAL_EVENTS:
         dates = CL.occurrences(ev, TODAY)
+        has_nights = bool(SERIES_WEEKS.get(ev['slug']))
         if ev.get('repeats'):
             nth, _, day = str(ev['repeats']).strip().lower().partition(' ')
-            when = f'The {nth} {day.capitalize()} of every month'
+            if nth == 'every':
+                s_, u_ = CL._date(ev.get('starts')) or (dates[0][0] if dates else None), CL._date(ev.get('until'))
+                when = f'Every {day.capitalize()}' + (f', {date_range_text(s_, u_)}' if s_ and u_ else '')
+            else:
+                when = f'The {nth} {day.capitalize()} of every month'
         else:
             d, end = dates[0] if dates else (None, None)
             when = date_range_text(d, end) if d else ''
@@ -390,20 +481,53 @@ def build_cal_event_pages():
             f'<p>For the latest details, see {ext(ev["link"], E(ev.get("link_text") or "the event website"))}.</p>' if ev.get('link')
             else '<p>More details will be posted here as the date gets closer.</p>')
         upcoming = ''
-        if ev.get('repeats') and dates:
+        if ev.get('repeats') and dates and not has_nights:
             upcoming = '<section class="panel"><h2>Coming dates</h2><ul>' + ''.join(
                 f'<li><time datetime="{d.isoformat()}">{DAY_NAMES[d.weekday()]}, {MONTH_NAMES[d.month]} {d.day}</time></li>' for d, _ in dates[:6]) + '</ul></section>'
         body = page_hero([('index.html', 'Home'), ('events.html', 'Events'), (f'events/{ev["slug"]}.html', ev['title'])],
                          E(', '.join(ev['tags']) or 'Event'), E(ev['title']), E(ev.get('summary', '')), ev.get('fill', 'f-green'))
-        body += f'''<section class="section" aria-labelledby="glance-title"><div class="wrap"><h2 class="sr-only" id="glance-title">At a glance</h2><dl class="glance">{gl}</dl></div></section>
+        body += f'''{cal_style() if has_nights else ''}<section class="section" aria-labelledby="glance-title"><div class="wrap"><h2 class="sr-only" id="glance-title">At a glance</h2><dl class="glance">{gl}</dl></div></section>
 <section class="section" style="padding-top:0" aria-label="About this event">
   <div class="wrap two-col">
     <div class="prose">{about}</div>
     <div class="aside">{upcoming}<section class="panel"><h2>Getting here</h2><p><a href="{{R}}visit.html">Parking and getting around</a> · <a href="{{R}}access-guide.html">Accessible downtown</a></p></section></div>
   </div>
 </section>
+{lineup_section(ev)}
 <section class="section-tight"><div class="wrap"><p><a href="{{R}}events.html">← All events</a></p></div></section>'''
         page(f'events/{ev["slug"]}.html', ev['title'], body, 'events', ev.get('summary', ''))
+        for w in SERIES_WEEKS.get(ev['slug'], {}).values():
+            build_night_page(ev, night(ev, w))
+
+
+def build_night_page(ev, n):
+    d = n['date']
+    day = f'{DAY_NAMES[d.weekday()]}, {MONTH_NAMES[d.month]} {d.day}, {d.year}'
+    glance = [('When', E(day)), ('Time', E(n.get('time') or '')), ('Where', E(n.get('where') or ''))]
+    if n.get('link'):
+        glance.append(('More', ext(n['link'], E(n.get('link_text') or 'Event website'))))
+    gl = ''.join(f'<div><dt>{k}</dt><dd>{v}</dd></div>' for k, v in glance if v)
+    past = (f'<p class="note">This night has already happened. See what’s next on the <a href="{{R}}events/{ev["slug"]}.html">{E(ev["title"])} page</a>.</p>'
+            if d < TODAY else '')
+    about = n['body_html'] or ev.get('body_html') or ''
+    more = [x for x in series_dates(ev) if x >= TODAY and x != d][:5]
+    more_html = ('<h3 class="h3" style="font-size:1.05rem">More nights</h3><ul class="lineup lineup-compact">' + ''.join(lineup_item(ev, x) for x in more) + '</ul>') if more else ''
+    aside = (f'<section class="panel"><h2>Part of {E(ev["title"])}</h2><p>{E(ev.get("summary") or "")}</p>'
+             f'<p><a href="{{R}}events/{ev["slug"]}.html">See the whole {E(ev["title"])} season</a></p>{more_html}</section>'
+             f'<section class="panel"><h2>Getting here</h2><p><a href="{{R}}visit.html">Parking and getting around</a> · <a href="{{R}}access-guide.html">Accessible downtown</a></p></section>')
+    photo = (n['image'], n.get('image_alt') or '') if n.get('image') else None
+    body = page_hero([('index.html', 'Home'), ('events.html', 'Events'), (f'events/{ev["slug"]}.html', ev['title']), (f'events/{n["slug"]}.html', n['lineup'])],
+                     f'{E(ev["title"])} · {E(day)}', E(n['lineup']), E(n.get('summary') or ''), n.get('fill') or 'f-green', photo=photo)
+    body += f'''{cal_style()}<section class="section" aria-labelledby="glance-title"><div class="wrap"><h2 class="sr-only" id="glance-title">At a glance</h2>{past}<dl class="glance">{gl}</dl></div></section>
+<section class="section" style="padding-top:0" aria-label="About this night">
+  <div class="wrap two-col">
+    <div class="prose">{about}</div>
+    <div class="aside">{aside}</div>
+  </div>
+</section>
+<section class="section-tight"><div class="wrap"><p><a href="{{R}}events/{ev["slug"]}.html">← {E(ev["title"])}</a> · <a href="{{R}}events.html">All events</a></p></div></section>'''
+    page(f'events/{n["slug"]}.html', f'{ev["title"]}: {n["lineup"]}', body, 'events', n.get('summary') or '')
+
 
 
 # ---------------------------------------------------------------- News

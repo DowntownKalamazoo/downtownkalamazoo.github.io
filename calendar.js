@@ -38,7 +38,7 @@
     const shows = e => tag === 'all' || e.tags.includes(tag);
     // Events on one day: multi-day events first (oldest first) so their bars line up across the week.
     const on = d => d < todayIso ? [] : EVS.filter(e => shows(e) && e.s <= d && e.e >= d)
-      .sort((a, b) => (b.e !== b.s) - (a.e !== a.s) || a.s.localeCompare(b.s) || a.t.localeCompare(b.t));
+      .sort((a, b) => (b.e !== b.s) - (a.e !== a.s) || a.s.localeCompare(b.s) || (a.t + a.l).localeCompare(b.t + b.l));
     const inMonth = (y, m) => {
       const a = iso(new Date(y, m, 1)), b = iso(new Date(y, m + 1, 0));
       return EVS.filter(e => shows(e) && e.s <= b && e.e >= a && e.e >= todayIso);
@@ -56,7 +56,7 @@
       const named = !multi || start || col === 0 || d.endsWith('-01');
       const cls = `cal-ev ${esc(e.fill)}${multi ? ' cal-bar' : ''}${start ? ' is-start' : ''}${end ? ' is-end' : ''}`;
       const text = named
-        ? `<span class="n">${esc(e.t)}${multi && !start ? '<span class="sr-only"> (continues)</span>' : ''}</span>${!multi && e.time ? `<span class="t">${esc(e.time)}</span>` : ''}`
+        ? `<span class="n">${esc(e.t)}${multi && !start ? '<span class="sr-only"> (continues)</span>' : ''}</span>${!multi && (e.l || e.time) ? `<span class="t">${[e.l, e.time].filter(Boolean).map(esc).join(' · ')}</span>` : ''}`
         : `<span aria-hidden="true">&nbsp;</span><span class="sr-only">${esc(e.t)} (continues)</span>`;
       return `<li><a class="${cls}" href="${esc(e.href)}"${named ? '' : ' tabindex="-1"'}>${text}</a></li>`;
     }
@@ -100,7 +100,7 @@
     function row(e, d) {
       const multi = e.e !== e.s, cont = multi && d > e.s;
       const meta = [e.time && esc(e.time), multi && `${cont ? 'Continues · runs' : 'Runs'} ${range(e)}`, e.where && esc(e.where)].filter(Boolean);
-      return `<li class="event-row cal-row ${esc(e.fill)}${cont ? ' is-cont' : ''}"><div class="body"><h4 class="h3"><a href="${esc(e.href)}">${esc(e.t)}</a></h4>` +
+      return `<li class="event-row cal-row ${esc(e.fill)}${cont ? ' is-cont' : ''}"><div class="body"><h4 class="h3"><a href="${esc(e.href)}">${esc(e.l ? `${e.t}: ${e.l}` : e.t)}</a></h4>` +
         `<p class="meta">${meta.map(x => `<span>${x}</span>`).join('')}</p></div></li>`;
     }
     function renderDay() {
