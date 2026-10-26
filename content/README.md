@@ -54,8 +54,11 @@ When you save (GitHub calls it **Commit changes**), the site rebuilds and publis
 
 1. Open `content/events`, copy `_TEMPLATE.md`, and create a new file like `summer-concert.md`.
 2. Fill in `title`, `date`, `time`, `where`, `summary` and `tags`.
-3. For something that happens every month, use `repeats: first friday` (or `second`, `third`, `fourth` or `last`, plus any day) instead of `date`. Add `until:` with the last date, and `skip:` for any dates to leave out.
-4. If you write a description below the second `---` line, the event gets its own page. Otherwise it links to `link`, or to nothing.
+3. For an event that runs more than one day, like a weekend festival, add `end:` with the last day. It shows as one bar across those days in the month view, and under each of those days in the list.
+4. For something that happens every month, use `repeats: first friday` (or `second`, `third`, `fourth` or `last`, plus any day) instead of `date`. Add `until:` with the last date, and `skip:` for any dates to leave out.
+5. Write a description below the second `---` line if you have one. Every event gets its own page either way. Without a description, the page points people to `link` for details.
+
+The calendar page has two views. **Month** shows a calendar grid (on phones, a smaller grid where people tap a day to see its events). **List** shows every event by day. Visitors switch between them, and the filter buttons come from each event's `tags`.
 
 Past events drop off the calendar on their own.
 

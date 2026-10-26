@@ -16,6 +16,17 @@ def long_date(d):
     return f'{MONTH_NAMES[d.month]} {d.day}, {d.year}'
 
 
+def date_range_text(d, end=None):
+    """November 27–29, 2026 · November 30 – December 2, 2026 · December 30, 2026 – January 2, 2027"""
+    if not end or end <= d:
+        return long_date(d)
+    if d.year != end.year:
+        return f'{long_date(d)} – {long_date(end)}'
+    if d.month != end.month:
+        return f'{MONTH_NAMES[d.month]} {d.day} – {MONTH_NAMES[end.month]} {end.day}, {end.year}'
+    return f'{MONTH_NAMES[d.month]} {d.day}–{end.day}, {d.year}'
+
+
 def sources_list(items, level='h2'):
     return f'<{level} class="h3" style="margin-top:2rem">Sources</{level}><ul class="sources">' + ''.join(f'<li>{ext(h, E(t))}</li>' for t, h in items) + '</ul>'
 
@@ -34,15 +45,16 @@ CAL_EVENTS = CL.events()
 def calendar_items():
     items = []
     for e in EVENTS:
-        items.append(dict(date=e['date'], end=e.get('end'), title=e['title'], when=e['when_short'], where=e['where_short'],
+        time = e['when_short'].split('·', 1)[1].strip() if '·' in e['when_short'] else ''
+        items.append(dict(date=e['date'], end=e.get('end'), title=e['title'], when=e['when_short'], time=time, where=e['where_short'],
                           summary=e['summary'], href=f'holidays/events/{e["slug"]}.html', external=False, fill=e['fill'], tags=['Holidays']))
     for ev in CAL_EVENTS:
         for d, end in CL.occurrences(ev, TODAY.replace(day=1)):
-            href = f'events/{ev["slug"]}.html' if ev.get('body_html') else (ev.get('link') or '')
+            # Every calendar event has its own page (see build_cal_event_pages), even without a description.
             when = f'{DOW[d.weekday()]}, {MON[d.month]} {d.day}' + (f' · {ev["time"]}' if ev.get('time') else '')
-            items.append(dict(date=d.isoformat(), end=end.isoformat() if end else None, title=ev['title'], when=when, where=ev.get('where', ''),
-                              summary=ev.get('summary', ''), href=href, external=not ev.get('body_html') and bool(ev.get('link')),
-                              fill=ev.get('fill', 'f-green'), tags=ev['tags']))
+            items.append(dict(date=d.isoformat(), end=end.isoformat() if end and end > d else None, title=ev['title'], when=when,
+                              time=str(ev.get('time') or ''), where=ev.get('where', ''), summary=ev.get('summary', ''),
+                              href=f'events/{ev["slug"]}.html', external=False, fill=ev.get('fill', 'f-green'), tags=ev['tags']))
     items = [o for o in items if dt.date.fromisoformat(o['end'] or o['date']) >= TODAY]
     return sorted(items, key=lambda o: (o['date'], o['title']))
 
@@ -250,6 +262,37 @@ def build_year_home():
 
 
 # ---------------------------------------------------------------- Events calendar
+def short_range(d, end):
+    if d.month == end.month:
+        return f'{MON[d.month]} {d.day}–{end.day}'
+    return f'{MON[d.month]} {d.day} – {MON[end.month]} {end.day}'
+
+
+def cal_list_row(o, i, day):
+    """One event under one day heading. A multi-day event appears under every day it runs;
+    after its first day it shows a shorter row without the summary."""
+    start = dt.date.fromisoformat(o['date'])
+    end = dt.date.fromisoformat(o['end']) if o['end'] else start
+    cont = day > start
+    meta = []
+    if o['time']:
+        meta.append(E(o['time']))
+    if end > start:
+        meta.append(('Continues · runs ' if cont else 'Runs ') + short_range(start, end))
+    if o['where']:
+        meta.append(E(o['where']))
+    tags = ''.join(f'<span class="mini-tag">{E(t)}</span>' for t in o['tags'])
+    summary = '' if cont else f'<p>{E(o["summary"])}</p>'
+    return f'''<li class="event-row cal-row {o['fill']}{' is-cont' if cont else ''}" data-occ="{i}" data-tags="{E('|'.join(o['tags']))}">
+  <div class="body">
+    <h4 class="h3"><a href="{{R}}{o["href"]}">{E(o["title"])}</a></h4>
+    <p class="meta">{''.join(f'<span>{m}</span>' for m in meta)}</p>
+    {summary}
+    {f'<p class="tags">{tags}</p>' if tags and not cont else ''}
+  </div>
+</li>'''
+
+
 def build_calendar():
     items = calendar_items()
     tags = []
@@ -261,52 +304,91 @@ def build_calendar():
     tags.sort(key=lambda t: order.index(t) if t in order else 99)
     chips = (f'<li><button type="button" class="chip" data-tag="all" aria-pressed="true">All events</button></li>' +
              ''.join(f'<li><button type="button" class="chip" data-tag="{E(t)}" aria-pressed="false">{E(t)}</button></li>' for t in tags))
-    months, groups = [], {}
-    for o in items:
-        k = o['date'][:7]
-        if k not in groups:
-            groups[k] = []; months.append(k)
-        groups[k].append(o)
+
+    # List view: one heading per day, from today on. Multi-day events are listed under each day they run.
+    by_day = {}
+    for i, o in enumerate(items):
+        start = dt.date.fromisoformat(o['date'])
+        end = dt.date.fromisoformat(o['end']) if o['end'] else start
+        d = max(start, TODAY)
+        while d <= end:
+            by_day.setdefault(d, []).append(i)
+            d += dt.timedelta(days=1)
+    months = {}
+    for d in sorted(by_day):
+        # Events that started earlier come first, so a festival in progress leads the day.
+        ids = sorted(by_day[d], key=lambda i: (items[i]['date'] == d.isoformat(), items[i]['date'], items[i]['title']))
+        months.setdefault((d.year, d.month), []).append(
+            f'<section class="cal-day" id="d-{d.isoformat()}" data-day="{d.isoformat()}" aria-labelledby="dh-{d.isoformat()}">'
+            f'<h3 class="cal-day-head" id="dh-{d.isoformat()}" tabindex="-1">{DAY_NAMES[d.weekday()]}, {MONTH_NAMES[d.month]} {d.day}</h3>'
+            f'<ul class="event-list">{"".join(cal_list_row(items[i], i, d) for i in ids)}</ul></section>')
     sections = ''
-    for k in months:
-        y, m = int(k[:4]), int(k[5:])
-        n = len(groups[k])
+    for (y, m), days in months.items():
+        k = f'{y}-{m:02d}'
+        n = len({i for d, ids in by_day.items() if (d.year, d.month) == (y, m) for i in ids})
         sections += (f'<section class="cal-month" aria-labelledby="m-{k}"><div class="month-head"><h2 class="h2" id="m-{k}">{MONTH_NAMES[m]} {y}</h2>'
-                     f'<span class="muted cal-count">{n} event{"s" if n != 1 else ""}</span></div>'
-                     f'<ul class="event-list">{"".join(cal_row(o) for o in groups[k])}</ul></section>')
+                     f'<span class="muted cal-count">{n} event{"s" if n != 1 else ""}</span></div>{"".join(days)}</section>')
+
+    # Month view: drawn in the browser from this data, so it can switch between a full grid and a tap-a-day grid.
+    data = json.dumps([dict(s=o['date'], e=o['end'] or o['date'], t=o['title'], time=o['time'], where=o['where'],
+                            href=o['href'], fill=o['fill'], tags=o['tags']) for o in items], ensure_ascii=False).replace('</', '<\\/')
+    last = max([dt.date.fromisoformat(o['end'] or o['date']) for o in items] or [TODAY])
+    first_m, last_m = f'{TODAY.year}-{TODAY.month:02d}', f'{last.year}-{last.month:02d}'
+
     body = page_hero([('index.html', 'Home'), ('events.html', 'Events')], 'What’s happening', 'Events downtown',
                      'Art Hops, holiday traditions, festivals and public meetings. Everything happening downtown, in one place.', 'f-red',
                      '<div class="btn-row" style="margin-top:1.25rem"><a class="btn btn-primary" href="{R}submit-event.html">Submit an event</a></div>')
-    body += f'''<section class="section calendar" aria-label="Events calendar">
+    # The calendar's own styles and script live in calendar.css and calendar.js and are added to this page only.
+    cal_css = open(os.path.join(HERE, 'calendar.css'), encoding='utf-8').read()
+    cal_js = open(os.path.join(HERE, 'calendar.js'), encoding='utf-8').read().replace('</', '<\\/')
+    body += f'''<style>{cal_css}</style>
+<section class="section calendar" aria-label="Events calendar">
   <div class="wrap">
-    {in_short('Events are listed by date, starting today. Use the buttons to show one kind of event.')}
-    <div class="cal-tools"><span class="label" id="cal-filter-label">Show</span><ul class="chips" id="cal-tags" role="list" aria-labelledby="cal-filter-label">{chips}</ul></div>
+    {in_short('See the month at a glance, or switch to a list of every event by day. Use the buttons to show one kind of event. Select an event for its details.')}
+    <div class="cal-top">
+      <div class="cal-tools"><span class="label" id="cal-filter-label">Show</span><ul class="chips" id="cal-filter" role="list" aria-labelledby="cal-filter-label">{chips}</ul></div>
+      <div class="cal-switch"><span class="label" id="cal-view-label">View</span><span class="segmented" role="group" aria-labelledby="cal-view-label" id="cal-view"><button type="button" data-view="month" aria-pressed="true">Month</button><button type="button" data-view="list" aria-pressed="false">List</button></span></div>
+    </div>
     <p class="sr-only" id="cal-status" role="status" aria-live="polite"></p>
-    {sections}
+    <div class="cal-month-view" id="cal-month-view" hidden>
+      <div class="cal-nav">
+        <button type="button" class="btn cal-arrow" id="cal-prev" aria-label="Previous month"><span aria-hidden="true">←</span></button>
+        <h2 class="h2" id="cal-title" tabindex="-1"></h2>
+        <button type="button" class="btn cal-arrow" id="cal-next" aria-label="Next month"><span aria-hidden="true">→</span></button>
+        <button type="button" class="btn cal-today-btn" id="cal-today">Today</button>
+      </div>
+      <div id="cal-grid"></div>
+      <div id="cal-dayview" class="cal-dayview" hidden></div>
+    </div>
+    <div class="cal-list-view" id="cal-list-view">{sections}</div>
     <p class="note" id="cal-empty" hidden>No events of this kind are on the calendar yet.</p>
+    <script type="application/json" id="cal-data" data-first="{first_m}" data-last="{last_m}" data-today="{TODAY.isoformat()}">{data}</script>
     <div class="two-col" style="margin-top:2.5rem">
       <section class="panel f-pink"><h2>Hosting something downtown?</h2><p>Groups, venues and businesses can send an event for the calendar. Every event is reviewed before it’s posted. <a href="{{R}}submit-event.html">Submit an event</a></p></section>
       <section class="panel"><h2>Details can change</h2><p>Events are confirmed with organizers, but times and places sometimes change. Check the organizer’s link before you go, and see <a href="{{R}}visit.html">Visit &amp; park</a> for getting here.</p></section>
     </div>
   </div>
-</section>'''
+</section>
+<script>{cal_js}</script>'''
     page('events.html', 'Events', body, 'events', 'The Downtown Kalamazoo events calendar: Art Hop, holiday events, festivals and public meetings.')
 
 
 def build_cal_event_pages():
     for ev in CAL_EVENTS:
-        if not ev.get('body_html'):
-            continue
         dates = CL.occurrences(ev, TODAY)
         if ev.get('repeats'):
-            when = 'The ' + ev['repeats'].lower() + ' of every month'
+            nth, _, day = str(ev['repeats']).strip().lower().partition(' ')
+            when = f'The {nth} {day.capitalize()} of every month'
         else:
-            d = dates[0][0] if dates else None
-            when = long_date(d) if d else ''
+            d, end = dates[0] if dates else (None, None)
+            when = date_range_text(d, end) if d else ''
         glance = [('When', E(when)), ('Time', E(ev.get('time', ''))), ('Where', E(ev.get('where', '')))]
         if ev.get('link'):
             glance.append(('More', ext(ev['link'], E(ev.get('link_text') or 'Event website'))))
         gl = ''.join(f'<div><dt>{k}</dt><dd>{v}</dd></div>' for k, v in glance if v)
+        about = ev.get('body_html') or (
+            f'<p>For the latest details, see {ext(ev["link"], E(ev.get("link_text") or "the event website"))}.</p>' if ev.get('link')
+            else '<p>More details will be posted here as the date gets closer.</p>')
         upcoming = ''
         if ev.get('repeats') and dates:
             upcoming = '<section class="panel"><h2>Coming dates</h2><ul>' + ''.join(
@@ -316,7 +398,7 @@ def build_cal_event_pages():
         body += f'''<section class="section" aria-labelledby="glance-title"><div class="wrap"><h2 class="sr-only" id="glance-title">At a glance</h2><dl class="glance">{gl}</dl></div></section>
 <section class="section" style="padding-top:0" aria-label="About this event">
   <div class="wrap two-col">
-    <div class="prose">{ev['body_html']}</div>
+    <div class="prose">{about}</div>
     <div class="aside">{upcoming}<section class="panel"><h2>Getting here</h2><p><a href="{{R}}visit.html">Parking and getting around</a> · <a href="{{R}}access-guide.html">Accessible downtown</a></p></section></div>
   </div>
 </section>
