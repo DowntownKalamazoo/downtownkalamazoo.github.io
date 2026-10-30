@@ -43,6 +43,7 @@ santa:
     sun: Noon to 4 p.m.
   special:
     2026-11-28: Noon to 6 p.m. (opening day)
+    2026-11-29: Closed
     2026-12-21: 5 to 8 p.m.
     2026-12-22: 5 to 8 p.m.
     2026-12-23: 5 to 8 p.m.
@@ -58,6 +59,7 @@ trolley:
     sat: Noon to 7 p.m.
     sun: Noon to 4 p.m.
   special:
+    2026-11-29: No service
     2026-12-21: 5 to 9 p.m.
     2026-12-22: 5 to 9 p.m.
     2026-12-23: 5 to 9 p.m.
@@ -691,35 +693,35 @@ plans:
   time: 3 to 5 hours
   budget: "$$"
   who: [friends, adults, couples]
-  days: [sat]
-  when: Saturday, Dec. 12, 6 to 11 p.m.
+  days: [fri]
+  when: Friday, Dec. 11, 6 to 11 p.m.
   events: [moonlight-madness]
   gifts: all
   steps:
     - Plan an evening shopping route through Kalamazoo Candle Company, LUXE Gift Shop & Boutique, Stewart & Company, and Rocket Fizz.
     - Take a break for dinner at 600 Kitchen and Bar, WL Social House, or Maru Sushi & Grill.
     - Go back to shopping, or end with a drink at a participating business.
-  holiday: Moonlight Madness, Saturday, Dec. 12, 6 to 11 p.m.
+  holiday: Moonlight Madness, Friday, Dec. 11, 6 to 11 p.m.
   before_you_go: Check which shops are open late.
 
 - slug: gingerbread-outing
-  title: A Gingerbread Wonderland outing
+  title: A Gingerbread House Contest outing
   summary: Gingerbread creations, a photo hunt and a sweet stop.
   best_for: Families and holiday fans
   time: 2 to 4 hours
   budget: "Free"
   who: [families, visitors]
   days: all
-  when: Any day, Dec. 5 to 21
+  when: Any day, Dec. 4 to 19
   events: [gingerbread-wonderland]
   gifts: kids
   steps:
-    - Plan your visit during Gingerbread Wonderland, Dec. 5 to 21.
+    - Visit during the Gingerbread House Contest, Dec. 4 to 19, and vote for your favorite by Dec. 12.
     - Pair it with the holiday photo scavenger hunt or a selfie station.
     - Browse nearby shops such as Uncle Buddy's Toy Stash, Rocket Fizz, or Kalamazoo Candle Company.
     - Enjoy a treat at Sarkozy Bakery or Cherri's Chocol'art.
-  holiday: Gingerbread Wonderland, Dec. 5 to 21
-  before_you_go: Check display locations and hours.
+  holiday: Gingerbread House Contest, Dec. 4 to 19
+  before_you_go: Check the contest map for host businesses.
 
 - slug: december-to-remember-evening
   title: A December to Remember evening
