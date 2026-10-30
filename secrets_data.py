@@ -59,9 +59,6 @@ PAGE_SECRETS = {
     # events
     'events/first-friday-nov.html': fact('51 stops in one night',
                                          'One Art Hop back in 2011 had 51 stops, most of them downtown, with live music at Terrapin and the public library.', None),
-    'events/moms-in-the-zoo.html': fact('An easy gift',
-                                        'Downtown Dollars come in $5, $10 and $20 and stay good for five years, so they make an easy gift for the moms on your list.',
-                                        ('dollars.html', 'Downtown Dollars'), kicker='Gift idea'),
     'events/holiday-parade.html': PARADE,
     'events/after-parade.html': MALL,
     'events/tree-lighting.html': BRONSON,

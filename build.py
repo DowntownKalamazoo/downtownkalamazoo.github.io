@@ -805,7 +805,7 @@ def build_event(i, e):
     if e.get('highlights'):
         extra += f'<h2 class="h3">{E(e.get("highlights_title", "What to expect"))}</h2><ul class="checks {e["fill"]}">' + ''.join(f'<li>{h}</li>' for h in e['highlights']) + '</ul>'
     if e.get('route'):
-        extra += '<h2 class="h3">Parade route</h2><p class="muted">Last year’s route. It starts and ends at the staging area at Portage and Lovell streets.</p><ol class="route">' + ''.join(f'<li>{E(s)}</li>' for s in e['route']) + '</ol>'
+        extra += '<h2 class="h3">Parade route</h2><p class="muted">The 2026 route. It steps off at Lovell and Jasper streets and loops back to Lovell Street.</p><ol class="route">' + ''.join(f'<li>{E(s)}</li>' for s in e['route']) + '</ol>'
     if e.get('hours'):
         rows = ''.join(f'<tr><th scope="row">{E(a)}</th><td>{E(b)}</td></tr>' for a, b in e['hours'])
         extra += f'<div class="table-wrap"><table><caption>{E(e["hours_caption"])}</caption><tbody>{rows}</tbody></table></div>'
