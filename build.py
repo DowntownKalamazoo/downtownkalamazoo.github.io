@@ -773,17 +773,23 @@ def build_newsletter():
 
 
 # ---------------------------------------------------------------- Events index
+HOLIDAY_COUNT_WORDS = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen']
+def NUMW(n):
+    return HOLIDAY_COUNT_WORDS[n] if n < len(HOLIDAY_COUNT_WORDS) else str(n)
+
 def build_events():
     nov = ''.join(event_row(e) for e in EVENTS if e['date'][5:7] == '11')
     dec = ''.join(event_row(e) for e in EVENTS if e['date'][5:7] == '12')
+    n_nov = sum(1 for e in EVENTS if e['date'][5:7] == '11')
+    n_dec = len(EVENTS) - n_nov
     body = page_hero([('index.html', 'Home'), ('events.html', 'Holiday events')], 'November 6 – December 31, 2026',
-                     'Holiday events', 'Eleven reasons to come downtown this season, from the first Art Hop of November to midnight on New Year’s Eve.', 'f-red')
+                     'Holiday events', f'{NUMW(len(EVENTS))} reasons to come downtown this season, from the first Art Hop of November to midnight on New Year’s Eve.', 'f-red')
     body += lights() + f'''<section class="section" aria-label="Event calendar">
   <div class="wrap">
-    {in_short('Events are listed by date. November has six events and December has five. Select an event to see full details.')}
-    <div class="month-head"><h2 class="h2" id="nov">November</h2><span class="muted">6 events</span></div>
+    {in_short(f'Events are listed by date. November has {NUMW(n_nov).lower()} events and December has {NUMW(n_dec).lower()}. Select an event to see full details.')}
+    <div class="month-head"><h2 class="h2" id="nov">November</h2><span class="muted">{n_nov} events</span></div>
     <ul class="event-list" aria-labelledby="nov">{nov}</ul>
-    <div class="month-head"><h2 class="h2" id="dec">December</h2><span class="muted">5 events</span></div>
+    <div class="month-head"><h2 class="h2" id="dec">December</h2><span class="muted">{n_dec} events</span></div>
     <ul class="event-list" aria-labelledby="dec">{dec}</ul>
     <p class="note" style="margin-top:2rem">Details are confirmed with organizers before each event. Check back before you go.</p>
     <div class="panel f-pink" style="margin-top:1.5rem;max-width:46rem"><h2>Hosting a holiday event downtown?</h2><p>Groups, venues and businesses can send an event for the calendar. <a href="{{R}}submit-event.html">Submit an event</a></p></div>
@@ -939,7 +945,7 @@ def build_dollars():
 def build_visit():
     rates = [('First 90 minutes', 'Free'), ('Next hour', '$2'), ('Each additional half hour', '$1'), ('Daily maximum (24 hours)', '$10')]
     rate_rows = ''.join(f'<tr><th scope="row">{a}</th><td class="num">{b}</td></tr>' for a, b in rates)
-    hours = [('Thursday to Sunday', 'Through December 24'), ('New Year’s Eve', 'Special run on December 31'), ('Departures', 'On the hour and half hour from City Hall')]
+    hours = [('Thursdays and Fridays', '5 to 9 p.m.'), ('Saturdays', 'Noon to 7 p.m.'), ('Sundays', 'Noon to 4 p.m. (no service Nov 29)'), ('December 21 to 23', '5 to 9 p.m.'), ('Christmas Eve', 'Noon to 4 p.m.'), ('New Year’s Eve', '6 to 11 p.m.')]
     hour_rows = ''.join(f'<tr><th scope="row">{a}</th><td>{b}</td></tr>' for a, b in hours)
     body = page_hero([('index.html', 'Home'), ('visit.html', 'Visit & park')], 'Getting here', 'Visit &amp; park',
                      'Where to park, how to ride the free holiday trolley, and how to get around once you’re here.', 'f-green')
@@ -953,8 +959,8 @@ def build_visit():
       <p class="note">2026 holiday parking rates will be confirmed by the City of Kalamazoo. On parade day, expect road closures along the route from mid-morning into the afternoon.</p>
 
       <h2 class="h2" id="trolley-title" style="margin-top:1.5rem">Holly Jolly Trolley</h2>
-      <p>The free Holly Jolly Trolley loops around downtown, starting and ending at City Hall, 241 W. South St. Stops have included City Hall, the Kalamazoo Mall and Bell’s Eccentric Café.</p>
-      <div class="table-wrap"><table><caption>Trolley schedule (last season)</caption><tbody>{hour_rows}</tbody></table></div>
+      <p>The free Holly Jolly Trolley loops around downtown from November 27 to December 24, and on New Year’s Eve, starting and ending at City Hall, 241 W. South St. Stops include the Kalamazoo Mall by Santa’s Workshop, Peregrine Tower, Bates Alley, Bell’s Eccentric Café and the Kalamazoo Valley Museum. The last ride leaves City Hall 30 minutes before service ends. <a href="{{R}}events/holly-jolly-trolley.html">See every stop and date</a>.</p>
+      <div class="table-wrap"><table><caption>Trolley schedule, 2026</caption><tbody>{hour_rows}</tbody></table></div>
       <p>The trolley seats 24 people. On busy nights it may be full and pass a stop, so leave a little extra time.</p>
 
       <h2 class="h2" style="margin-top:1.5rem">Getting around</h2>
@@ -979,7 +985,7 @@ def build_businesses():
     steps = [
         ('Get listed', 'Add your business to the Explore downtown directory, with your website, a short description, holiday specials and accessibility details.'),
         ('Accept Downtown Dollars', 'Join the businesses that take Downtown Dollars. Customers can spend them at your door for five years.'),
-        ('Host during events', 'Plan something for After Parade activities, Art Hop, Gingerbread Wonderland or Moonlight Madness, and submit it for the holiday calendar.'),
+        ('Host during events', 'Plan something for After Parade activities, Art Hop, the Gingerbread House Contest or Moonlight Madness, and submit it for the holiday calendar.'),
         ('Show the brand', 'Place a decal in your window, wear a sticker, and share the brand with #SomethingNewKalamazoo.'),
     ]
     step_html = ''.join(f'<li class="{f}"><span class="big">{E(a)}</span><span>{E(b)}</span></li>' for (a, b), f in zip(steps, ['f-blue', 'f-pink', 'f-green', 'f-red']))
@@ -1134,7 +1140,7 @@ def build_take_home():
       <h2 class="h2" id="craft-title">Holiday color &amp; craft pack</h2>
       <p>Seven pages of downtown patterns in holiday shapes: color the K, deck six ornaments, build a patchwork tree, match a pair of mittens, cut out gift tags, piece together a downtown quilt, and design a pattern of your own.</p>
       <p><a class="btn btn-primary" href="{{R}}downloads/holiday-color-craft-pack.pdf" download>Download the craft pack<span class="sr-only"> (PDF, 7 pages)</span></a></p>
-      <p class="muted">PDF, 7 letter-size pages. Great for Gingerbread Wonderland week, classrooms and kids’ tables at holiday dinners.</p>
+      <p class="muted">PDF, 7 letter-size pages. Great for Gingerbread House Contest week, classrooms and kids’ tables at holiday dinners.</p>
     </div>
     <img class="sheet-preview" src="{{R}}downloads/craft-pack-thumb.webp" width="360" height="466" loading="lazy" alt="The first craft page: the Downtown Kalamazoo K in outline, filled with the squiggle pattern, under the heading Color the K.">
   </div>

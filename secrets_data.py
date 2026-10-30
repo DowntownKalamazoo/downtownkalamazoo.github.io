@@ -90,7 +90,7 @@ PAGE_SECRETS = {
 HOME_HERO = MALL
 PILLAR_SECRETS = [
     biz("Uncle Buddy's Toy Stash"),
-    fact('Downtown stays up late', 'On Saturday, December 12, shops, restaurants and bars stay open from 6 to 11 p.m. for Moonlight Madness: deals, lights and music.',
+    fact('Downtown stays up late', 'On Friday, December 11, shops, restaurants and bars stay open from 6 to 11 p.m. for Moonlight Madness: deals, lights and music.',
          ('events/moonlight-madness.html', 'Moonlight Madness'), kicker='Mark your calendar'),
     PARADE,
     TROLLEY,

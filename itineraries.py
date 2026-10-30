@@ -56,13 +56,14 @@ def places():
         ('Tree Lighting Ceremony', 'events/tree-lighting.html', 'event'),
         ('Tree Lighting', 'events/tree-lighting.html', 'event'),
         ('Moonlight Madness', 'events/moonlight-madness.html', 'event'),
+        ('Gingerbread House Contest', 'events/gingerbread-wonderland.html', 'event'),
         ('Gingerbread Wonderland', 'events/gingerbread-wonderland.html', 'event'),
         ('December to Remember', 'events/december-to-remember.html', 'event'),
         ("New Year's Fest", 'events/new-years-fest.html', 'event'),
         ('Moms in the Zoo', 'events/moms-in-the-zoo.html', 'event'),
-        ('Pets with Santa', 'events/small-business-saturday.html', 'event'),
-        ("Santa's Workshop", 'events/small-business-saturday.html', 'event'),
-        ('Holly Jolly Trolley', 'visit.html#trolley-title', 'event'),
+        ('Pets with Santa', 'events/santas-workshop.html', 'event'),
+        ("Santa's Workshop", 'events/santas-workshop.html', 'event'),
+        ('Holly Jolly Trolley', 'events/holly-jolly-trolley.html', 'event'),
         ('Downtown Dollars', 'dollars.html', 'event'),
         ('Kalamazoo Valley Museum', 'https://kalamazoomuseum.org', 'place'),
     ]
@@ -260,9 +261,9 @@ def schedule_json(s):
 
 # Stops people can add on the build-your-own page that aren't businesses or events.
 EXPERIENCES = [
-    dict(id='santa', n="Santa's Workshop", w='City Centre, second floor, 125 S. Kalamazoo Mall', h='events/small-business-saturday.html',
+    dict(id='santa', n="Santa's Workshop", w='City Centre, second floor, 125 S. Kalamazoo Mall', h='events/santas-workshop.html',
          d='Visit Santa, write a letter and make a craft. Free. Open Thursday to Sunday from Nov. 28.'),
-    dict(id='trolley', n='Ride the Holly Jolly Trolley', w='Leaves from City Hall, 241 W. South St.', h='visit.html#trolley-title',
+    dict(id='trolley', n='Ride the Holly Jolly Trolley', w='Leaves from City Hall, 241 W. South St.', h='events/holly-jolly-trolley.html',
          d='A free trolley loop around downtown, Thursday to Sunday through Dec. 24, and Dec. 31.'),
     dict(id='mall', n='Stroll the Kalamazoo Mall', w='Kalamazoo Mall', h='',
          d='Holiday windows, lights and photo spots on downtown’s pedestrian street. Free.'),
