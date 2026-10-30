@@ -642,11 +642,11 @@ plans:
   when: Saturday, Nov. 21
   events: [holiday-parade, after-parade]
   steps:
-    - Arrive early and pick a viewing spot for the Fox Motors Maple Hill Holiday Parade, 11 a.m. to 12:30 p.m.
+    - Arrive early and pick a viewing spot for the Kalamazoo Holiday Parade presented by Fox Motors, 11 a.m. to 12:30 p.m. Roads close at 10:30 a.m.
     - Explore the after-parade activities, noon to 3 p.m.
     - Grab lunch at Bimbo's Pizza, Coney Island Hot Dogs, or City Centre Market and Deli.
     - Browse a few nearby shops before heading home.
-  holiday: Fox Motors Maple Hill Holiday Parade and after-parade activities, Saturday, Nov. 21
+  holiday: Kalamazoo Holiday Parade and after-parade activities, Saturday, Nov. 21
   before_you_go: Check the official schedule and street closures.
 
 - slug: tree-lighting-evening
