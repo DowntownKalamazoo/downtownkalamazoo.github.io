@@ -1,0 +1,120 @@
+/* Holiday Gift Guide (holidays/gifts.html): every gift is a gift tag hung from a string.
+   Tags are paper: white with dark-blue ink in both light and dark themes, so photos and patterns read the same. */
+.gg-hero, .gg-results { --gg-paper: #ffffff; --gg-ink: #121345; --gg-link: #04679a; --gg-line: #c6dadd; --gg-muted: #444872; }
+
+/* ---------- Hero: the tag you fill in ---------- */
+.gg-hero { position: relative; background: var(--dk-navy); color: #fff; padding-block: 4.25rem 3rem; overflow: hidden; }
+.gg-garland { position: absolute; left: 0; top: 0; width: 100%; height: 56px; }
+.gg-garland path { fill: none; stroke: var(--dk-pink); stroke-width: 12; stroke-linecap: round; }
+.gg-garland .gg-garland-dots { stroke: var(--dk-red); stroke-width: 4; stroke-dasharray: 1 14; }
+.gg-hero .crumbs, .gg-hero .crumbs a { color: #fff; }
+.gg-hero .crumbs [aria-current] { color: var(--dk-pink); }
+.gg-hero-row { display: flex; flex-wrap: wrap; gap: 2.5rem; align-items: flex-start; margin-top: 1rem; }
+.gg-hang { flex: 999 1 34rem; min-width: 0; display: flex; flex-direction: column; filter: drop-shadow(0 18px 30px rgba(0, 0, 0, .35)); }
+.gg-string { display: block; width: 2px; height: 1.4rem; margin-inline: auto; background: var(--gg-ink); }
+.gg-string-long { height: 2.2rem; background: var(--dk-mist); }
+.gg-bigtag { position: relative; background: var(--gg-paper); color: var(--gg-ink); display: grid; gap: 1rem;
+  padding: 4rem clamp(1.25rem, 4vw, 3rem) 2rem;
+  clip-path: polygon(2.75rem 0, calc(100% - 2.75rem) 0, 100% 2.75rem, 100% 100%, 0 100%, 0 2.75rem); }
+.gg-bigtag .eyebrow { color: var(--gg-link); }
+.gg-bigtag h1 { color: var(--gg-ink); }
+.gg-hole { position: absolute; left: 50%; top: .6rem; width: 1rem; height: 1rem; margin-left: calc(-.5rem - 4px); border-radius: 50%;
+  background: var(--gg-ground, var(--band)); border: 4px solid var(--gg-paper); box-shadow: 0 0 0 1px rgba(18, 19, 69, .25); box-sizing: content-box; }
+.gg-hole-big { top: .85rem; width: 1.1rem; height: 1.1rem; margin-left: calc(-.55rem - 5px); background: var(--dk-navy); border: 5px solid var(--dk-mist); }
+.gg-confetti { height: .9rem; background-size: cover; background-position: center; background-repeat: no-repeat; }
+
+/* The sentence with three blanks */
+.gg-form { display: grid; gap: 1.1rem; }
+.gg-sentence { font-size: clamp(1.3rem, 1rem + 1.3vw, 1.95rem); line-height: 1.6; font-weight: 500; max-width: 32em; }
+.gg-blank { position: relative; display: inline-block; max-width: 100%; vertical-align: baseline; }
+.gg-blank select { appearance: none; -webkit-appearance: none; font: inherit; font-weight: 700; color: var(--gg-link); background: transparent;
+  border: 0; border-bottom: 3px solid var(--gg-ink); border-radius: 0; padding: 0 2rem .05em .1rem; cursor: pointer; max-width: 100%; text-overflow: ellipsis; }
+.gg-blank select:hover { background: var(--dk-pink); color: var(--gg-ink); }
+.gg-blank select:focus-visible { outline: 3px solid var(--dk-red); outline-offset: 3px; }
+.gg-blank select option { color: #121345; background: #fff; }
+.gg-chev { position: absolute; right: .25rem; top: 50%; margin-top: -.55rem; width: 1.1rem; height: 1.1rem; color: var(--gg-ink); pointer-events: none; }
+.gg-toggles { display: flex; flex-wrap: wrap; gap: .5rem; }
+.gg-toggle { appearance: none; display: inline-flex; align-items: center; gap: .45rem; min-height: 2.75rem; padding: .35rem 1rem;
+  border: 2px solid var(--gg-ink); border-radius: 999px; background: var(--gg-paper); color: var(--gg-ink);
+  font-family: var(--font-ui); font-weight: 700; font-size: .875rem; cursor: pointer; }
+.gg-toggle:hover { background: var(--dk-mist); }
+.gg-toggle[aria-pressed="true"] { background: var(--gg-ink); color: #fff; }
+.gg-toggle .gg-tick { display: none; flex: none; }
+.gg-toggle[aria-pressed="true"] .gg-tick { display: inline; }
+.gg-toggle:focus-visible { outline: 3px solid var(--dk-red); outline-offset: 3px; }
+.gg-nojs { display: none; font-size: 1.15rem; }
+:root:not(.js) .gg-form, :root:not(.js) .gg-surprise { display: none; }
+:root:not(.js) .gg-nojs { display: block; }
+
+/* Surprise me: a wrapped present that becomes a tag */
+.gg-surprise { flex: 1 1 18rem; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 1.1rem; text-align: center; }
+.gg-surprise .gg-string-long { margin-bottom: -1.1rem; }
+.gg-package { position: relative; width: min(100%, 18rem); aspect-ratio: 18 / 13; filter: drop-shadow(0 18px 30px rgba(0, 0, 0, .35)); }
+.gg-paper { position: absolute; inset: 2rem 0 0; border-radius: 6px; background-color: var(--dk-pink); background-size: cover; background-position: center; background-repeat: no-repeat; }
+.gg-ribbon-v { position: absolute; left: 50%; top: 2rem; bottom: 0; width: 2rem; margin-left: -1rem; background: var(--dk-red); border-inline: 3px solid var(--gg-ink); }
+.gg-ribbon-h { position: absolute; left: 0; right: 0; top: 52%; height: 2rem; background: var(--dk-red); border-block: 3px solid var(--gg-ink); }
+.gg-bow { position: absolute; left: 50%; top: 0; width: 7rem; margin-left: -3.5rem; }
+.gg-bow path { fill: var(--dk-red); stroke: var(--gg-ink); stroke-width: 2.5; stroke-linejoin: round; }
+.gg-bow circle { fill: #f2b829; stroke: var(--gg-ink); stroke-width: 2.5; }
+.gg-surprise-text { max-width: 20rem; font-size: 1.1rem; }
+.gg-hero .gg-surprise-btn { background: #fff; color: var(--gg-ink); border-color: #fff; }
+.gg-hero .gg-surprise-btn:hover { background: var(--dk-pink); border-color: var(--dk-pink); }
+.gg-spot { width: min(100%, 21rem); filter: drop-shadow(0 18px 30px rgba(0, 0, 0, .35)); text-align: start; }
+.gg-spot .gg-tag { width: 100%; }
+
+/* ---------- The tags ---------- */
+.gg-results { --gg-ground: var(--band); background: var(--gg-ground); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .gg-results { --gg-ground: var(--bg); } }
+:root[data-theme="dark"] .gg-results { --gg-ground: var(--bg); }
+.gg-item .gg-string { background: var(--fg); }
+.gg-spot .gg-hole { background: var(--dk-navy); }
+.gg-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1rem 2rem; margin-bottom: 1.75rem; }
+.gg-head > div { display: grid; gap: .35rem; }
+#gg-count { font-size: 1.1rem; }
+.gg-from-note { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; margin-bottom: 1.5rem; padding: .75rem 1rem;
+  background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); }
+.gg-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16.5rem), 1fr)); gap: 2.5rem 1.75rem; align-items: start; }
+.gg-item { display: flex; flex-direction: column; min-width: 0; transform: rotate(var(--tilt, 0deg)); transform-origin: 50% 0;
+  transition: transform .25s ease; filter: drop-shadow(0 8px 16px rgba(18, 19, 69, .16)); }
+.gg-item:hover, .gg-item:focus-within { transform: rotate(0deg) translateY(-3px); }
+.gg-item.is-picked .gg-string { background: var(--dk-red); width: 3px; }
+.gg-tag { position: relative; display: flex; flex-direction: column; background: var(--gg-paper); color: var(--gg-ink);
+  clip-path: polygon(1.6rem 0, calc(100% - 1.6rem) 0, 100% 1.6rem, 100% 100%, 0 100%, 0 1.6rem); }
+.gg-media { position: relative; aspect-ratio: 4 / 3; background: var(--dk-mist); overflow: hidden; }
+.gg-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.gg-band { height: .75rem; background-size: cover; background-position: center; background-repeat: no-repeat; }
+.gg-wrap { display: flex; align-items: center; justify-content: center; padding: 2rem 1rem .9rem; box-sizing: border-box;
+  background-size: cover; background-position: center; background-repeat: no-repeat; }
+.gg-wrap-label { max-width: 85%; padding: .6rem 1rem; background: var(--gg-paper); color: var(--gg-ink); border: 3px solid var(--gg-ink);
+  transform: rotate(-2deg); text-align: center; font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; line-height: 1.1;
+  text-transform: uppercase; text-wrap: balance; overflow-wrap: anywhere; }
+.gg-body { display: grid; gap: .6rem; padding: 1rem 1.35rem .9rem; }
+.gg-pick { justify-self: start; padding: .15rem .65rem; border-radius: 999px; background: #f2b829; color: var(--gg-ink);
+  font-family: var(--font-ui); font-weight: 800; font-size: .75rem; }
+.gg-to { font-family: var(--font-ui); font-weight: 700; font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--gg-link); }
+.gg-name { font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; line-height: 1.2; color: var(--gg-ink); }
+.gg-desc { font-size: 1rem; line-height: 1.5; }
+.gg-badges { display: flex; flex-wrap: wrap; gap: .35rem; }
+.gg-badge { display: inline-flex; align-items: center; gap: .35rem; border-radius: 999px; padding: .2rem .65rem; color: var(--gg-ink);
+  font-family: var(--font-ui); font-weight: 700; font-size: .72rem; line-height: 1.2; }
+.gg-local { background: var(--dk-green); }
+.gg-k { width: .7rem; height: .85rem; background: var(--gg-ink); -webkit-mask: url({R}k-shape.svg) center / contain no-repeat; mask: url({R}k-shape.svg) center / contain no-repeat; }
+.gg-gives { background: #f2b829; }
+.gg-21 { border: 2px solid var(--gg-ink); padding-block: .1rem; }
+.gg-tag .dd-badge { --dd-bg: #f5b8d1; --dd-fg: #121345; --dd-coin: #121345; }
+.gg-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .25rem 1rem; padding-top: .6rem; border-top: 2px dashed var(--gg-line);
+  font-family: var(--font-ui); font-weight: 700; font-size: .8rem; }
+.gg-price { font-family: var(--font-body); font-weight: 500; font-size: .95rem; }
+.gg-from { display: inline-flex; align-items: center; min-height: 2.75rem; font-family: var(--font-ui); font-weight: 700; font-size: .875rem; color: var(--gg-link); }
+p.gg-from { color: var(--gg-ink); }
+a.gg-from:focus-visible { outline: 3px solid var(--dk-red); outline-offset: 2px; }
+.gg-empty { display: grid; gap: .75rem; justify-items: start; padding: 1.5rem; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); }
+.gg-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: 1rem; }
+
+/* Phones: tags hang straight in one column */
+@media (max-width: 600px) {
+  .gg-hero { padding-block: 4rem 2.5rem; }
+  .gg-item { transform: none; }
+}
+:root.a11y-motion .gg-item, :root.a11y-motion .gg-item:hover, :root.a11y-motion .gg-item:focus-within { transition: none; }
+@media (prefers-reduced-motion: reduce) { .gg-item:hover, .gg-item:focus-within { transform: rotate(var(--tilt, 0deg)); } }

@@ -175,7 +175,7 @@ PLANS = [
          best_for='Gift shoppers', time='Most of a day', budget='Up to you', days='Small Business Saturday, Nov 28',
          stops=[
              dict(time='10:00', place='Coffee to start', what='Fuel up at a downtown café and write your list.', cost='Your choice'),
-             dict(time='10:45', place='The Kalamazoo Mall', what='Work your way down the mall, where shops sit a short walk apart. Use the <a href="{R}gifts.html">gift guides</a> for ideas.'),
+             dict(time='10:45', place='The Kalamazoo Mall', what='Work your way down the mall, where shops sit a short walk apart. Use the <a href="{R}gifts.html">Holiday Gift Guide</a> for ideas.'),
              dict(time='12:30', place='Lunch at a local restaurant', what='Sit down somewhere owned by your neighbors. Downtown Dollars work at many restaurants.', cost='Your choice'),
              dict(time='2:00', place='Side streets', what='Branch off the mall for the shops a block over. The <a href="{R}directory.html#shop">directory</a> lists places to start.'),
              dict(time='4:00', place='Santa’s Workshop', what='Drop in at City Centre, 125 S. Kalamazoo Mall, before heading home.', cost='Free'),
@@ -217,7 +217,7 @@ PLANS = [
          best_for='Last-minute shoppers', time='About 2 hours', budget='Up to you', days='December 21 to 24',
          stops=[
              dict(time='Anytime', place='Buy Downtown Dollars', what='They arrive by email, so they work as a gift even on Christmas Eve. <a href="{R}dollars.html">How to buy</a>.'),
-             dict(time='5:00', place='Shops on the Kalamazoo Mall', what='Head straight for the mall and use the <a href="{R}gifts.html">gift guides</a> to move fast.'),
+             dict(time='5:00', place='Shops on the Kalamazoo Mall', what='Head straight for the mall and use the <a href="{R}gifts.html">Holiday Gift Guide</a> to move fast.'),
              dict(time='6:30', place='Santa’s Workshop', what='Last season, Santa stayed through Christmas Eve with evening hours Monday to Wednesday of Christmas week, and noon to 4 p.m. on the 24th.', cost='Free'),
              dict(time='7:30', place='Dinner and done', what='Celebrate finishing your list at a downtown restaurant.', cost='Your choice'),
          ],

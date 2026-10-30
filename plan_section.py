@@ -168,10 +168,10 @@ def build_plan(i, p):
     gifts = ''
     if p['gifts']:
         g = p['gifts']
-        href = 'gifts.html' if g == 'all' else f'gifts.html#{g}'
+        href = 'gifts.html' + (f'#{IT.GIFT_HASH[g]}' if IT.GIFT_HASH[g] else '')
         label = IT.GIFT_GUIDES[g]
         gifts = (f'<p class="gift-link"><span class="gl-ribbon" aria-hidden="true"></span>Shopping for someone? '
-                 f'<a href="{{R}}{href}">{"See the holiday gift guides" if g == "all" else "Gift guide: " + E(label)}</a></p>')
+                 f'<a href="{{R}}{href}">{"See the Holiday Gift Guide" if g == "all" else "Holiday Gift Guide: " + E(label)}</a></p>')
     evs = ''.join(f'<li><a href="{{R}}events/{s}.html">{E(_EV[s]["title"])}</a> <span class="muted">{E(_EV[s]["when_short"])}</span></li>' for s in p['events'])
     tie = ''
     if p['holiday'] or evs:

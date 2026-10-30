@@ -1,5 +1,5 @@
 """Plan your day: loads content/itineraries.yml, checks it, and turns each plan's steps into HTML with
-links to the business directory, holiday event pages and gift guides.
+links to the business directory, holiday event pages and the Holiday Gift Guide.
 
 Business names link on their own when they match a name in the directory (directory.json plus
 content/directory-updates.yml). Holiday events, Santa's Workshop and the trolley link through PLACES below.
@@ -27,8 +27,11 @@ BUDGET_KEY = {'free': 'free', '$': 'b1', '$$': 'b2', '$$$': 'b3'}
 WHO = [('families', 'Families with kids'), ('couples', 'Couples'), ('friends', 'Friends'), ('adults', 'Adults'),
        ('teens', 'Teens'), ('solo', 'On my own'), ('visitors', 'Visiting guests'), ('pets', 'With a pet')]
 
-GIFT_GUIDES = {'all': 'Holiday gift guides', 'art-lover': 'For the art lover', 'foodie': 'For the food lover',
-               'kids': 'For kids', 'host': 'For the host', 'stocking': 'Stocking stuffers', 'experiences': 'Experiences'}
+# A plan's "gifts:" line links to the Holiday Gift Guide, filled in for that kind of gift (gifts.html#foodie and so on).
+GIFT_GUIDES = {'all': 'Holiday Gift Guide', 'art-lover': 'gifts for the arts fan', 'foodie': 'gifts for the foodie',
+               'kids': 'gifts for kids', 'host': 'gifts for the host', 'stocking': 'stocking stuffers', 'experiences': 'experiences to give'}
+GIFT_HASH = {'all': '', 'art-lover': 'arts-fan', 'foodie': 'foodie', 'kids': 'kid', 'host': 'host', 'stocking': 'stocking',
+             'experiences': 'experience'}
 
 FILLS = ['f-pink', 'f-blue', 'f-green', 'f-red', 'f-mist']
 CARD_PATTERNS = ['arcs', 'confetti', 'dots', 'squiggle', 'quilt', 'stripes', 'waves', 'speckle', 'loops']

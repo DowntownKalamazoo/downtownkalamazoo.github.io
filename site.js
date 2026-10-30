@@ -156,13 +156,14 @@
   const grid = $('#biz-grid');
   if (grid) {
     const cards = $$('.biz', grid);
-    const q = $('#dir-q'), chips = $$('#dir-cats .chip'), ddChip = $('#dir-dd'), sdChip = $('#dir-sd'), count = $('#dir-count'), empty = $('#dir-empty');
+    const q = $('#dir-q'), chips = $$('#dir-cats .chip'), ddChip = $('#dir-dd'), sdChip = $('#dir-sd'), giftChip = $('#dir-gift'), count = $('#dir-count'), empty = $('#dir-empty');
     const VIEW_KEY = 'dk-dir-view';
     const canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    let cat = 'all', ddOnly = false, sdOnly = false;
+    let cat = 'all', ddOnly = false, sdOnly = false, giftOnly = false;
     const hash = (location.hash || '').replace('#', '');
     if (hash === 'dollars') ddOnly = true;
     else if (hash === 'social') sdOnly = true;
+    else if (hash === 'gifts' && giftChip) giftOnly = true;
     else if (chips.some(c => c.dataset.cat === hash)) cat = hash;
 
     const st = new Map(cards.map(c => [c, { pinned: false, hovered: false, suppress: false, timer: 0 }]));
@@ -218,25 +219,27 @@
       const term = (q.value || '').trim().toLowerCase();
       let n = 0;
       cards.forEach(c => {
-        const ok = (cat === 'all' || c.dataset.cat === cat) && (!ddOnly || c.dataset.dd === '1') && (!sdOnly || c.dataset.sd === '1') && (!term || c.dataset.search.includes(term));
+        const ok = (cat === 'all' || c.dataset.cat === cat) && (!ddOnly || c.dataset.dd === '1') && (!sdOnly || c.dataset.sd === '1') && (!giftOnly || c.dataset.gift === '1') && (!term || c.dataset.search.includes(term));
         c.hidden = !ok; if (ok) n++;
       });
       chips.forEach(c => c.setAttribute('aria-pressed', String(c.dataset.cat === cat)));
       ddChip.setAttribute('aria-pressed', String(ddOnly));
       if (sdChip) sdChip.setAttribute('aria-pressed', String(sdOnly));
+      if (giftChip) giftChip.setAttribute('aria-pressed', String(giftOnly));
       const label = cat === 'all' ? 'businesses' : (chips.find(c => c.dataset.cat === cat).dataset.noun || (chips.find(c => c.dataset.cat === cat).dataset.label + ' businesses'));
-      count.textContent = `Showing ${n} of ${cards.length} ${n === cards.length ? 'businesses' : label}${ddOnly ? ' that accept Downtown Dollars' : ''}${sdOnly ? ' in the Social District' : ''}`;
+      count.textContent = `Showing ${n} of ${cards.length} ${n === cards.length ? 'businesses' : label}${ddOnly ? ' that accept Downtown Dollars' : ''}${sdOnly ? ' in the Social District' : ''}${giftOnly ? ' in the Holiday Gift Guide' : ''}`;
       empty.hidden = n > 0;
     }
     chips.forEach(c => c.addEventListener('click', () => { cat = c.dataset.cat; run(); }));
     ddChip.addEventListener('click', () => { ddOnly = !ddOnly; run(); });
     if (sdChip) sdChip.addEventListener('click', () => { sdOnly = !sdOnly; run(); });
+    if (giftChip) giftChip.addEventListener('click', () => { giftOnly = !giftOnly; run(); });
     // Searches from the home page arrive as directory.html?q=…
     const qp = new URLSearchParams(location.search).get('q');
     if (qp) q.value = qp.slice(0, 80);
     let t; q.addEventListener('input', () => { clearTimeout(t); t = setTimeout(run, 150); });
     $('#dir-form').addEventListener('submit', e => e.preventDefault());
-    $('#dir-clear').addEventListener('click', () => { cat = 'all'; ddOnly = false; sdOnly = false; q.value = ''; run(); q.focus(); });
+    $('#dir-clear').addEventListener('click', () => { cat = 'all'; ddOnly = false; sdOnly = false; giftOnly = false; q.value = ''; run(); q.focus(); });
 
     const viewBtns = $$('#view-group button');
     function setView(v, save) {

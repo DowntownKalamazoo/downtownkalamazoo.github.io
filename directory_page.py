@@ -4,6 +4,9 @@ import json, os, re, urllib.parse, html
 E = html.escape
 HERE = os.path.dirname(os.path.abspath(__file__))
 BIZ = json.load(open(os.path.join(HERE, 'directory.json')))
+# Gift names by business id, set by build.py from content/gift-guide.yml during the holiday season.
+# Businesses with a gift get an "In the Gift Guide" tag and a directory filter.
+GIFTS = {}
 
 
 def _apply_updates():
@@ -64,6 +67,15 @@ def dd_badge():
     return '<span class="dd-badge"><span class="dd-coin" aria-hidden="true">$</span>Accepts Downtown Dollars</span>'
 
 
+def gift_badge():
+    return ('<span class="gift-badge"><span class="gift-swatch" aria-hidden="true" style="background-image:url({R}pattern-stripes-sm.webp)"></span>'
+            'In the Gift Guide</span>')
+
+
+def _and(names):
+    return names[0] if len(names) == 1 else ', '.join(names[:-1]) + ' and ' + names[-1]
+
+
 def sd_badge():
     return '<span class="sd-badge"><span class="sd-cup" aria-hidden="true"></span>Social District</span>'
 
@@ -85,14 +97,19 @@ def biz_card(b):
     desc = f'<p class="biz-desc">{E(b["desc"])}</p>' if b['desc'] else ''
     if b['includes']:
         desc += f'<p class="biz-desc"><strong>Inside:</strong> {E(b["includes"])}</p>'
+    gifts = GIFTS.get(b['id']) or []
+    if gifts:
+        desc += (f'<p class="biz-desc"><strong>Gift ideas:</strong> {E(_and(gifts))}. '
+                 f'<a href="{{R}}gifts.html#from-{b["id"]}">See them in the Holiday Gift Guide</a></p>')
     search = ' '.join([b['name'], b['cat_label'], b['address'], b['where'], b['desc'], b['includes'],
-                       'downtown dollars' if b['dd'] else '', 'social district' if b.get('sd') else '']).lower()
+                       'downtown dollars' if b['dd'] else '', 'social district' if b.get('sd') else '',
+                       'gift guide holiday gifts ' + ' '.join(gifts) if gifts else '']).lower()
     initial = re.sub(r'^the\s+', '', b['name'], flags=re.I)[:1].upper()
-    dd = (dd_badge() if b['dd'] else '') + (sd_badge() if b.get('sd') else '')
+    dd = (dd_badge() if b['dd'] else '') + (sd_badge() if b.get('sd') else '') + (gift_badge() if gifts else '')
     where = f'<p class="biz-where">{E(b["where"])}</p>' if b['where'] else ''
     name = E(b['name'])
     return (
-        f'<li class="biz {b["fill"]}" style="--cat-pat:url({{R}}pattern-{CAT_PATTERN.get(b["cat"], "squiggle")}-sm.webp)" id="{bid}" data-cat="{b["cat"]}" data-dd="{1 if b["dd"] else 0}" data-sd="{1 if b.get("sd") else 0}" data-search="{E(search)}">'
+        f'<li class="biz {b["fill"]}" style="--cat-pat:url({{R}}pattern-{CAT_PATTERN.get(b["cat"], "squiggle")}-sm.webp)" id="{bid}" data-cat="{b["cat"]}" data-dd="{1 if b["dd"] else 0}" data-sd="{1 if b.get("sd") else 0}" data-gift="{1 if gifts else 0}" data-search="{E(search)}">'
         f'<div class="biz-inner">'
         f'<article class="face front" aria-labelledby="{bid}-n">'
         f'<div class="front-band" aria-hidden="true"><span class="cat">{E(b["cat_label"])}</span><span class="initial">{E(initial)}</span></div>'
@@ -120,6 +137,10 @@ def directory_body(page_hero, in_short):
     total = len(BIZ)
     n_dd = sum(1 for b in BIZ if b['dd'])
     n_sd = sum(1 for b in BIZ if b.get('sd'))
+    n_gift = sum(1 for b in BIZ if GIFTS.get(b['id']))
+    gift_chip = (f'<button type="button" class="chip chip-gift" id="dir-gift" aria-pressed="false" aria-describedby="dd-label">'
+                 f'<span class="gift-swatch" aria-hidden="true" style="background-image:url({{R}}pattern-stripes-sm.webp);margin-inline-end:.4rem"></span>'
+                 f'In the Holiday Gift Guide<span class="n">{n_gift}</span></button>') if n_gift else ''
     counts = {c: sum(1 for b in BIZ if b['cat'] == c) for c, _ in BIZ_CATS}
     chips = (f'<li><button type="button" class="chip" data-cat="all" data-label="All" aria-pressed="true">All<span class="n">{total}</span></button></li>'
              + ''.join(f'<li><button type="button" class="chip" data-cat="{c}" data-label="{E(l)}"{CAT_NOUN.get(c, '')} aria-pressed="false"><span class="chip-swatch" aria-hidden="true" style="background-image:url({{R}}pattern-{CAT_PATTERN[c]}-sm.webp)"></span>{E(l)}'
@@ -143,7 +164,8 @@ def directory_body(page_hero, in_short):
       <div class="row">
         <div class="field" style="flex:1 1 auto"><span class="label" id="cats-label">Type of business</span><div role="group" aria-labelledby="cats-label"><ul class="chips" id="dir-cats">{chips}</ul></div></div>
         <div class="field"><span class="label" id="dd-label">Show only</span><button type="button" class="chip chip-dd" id="dir-dd" aria-pressed="false" aria-describedby="dd-label"><span class="dd-coin" aria-hidden="true" style="margin-inline-end:.4rem">$</span>Accepts Downtown Dollars<span class="n">{n_dd}</span></button>
-          <button type="button" class="chip chip-sd" id="dir-sd" aria-pressed="false" aria-describedby="dd-label"><span class="sd-cup" aria-hidden="true" style="margin-inline-end:.4rem"></span>Social District<span class="n">{n_sd}</span></button></div>
+          <button type="button" class="chip chip-sd" id="dir-sd" aria-pressed="false" aria-describedby="dd-label"><span class="sd-cup" aria-hidden="true" style="margin-inline-end:.4rem"></span>Social District<span class="n">{n_sd}</span></button>
+          {gift_chip}</div>
       </div>
     </form>
     <div class="dir-result">

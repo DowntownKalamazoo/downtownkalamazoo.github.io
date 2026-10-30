@@ -31,6 +31,16 @@ import random as _random
 # main menu, a banner on the homepage and a Holidays column in the footer. Set it to False after the season.
 HOLIDAY_SEASON = True
 
+# Holiday Gift Guide: gifts live in content/gift-guide.yml (see gift_guide.py). Businesses with a gift get an
+# "In the Gift Guide" tag in the directory while it's the holiday season.
+import gift_guide as GG
+try:
+    GIFTS = GG.load()
+except GG.GiftGuideError as _err:
+    print(f'::error file=content/gift-guide.yml,title=Gift guide::{_err}')
+    raise
+directory_page.GIFTS = GIFTS['by_business'] if HOLIDAY_SEASON else {}
+
 # Pages that are switched off for now. Their content stays in this repository. To bring one back,
 # change False to True and commit; every menu, footer and page link to it comes back with it.
 SHOW_NEWS = True            # News & stories (news.html, made from content/news)
@@ -115,7 +125,7 @@ HOLIDAY_NAV = [
     ('holidays/index.html', 'Find the Holidays Downtown'),
     ('holidays/events.html', 'Holiday events'),
     ('holidays/plan.html', 'Plan your day'),
-    ('holidays/gifts.html', 'Gift guides'),
+    ('holidays/gifts.html', 'Gift guide'),
     ('holidays/sbs.html', 'Small Business Saturday'),
 ]
 
@@ -446,7 +456,7 @@ STREETS_FOR_ALL = 'https://www.kalamazoocity.org/Community/Projects/Streets-for-
 PILLARS = [
     dict(fill='f-green', title='Find something local',
          text='Locally owned shops, restaurants, makers and services, a few blocks apart.',
-         links=[('Explore downtown', 'directory.html'), ('Gift guides', 'gifts.html'), ('Downtown Dollars', 'dollars.html')]),
+         links=[('Explore downtown', 'directory.html'), ('Holiday Gift Guide', 'gifts.html'), ('Downtown Dollars', 'dollars.html')]),
     dict(fill='f-red', title='Find more to do',
          text='Pair a holiday event with dinner, shopping, a show or a walk through the lights.',
          links=[('Holiday events', 'events.html'), ('Plan your day', 'plan.html'), ('Small Business Saturday', 'sbs.html')]),
@@ -602,7 +612,7 @@ def build_home():
 </section>
 '''
     page('holidays/index.html', 'Find the Holidays Downtown', body, 'holidays',
-         'Find the Holidays Downtown: holiday events, itineraries, gift guides, local businesses and visitor information for Downtown Kalamazoo, November and December 2026.')
+         'Find the Holidays Downtown: holiday events, itineraries, the Holiday Gift Guide, local businesses and visitor information for Downtown Kalamazoo, November and December 2026.')
 
 
 # ---------------------------------------------------------------- Submit an event
@@ -691,7 +701,7 @@ def build_submit():
         <li>Holiday events between November 1 and December 31 also go in Find the Holidays Downtown</li>
       </ul><p>Staff review each submission and confirm the details with you first. Popular weekends fill up, so send events early.</p></section>
       <section class="panel"><h2>Questions?</h2><p>Email <span>downtown@kalamazoocity.org</span> <button type="button" class="btn btn-small btn-quiet" data-copy="downtown@kalamazoocity.org">Copy address</button></p><p>Or call 311.</p></section>
-      <section class="panel"><h2>Own a downtown business?</h2><p>You can also join the directory, gift guides and Small Business Saturday. <a href="{{R}}businesses.html">See how to take part</a>.</p></section>
+      <section class="panel"><h2>Own a downtown business?</h2><p>You can also join the directory, the Holiday Gift Guide and Small Business Saturday. <a href="{{R}}businesses.html">See how to take part</a>.</p></section>
     </div>
   </div>
 </section>'''
@@ -847,31 +857,14 @@ def build_directory():
 
 # ---------------------------------------------------------------- Gifts
 def build_gifts():
-    toc = ''.join(f'<li><a class="chip" href="#{g["id"]}">{E(g["title"])}</a></li>' for g in GIFT_GUIDES)
-    sections = ''
-    for g in GIFT_GUIDES:
-        ideas = ''.join(f'<li>{x}</li>' for x in g['ideas'])
-        look = ' · '.join(f'<a href="{{R}}{h}">{E(t)}</a>' for t, h in g['look'])
-        sections += f'''<section class="section-tight" aria-labelledby="{g["id"]}" style="border-top:1px solid var(--line)">
-  <div class="two-col" style="align-items:start">
-    <div class="prose">
-      <h2 class="h2" id="{g["id"]}">{E(g["title"])}</h2>
-      <p>{g["intro"]}</p>
-      <ul class="checks {g["fill"]}">{ideas}</ul>
-    </div>
-    {turn_box('pick-card wrapped ' + g["fill"], f'<span class="ribbon" aria-hidden="true"></span><h3>Where to look</h3><p>{look}</p>', SD.biz(SD.GUIDE_PICKS[g["id"]], kicker='Local pick'), 'Local pick for ' + g["title"].lower(), pattern='pattern-stripes.webp')}
-  </div>
-</section>'''
-    body = page_hero([('index.html', 'Home'), ('gifts.html', 'Gift guides')], 'Shop local', 'Gift guides',
-                     'Gifts for everyone on your list, found a few blocks apart. When in doubt, Downtown Dollars fit everyone.', 'f-pink')
-    body += f'''<section class="section" aria-label="Guides">
-  <div class="wrap">
-    {in_short('There are six gift guides. Each has ideas and a link to the places downtown where you can find them.')}
-    <nav aria-label="Jump to a guide"><ul class="chips" style="margin-bottom:1.5rem">{toc}</ul></nav>
-    {sections}
-  </div>
-</section>'''
-    page('holidays/gifts.html', 'Gift guides', body, 'holidays', 'Holiday gift ideas from Downtown Kalamazoo shops, makers and venues.')
+    """The Holiday Gift Guide. The gifts come from content/gift-guide.yml; the page is built in gift_guide.py."""
+    GG.prepare_photos(GIFTS['gifts'], OUT, GIFTS['warnings'])
+    trail = crumbs([('index.html', 'Home'), ('gifts.html', 'Holiday Gift Guide')])   # page() adds the Holidays step
+    body = GG.body(trail, in_short, GIFTS['gifts'])
+    page('holidays/gifts.html', 'Holiday Gift Guide', body, 'holidays',
+         'Holiday gift ideas from Downtown Kalamazoo shops, restaurants, studios and makers. Fill in the tag to find the right gift.')
+    for w in GIFTS['warnings']:
+        print(f'::warning file=content/gift-guide.yml,title=Gift guide::{w}')
 
 # ---------------------------------------------------------------- SBS
 def build_sbs():
@@ -894,7 +887,7 @@ def build_sbs():
         <li>Share what you find with <strong>#SomethingNewKalamazoo</strong>.</li>
       </ul>
       <h2 class="h3">Need ideas?</h2>
-      <p>Our <a href="{{R}}gifts.html">gift guides</a> cover the art lover, the cook, the kids and everyone in between. The <a href="{{R}}directory.html">directory</a> lists places to start.</p>
+      <p>The <a href="{{R}}gifts.html">Holiday Gift Guide</a> has ideas for the foodie, the maker, the kids and everyone in between. The <a href="{{R}}directory.html">directory</a> lists places to start.</p>
     </div>
     <div class="aside">
       <section class="panel f-green"><h2>Santa’s Workshop</h2><p>Santa settles in at City Centre on Small Business Saturday. Last season’s Saturday hours were noon to 6 p.m. Bring a camera for the photo backdrops.</p></section>
@@ -1300,6 +1293,7 @@ if __name__ == '__main__':
     for n in PATTERNS:
         shutil.copy(os.path.join(HERE, f'pattern-{n}.webp'), os.path.join(OUT, f'pattern-{n}.webp'))
     shutil.copy(os.path.join(HERE, 'logo-reverse.png'), os.path.join(OUT, 'logo-reverse.png'))
+    shutil.copy(os.path.join(HERE, 'k-shape.svg'), os.path.join(OUT, 'k-shape.svg'))   # the K on "Only in Kalamazoo" tags
     assets = os.path.join(HERE, 'assets_out')   # made by make_assets.py
     for root_, _, fs in os.walk(assets):
         for f in fs:
@@ -1311,7 +1305,10 @@ if __name__ == '__main__':
         build_access()
     build_year_round()
     if os.path.isdir(os.path.join(HERE, 'files')):
-        shutil.copytree(os.path.join(HERE, 'files'), os.path.join(OUT, 'files'), dirs_exist_ok=True, ignore=shutil.ignore_patterns('README.md'))
+        # files/gifts holds the original gift photos; the gift guide publishes resized copies of them instead.
+        def _skip(folder, names):
+            return {'README.md'} | ({'gifts'} if os.path.abspath(folder) == os.path.join(HERE, 'files') else set())
+        shutil.copytree(os.path.join(HERE, 'files'), os.path.join(OUT, 'files'), dirs_exist_ok=True, ignore=_skip)
     for i, e in enumerate(EVENTS): build_event(i, e)
     for i, p in enumerate(PLANS): build_plan(i, p)
     build_builder()
