@@ -11,7 +11,9 @@
 
 hide: {}
 
-update: {}
+update:
+  the-spirit-of-kalamazoo:
+    name: The Spirit of Kalamazoo
 
 social_district: []
 

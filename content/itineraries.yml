@@ -15,7 +15,8 @@
 # when:          one line about the best days or dates
 # events:        holiday events it pairs with (the end of the event's page address, like tree-lighting).
 #                The plan is listed under "Make a day of it" on those event pages.
-# gifts:         optional. Adds a gift guide link: all, art-lover, foodie, kids, host, stocking or experiences
+# gifts:         optional. Adds a Holiday Gift Guide link, already filled in: all, art-lover, foodie, kids, host,
+#                stocking or experiences
 # steps:         the stops, in order. Business names that match the directory link to their listing
 #                automatically, and so do holiday event names, Santa's Workshop and the Holly Jolly Trolley.
 #                To link other words, write [the words](gifts.html) with a page on this site.

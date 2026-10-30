@@ -1,0 +1,687 @@
+# Holiday Gift Guide (downtownkalamazoo.us/holidays/gifts.html)
+#
+# Every gift on the page comes from this file. Each business is one block, with its gifts listed under it.
+# The business's name, address, link and Downtown Dollars badge come from the business directory, so you
+# never type them here. Businesses with at least one gift get an "In the Gift Guide" tag in the directory.
+#
+# business:   the business's directory id, the end of its directory link
+#             (directory.html#b-rustica is "rustica"). Use "downtown" for Downtown Kalamazoo itself.
+#             For a business that isn't in the directory yet, use name: instead (and add it to the
+#             directory when you can, so its gifts link to a listing).
+# gifts:      one entry per gift, each starting with "- name:"
+#
+# For each gift:
+#   name:              what the gift is, as it should appear on the tag
+#   kind:              unwrap, experience, eat-drink or gift-card
+#   for:               who it suits, in square brackets. Any of:
+#                      foodie, maker, kid, kalamazoo-lover, self-care, adventurer, coffee-tea, arts-fan,
+#                      someone-special, host, pet, has-everything
+#   description:       one or two sentences (about 200 characters at most)
+#   price:             optional, in quotes, like "$24" or "$5, $10 or $20". The lowest amount decides the
+#                      budget filter. Leave it "" until you know it.
+#   image:             optional photo, uploaded to files/gifts, like files/gifts/cherris-truffles.jpg
+#                      Any size is fine. The site resizes it.
+#   image_alt:         required with a photo. A sentence describing it for people who can't see it.
+#   photo_focus:       optional: top or bottom, if the photo's crop cuts off the product (center is normal)
+#   wrap_label:        one or two words shown on the gift wrap when there's no photo, like Truffles.
+#                      If it's blank, the tag uses the gift's name.
+#   link:              optional. Where the "From" line goes instead of the directory listing,
+#                      like dollars.html or a full https:// address.
+#   only_in_kalamazoo: yes     adds the "Only in Kalamazoo" tag
+#   gives_back: yes            adds the "Gives back" tag
+#   stocking_stuffer: yes      includes it when someone chooses Stocking stuffers
+#   age_21: yes                adds a 21+ tag and hides it when someone chooses "Hide 21+ gifts"
+#   draft: true                hides the gift (sold out, or not ready). Remove the line to show it again.
+#
+# Anything still in [square brackets] keeps a gift off the page until it's replaced, and the Actions
+# tab lists it in yellow. So does a gift with no description.
+#
+# If a line has a colon followed by a space, or starts with a quote mark, put the whole value in double
+# quotes, like the descriptions below that have colons in them.
+
+businesses:
+
+- business: kalamazoo-house-bed-and-breakfast
+  gifts:
+    - name: Gift certificate for an overnight stay
+      kind: experience
+      for: [someone-special, self-care, has-everything]
+      price: "$100 to $1,000"
+      description: A night at a historic boutique inn downtown, with free on-site parking and a freshly prepared two-course breakfast.
+      wrap_label: Overnight stay
+      only_in_kalamazoo: yes
+
+- business: the-spirit-of-kalamazoo
+  gifts:
+    - name: WMU squirrel tumbler
+      kind: unwrap
+      for: [kalamazoo-lover, coffee-tea]
+      price: ""
+      description: A triple-insulated 24 oz steel Corkcicle tumbler for Western Michigan University fans.
+      wrap_label: Tumbler
+    - name: Kalamazoo hoodie
+      kind: unwrap
+      for: [kalamazoo-lover, has-everything]
+      price: ""
+      description: A warm, cozy unisex hoodie for chilly days.
+      wrap_label: Hoodie
+      only_in_kalamazoo: yes
+    - name: Kalamazoo Hot Sauce
+      kind: eat-drink
+      for: [foodie, kalamazoo-lover]
+      price: ""
+      description: Five hand-crafted flavors from Kalamazoo Hot Sauce Co., made with clean ingredients and no thickeners.
+      wrap_label: Hot sauce
+      only_in_kalamazoo: yes
+      stocking_stuffer: yes
+
+- business: combat-ready-art
+  gifts:
+    - name: Beginner blacksmithing class
+      kind: experience
+      for: [maker, adventurer, kid]
+      price: ""
+      description: Forge an S hook or garden snake and learn the basics of an ancient craft. Private classes for 1 to 8 people, ages 9 and up.
+      wrap_label: Blacksmithing
+    - name: Railroad spike knifemaking class
+      kind: experience
+      for: [maker, adventurer]
+      price: ""
+      description: Turn a railroad spike into a working knife with a handle you choose, in three hours. Their most popular class.
+      wrap_label: Knifemaking
+
+- business: sit-and-stay-winery
+  gifts:
+    - name: Locally crafted wine
+      kind: eat-drink
+      for: [foodie, someone-special, host]
+      price: ""
+      description: A large selection, from dry to sweet, with something for everyone.
+      wrap_label: Wine
+      only_in_kalamazoo: yes
+      age_21: yes
+    - name: Gifts for the wine lover
+      kind: unwrap
+      for: [someone-special, host, has-everything]
+      price: ""
+      description: Wine glasses, decanters and branded shirts.
+      wrap_label: Wine gifts
+    - name: Make-your-own-wine experience
+      kind: experience
+      for: [maker, someone-special, foodie]
+      price: ""
+      description: Learn to make wine, then bottle it, label it and take it home.
+      wrap_label: Make wine
+      age_21: yes
+
+- business: kalamazoo-spice-and-tea-merchants
+  gifts:
+    - name: Specialty gift boxes
+      kind: eat-drink
+      for: [foodie, coffee-tea, host, has-everything]
+      price: ""
+      description: Curated boxes of house-made spice blends and teas that make gifting easy.
+      wrap_label: Gift boxes
+
+- business: studio-grill
+  gifts:
+    - name: Studio Grill gift certificate
+      kind: gift-card
+      for: [foodie, has-everything]
+      price: "$5, $10 or $20"
+      description: An easy stocking stuffer in three amounts.
+      wrap_label: Gift certificate
+      stocking_stuffer: yes
+
+- business: mrc-artworks
+  gifts:
+    - name: artWorks 2027 calendar
+      kind: unwrap
+      for: [arts-fan, has-everything]
+      price: "$20 minimum donation"
+      description: A year of original art by artWorks artists. Each calendar supports opportunities for people with disabilities.
+      wrap_label: Calendar
+      only_in_kalamazoo: yes
+      gives_back: yes
+
+- business: colors-cocktails
+  gifts:
+    - name: Colors & Cocktails gift card
+      kind: gift-card
+      for: [arts-fan, maker]
+      price: ""
+      description: Good for any of their 20-plus art classes.
+      wrap_label: Gift card
+    - name: DIY art kits
+      kind: unwrap
+      for: [kid, maker, arts-fan]
+      price: ""
+      description: Over 20 kit styles and dozens of designs, for kids and adults to make at home.
+      wrap_label: Art kits
+    - name: Art classes for kids and adults
+      kind: experience
+      for: [arts-fan, maker, someone-special, kid]
+      price: ""
+      description: Canvas, glassware and seasonal workshops for every skill level. Bring your own food and drinks.
+      wrap_label: Art classes
+
+- business: rocket-fizz
+  gifts:
+    - name: Build-your-own six-pack
+      kind: eat-drink
+      for: [foodie, kid, has-everything]
+      price: ""
+      description: Pick from more than 500 sodas. Classic root beer, or something bold like ranch dressing, black olive or dirt.
+      wrap_label: Six-pack
+    - name: Pop culture puzzles
+      kind: unwrap
+      for: [kid, has-everything]
+      price: ""
+      description: Movies, bands and silly fun, plus a puzzle of the shop’s own soda wall. The selection changes often.
+      wrap_label: Puzzles
+    - name: Stocking stuffers
+      kind: unwrap
+      for: [kid, has-everything]
+      price: ""
+      description: Treats from the Euro cart, shock gum, tin signs, bottle openers and fun pens.
+      wrap_label: Stocking stuffers
+      stocking_stuffer: yes
+
+- business: uncle-buddy-s-toy-stash
+  gifts:
+    - name: Spudsters
+      kind: unwrap
+      for: [kid, has-everything]
+      price: ""
+      description: Squishy, potato-shaped plush buddies. Customers say they make great car pillows.
+      wrap_label: Spudsters
+    - name: Bath toys
+      kind: unwrap
+      for: [kid]
+      price: ""
+      description: A slightly out-of-control selection for screen-free bath time.
+      wrap_label: Bath toys
+    - name: Book nooks and wooden puzzles
+      kind: unwrap
+      for: [maker, kid]
+      price: ""
+      description: Miniature houses with lights, wooden flowers and puzzles for teens and kidults, ages 14 and up.
+      wrap_label: Book nooks
+
+- business: rustica
+  gifts:
+    - name: Rustica gift card
+      kind: gift-card
+      for: [foodie, someone-special]
+      price: ""
+      description: A personalized gift card.
+      wrap_label: Gift card
+
+- business: downtown
+  gifts:
+    - name: Downtown Dollars
+      kind: gift-card
+      for: [has-everything, kalamazoo-lover]
+      price: "$5, $10 or $20"
+      description: Digital gift certificates good at participating downtown businesses. They arrive by email, so they work even on Christmas Eve.
+      wrap_label: Downtown Dollars
+      link: dollars.html
+      only_in_kalamazoo: yes
+      stocking_stuffer: yes
+    - name: Downtown Kalamazoo merch
+      kind: unwrap
+      for: [kalamazoo-lover]
+      price: ""
+      description: Tees, hoodies, hats and more.
+      wrap_label: Merch
+      only_in_kalamazoo: yes
+
+- business: pop-city-popcorn
+  gifts:
+    - name: Holiday popcorn tins
+      kind: eat-drink
+      for: [foodie, kid, host, has-everything]
+      price: ""
+      description: 2, 3.5 or 6 gallon tins filled with up to three flavors.
+      wrap_label: Popcorn tins
+    - name: Popcorn gift baskets
+      kind: eat-drink
+      for: [foodie, has-everything]
+      price: ""
+      description: Pick a basket design, then decide what goes inside.
+      wrap_label: Gift baskets
+    - name: Pop-at-home kit
+      kind: unwrap
+      for: [foodie, maker]
+      price: ""
+      description: Popcorn seed, seasonings and Whirley Pop poppers.
+      wrap_label: Pop at home
+
+- business: earthly-delights-amy-zane
+  gifts:
+    - name: Jellycat plush
+      kind: unwrap
+      for: [kid]
+      price: ""
+      description: An assortment of Jellycat friends.
+      wrap_label: Jellycat
+    - name: Eugy 3D puzzles
+      kind: unwrap
+      for: [kid, maker]
+      price: ""
+      description: A fun variety of Eugy 3D animal puzzle sets.
+      wrap_label: 3D puzzles
+
+- business: civic-theatre
+  gifts:
+    - name: 2026–27 Flex Pass 16
+      kind: experience
+      for: [arts-fan, someone-special]
+      price: ""
+      description: Sixteen admissions to use for any production in the 2026–27 season.
+      wrap_label: Flex Pass
+
+- business: farmers-alley-theatre
+  gifts:
+    - name: 26/27 Classic Flex Pass
+      kind: experience
+      for: [arts-fan, someone-special]
+      price: ""
+      description: Choose just the shows you want and save 15% off single tickets.
+      wrap_label: Flex Pass
+
+- business: dabney-co
+  gifts:
+    - name: Cocktail-making class
+      kind: experience
+      for: [someone-special, foodie]
+      price: ""
+      description: Treat yourself and someone you love to a cocktail-making class.
+      wrap_label: Cocktails
+      age_21: yes
+
+- business: glass-art-kalamazoo
+  gifts:
+    - name: Take-home glass kits
+      kind: unwrap
+      for: [maker, kid]
+      price: ""
+      description: Make suncatchers, magnets or nightlights at home this winter.
+      wrap_label: Glass kits
+
+- business: cherri-s-chocol-art
+  gifts:
+    - name: Salted caramels
+      kind: eat-drink
+      for: [foodie]
+      price: ""
+      description: 5 oz bags in Michigan Maple Pecan, Classic Salted or Habanero Salted.
+      wrap_label: Caramels
+    - name: Kalamazoo chocolate bars
+      kind: eat-drink
+      for: [foodie, kalamazoo-lover]
+      price: ""
+      description: Yes There Really Is a Kalamazoo, Winnie Wink, or A Sweet for You from Kalamazoo.
+      wrap_label: Chocolate
+      only_in_kalamazoo: yes
+    - name: Truffle boxes
+      kind: eat-drink
+      for: [foodie, someone-special, host, has-everything]
+      price: ""
+      description: Boxes of 4, 9, 12 or 16 truffles and confections.
+      wrap_label: Truffles
+
+- business: kalamazoo-candle-company
+  gifts:
+    - name: Winter candle trio
+      kind: unwrap
+      for: [self-care, host, has-everything]
+      price: ""
+      description: "Three customer favorites: Balsam & Cedar, Cranberry Bellini and Hearth & Home."
+      wrap_label: Candle trio
+      only_in_kalamazoo: yes
+    - name: Large two-wick winter candle
+      kind: unwrap
+      for: [self-care, host]
+      price: ""
+      description: A 100% soy candle in one of their winter fragrances.
+      wrap_label: Candle
+      only_in_kalamazoo: yes
+
+- business: climb-kalamazoo
+  gifts:
+    - name: Intro to Climbing class
+      kind: experience
+      for: [adventurer]
+      price: ""
+      description: An introductory climbing class.
+      wrap_label: Climbing
+
+- business: bell-s-general-store
+  gifts:
+    - name: Bell’s apparel
+      kind: unwrap
+      for: [kalamazoo-lover]
+      price: ""
+      description: Shirts and gear from Bell’s.
+      wrap_label: Apparel
+      only_in_kalamazoo: yes
+    - name: Two Hearted variety 12-pack
+      kind: eat-drink
+      for: [foodie, kalamazoo-lover, host]
+      price: ""
+      description: Twelve 12 oz cans from the Two Hearted lineup.
+      wrap_label: Two Hearted
+      only_in_kalamazoo: yes
+      age_21: yes
+    - name: Bell’s gift card
+      kind: gift-card
+      for: [foodie, kalamazoo-lover]
+      price: ""
+      description: A gift card for Bell’s.
+      wrap_label: Gift card
+
+- business: urban-asanas
+  gifts:
+    - name: 10-class bundle
+      kind: experience
+      for: [self-care, adventurer]
+      price: ""
+      description: Ten classes, with access to both heated and non-heated yoga.
+      wrap_label: Yoga
+
+- business: sarkozy-bakery
+  gifts:
+    - name: Sarkozy gift card
+      kind: gift-card
+      for: [foodie, coffee-tea]
+      price: ""
+      description: A gift card for Sarkozy Bakery.
+      wrap_label: Gift card
+    - name: Sarkozy pie
+      kind: eat-drink
+      for: [foodie, host]
+      price: ""
+      description: "[Flavors from Sarkozy Bakery]"
+      wrap_label: Pie
+
+- business: unwind-massage-and-stretch
+  gifts:
+    - name: Unwind gift card
+      kind: gift-card
+      for: [self-care, someone-special]
+      price: ""
+      description: Treat someone you love to a one-of-a-kind massage and stretch service.
+      wrap_label: Gift card
+
+- business: blush-salon-spa
+  gifts:
+    - name: Mani-pedi
+      kind: experience
+      for: [self-care]
+      price: ""
+      description: A manicure and pedicure at Blush Salon & Spa.
+      wrap_label: Mani-pedi
+
+- business: lana-s-boutique
+  gifts:
+    - name: Blue Q oven mitts
+      kind: unwrap
+      for: [foodie, host, has-everything]
+      price: ""
+      description: A set of oven mitts to help you handle the hot stuff.
+      wrap_label: Oven mitts
+    - name: World’s Softest Socks
+      kind: unwrap
+      for: [self-care, has-everything]
+      price: ""
+      description: An assortment of World’s Softest Socks.
+      wrap_label: Socks
+
+- business: factory-coffee-shop
+  gifts:
+    - name: Coffee box
+      kind: eat-drink
+      for: [coffee-tea]
+      price: ""
+      description: Three bags of Factory Coffee.
+      wrap_label: Coffee
+      only_in_kalamazoo: yes
+    - name: Factory Coffee gift card
+      kind: gift-card
+      for: [coffee-tea]
+      price: ""
+      description: A gift card for Factory Coffee.
+      wrap_label: Gift card
+
+- business: okun-brothers-shoes
+  gifts:
+    - name: Irish Setter Wingshooter XD boot
+      kind: unwrap
+      for: [has-everything, adventurer]
+      price: ""
+      description: A waterproof 6-inch safety-toe work boot for light to medium duty. Also in brown.
+      wrap_label: Work boots
+    - name: Timberland PRO Titan EV boot
+      kind: unwrap
+      for: [has-everything, adventurer]
+      price: ""
+      description: A light, waterproof 6-inch composite-toe boot in women’s and men’s sizes.
+      wrap_label: Work boots
+    - name: Boot care and accessories
+      kind: unwrap
+      for: [has-everything]
+      price: ""
+      description: Red Wing accessories, boot care, laces and work socks.
+      wrap_label: Boot care
+      stocking_stuffer: yes
+
+- business: water-street-coffee-joint
+  gifts:
+    - name: Specialty hot chocolate tin
+      kind: eat-drink
+      for: [coffee-tea, foodie, kid]
+      price: ""
+      description: A rich blend of chocolates with a touch of spice. Stir a few spoonfuls into hot milk.
+      wrap_label: Hot cocoa
+    - name: Aroma Borealis coffee
+      kind: eat-drink
+      for: [coffee-tea]
+      price: ""
+      description: A warming winter blend with a full body and hints of chocolate, sold October through February.
+      wrap_label: Coffee
+      only_in_kalamazoo: yes
+    - name: Etched coffee carafe
+      kind: unwrap
+      for: [coffee-tea, host]
+      price: ""
+      description: A double-walled, vacuum-insulated 33 oz carafe with a 360-degree pour lid. Dishwasher safe.
+      wrap_label: Carafe
+
+- business: south-street-cigars-spirits
+  gifts:
+    - name: Rare bourbon
+      kind: eat-drink
+      for: [foodie, has-everything]
+      price: ""
+      description: A bottle of rare whiskey for the bourbon lover in your life.
+      wrap_label: Bourbon
+      age_21: yes
+    - name: Rare Pink cigars
+      kind: unwrap
+      for: [has-everything]
+      price: ""
+      description: Rare Pink Vintage 1960 Series cigars, handmade in the Dominican Republic.
+      wrap_label: Cigars
+      age_21: yes
+
+- name: Matcharia
+  gifts:
+    - name: Matcharia gift card
+      kind: gift-card
+      for: [coffee-tea]
+      price: ""
+      description: A gift card for Matcharia.
+      wrap_label: Gift card
+    - name: Matcha tea-making set
+      kind: unwrap
+      for: [coffee-tea, self-care]
+      price: ""
+      description: Everything they need to make matcha at home.
+      wrap_label: Matcha
+
+- business: the-aroma-labs
+  gifts:
+    - name: Scent-making experience
+      kind: experience
+      for: [maker, self-care, someone-special]
+      price: ""
+      description: Book a scent-making experience at The Aroma Labs.
+      wrap_label: Scent making
+    - name: DIY scent kit
+      kind: unwrap
+      for: [maker, self-care]
+      price: ""
+      description: Create a signature fragrance at home.
+      wrap_label: Scent kit
+
+- business: wl-social-house
+  gifts:
+    - name: WL Social House gift card
+      kind: gift-card
+      for: [foodie]
+      price: ""
+      description: A gift card for WL Social House.
+      wrap_label: Gift card
+
+- business: beowoof-provisions-for-pets
+  gifts:
+    - name: AKC Canine Good Citizen class
+      kind: experience
+      for: [pet]
+      price: ""
+      description: Six sessions, with AKC testing included.
+      wrap_label: Dog class
+    - name: Pet toys
+      kind: unwrap
+      for: [pet]
+      price: ""
+      description: Toys for cats and dogs.
+      wrap_label: Pet toys
+
+- business: bimbo-s-pizza
+  gifts:
+    - name: Bimbo’s pizza, shipped
+      kind: eat-drink
+      for: [foodie, kalamazoo-lover]
+      price: ""
+      description: Ship Kalamazoo’s famous pizza anywhere in the country.
+      wrap_label: Pizza
+      only_in_kalamazoo: yes
+
+- business: gazelle-sports
+  gifts:
+    - name: Goodr sunglasses
+      kind: unwrap
+      for: [adventurer]
+      price: ""
+      description: A variety of Goodr sunglasses.
+      wrap_label: Sunglasses
+    - name: Running gloves and mittens
+      kind: unwrap
+      for: [adventurer]
+      price: ""
+      description: Running gloves and mittens for winter miles.
+      wrap_label: Gloves
+
+- business: k-zoo-in-the-mitten
+  gifts:
+    - name: Michigan merch
+      kind: unwrap
+      for: [kalamazoo-lover]
+      price: ""
+      description: Magnets, hats, cups and more.
+      wrap_label: Michigan
+
+- business: mason-jar-plant-shop
+  gifts:
+    - name: Rare plants
+      kind: unwrap
+      for: [self-care, host, has-everything]
+      price: ""
+      description: Rare and collectible plants.
+      wrap_label: Plants
+
+- business: morrison-jewelers
+  gifts:
+    - name: Morrison signature watches
+      kind: unwrap
+      for: [someone-special]
+      price: ""
+      description: Watches from Morrison Jewelers’ signature line.
+      wrap_label: Watches
+    - name: Earrings
+      kind: unwrap
+      for: [someone-special]
+      price: ""
+      description: Earrings from Morrison Jewelers.
+      wrap_label: Earrings
+
+- business: pedal-bicycles
+  gifts:
+    - name: Indoor cycling trainer
+      kind: unwrap
+      for: [adventurer]
+      price: ""
+      description: A class-leading indoor trainer for cyclists of every level.
+      wrap_label: Trainer
+    - name: Bike accessories
+      kind: unwrap
+      for: [adventurer, kid]
+      price: ""
+      description: Helmets, lights, bells, baskets and more.
+      wrap_label: Bike gear
+
+- business: the-waiting-room
+  gifts:
+    - name: Beanies
+      kind: unwrap
+      for: [has-everything]
+      price: ""
+      description: Warm hats for cold weather.
+      wrap_label: Beanies
+
+- business: caffe-casa
+  gifts:
+    - name: Caffe Casa gift card
+      kind: gift-card
+      for: [coffee-tea]
+      price: ""
+      description: A gift card for Caffe Casa.
+      wrap_label: Gift card
+
+# Waiting on details from these businesses. Each stays off the page until its brackets are replaced.
+
+- business: terrapin-worldwide-imports
+  gifts:
+    - name: "[Gift name from Terrapin]"
+      kind: unwrap
+      for: [has-everything]
+      price: ""
+      description: "[Description from Terrapin Worldwide Imports]"
+
+- business: the-velvet-daisy
+  gifts:
+    - name: "[Gift name from The Velvet Daisy]"
+      kind: unwrap
+      for: [has-everything]
+      price: ""
+      description: "[Description from The Velvet Daisy]"
+
+- name: Honare Salon
+  gifts:
+    - name: "[Gift name from Honare Salon]"
+      kind: experience
+      for: [self-care]
+      price: ""
+      description: "[Description from Honare Salon]"

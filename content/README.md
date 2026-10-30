@@ -8,7 +8,7 @@ When you save (GitHub calls it **Commit changes**), the site rebuilds and publis
 
 ## Post news, a press release or a feature story
 
-**The News page is switched off for now** (see *Pages that are switched off* below). You can still write and save posts here. They appear on the site once the News page is switched back on.
+Posts appear on the News & stories page (`news.html`) once you commit.
 
 1. Open the `content/news` folder.
 2. Open `_TEMPLATE.md`, select all the text, and copy it.
@@ -161,10 +161,10 @@ All 50 plans on the Plan your day page live in one file, `content/itineraries.ym
 **Change a plan:** open `content/itineraries.yml`, choose the pencil icon, find the plan by its `title`, edit it and commit.
 
 - **Business names link on their own.** Write a name exactly as it appears in the business directory (Sarkozy Bakery, Bell's Eccentric Café) and it links to that business's listing. The plan's "Places on this plan" list, with addresses and phone numbers, fills in from those names too. Holiday events, Santa's Workshop, the Holly Jolly Trolley and Downtown Dollars link the same way.
-- **To link other words**, write `[the words](gifts.html)` with a page on this site, like `gifts.html#foodie` for one gift guide.
+- **To link other words**, write `[the words](gifts.html)` with a page on this site, like `gifts.html#foodie` for the Holiday Gift Guide with "the foodie" filled in.
 - `budget` is one of `"Free"`, `"$"`, `"$$"` or `"$$$"`, in quotes. `who` and `days` decide which filters the plan appears under.
 - `events` lists the holiday events the plan goes with. Those event pages show the plan under "Make a day of it."
-- `gifts` adds a gift guide link under the plan's stops.
+- `gifts` adds a Holiday Gift Guide link under the plan's stops, already filled in: `all`, `art-lover`, `foodie`, `kids`, `host`, `stocking` or `experiences`.
 
 **Add a plan:** copy a whole plan, from `- slug:` down to the line before the next `- slug:`, paste it at the end, and change it. Give it a new `slug` (lowercase words with dashes).
 
@@ -177,6 +177,50 @@ All 50 plans on the Plan your day page live in one file, `content/itineraries.ym
 **Santa's Workshop and trolley hours** are at the top of the same file, under `santa:` and `trolley:`. Each plan's "Your day" box uses them to show the hours for the date someone picks.
 
 If a line has a `#` or a colon followed by a space, put the whole line in double quotes. If something's off, the Actions tab shows a red X that names the plan and the problem.
+
+---
+
+## Holiday Gift Guide
+
+Every gift on the Holiday Gift Guide (`downtownkalamazoo.us/holidays/gifts.html`) lives in one file, `content/gift-guide.yml`. Each business is one block, with its gifts listed under it. The notes at the top of the file explain every field.
+
+The business's name, link and Downtown Dollars tag come from the business directory, so you never type them in this file. Every business with a gift also gets an **In the Gift Guide** tag and a filter button in the directory while it's the holiday season.
+
+**Change a gift:** open `content/gift-guide.yml`, choose the pencil icon, find the gift by its `name`, edit it and commit.
+
+- `kind` is one of `unwrap`, `experience`, `eat-drink` or `gift-card`.
+- `for` decides who it shows up for in the "I'm shopping for…" blank, like `for: [foodie, host]`. The choices are listed at the top of the file.
+- `price` goes in quotes, like `price: "$24"`. The lowest dollar amount decides the budget blank. Leave it `""` until the business tells you.
+- `only_in_kalamazoo: yes`, `gives_back: yes`, `stocking_stuffer: yes` and `age_21: yes` add tags and filters.
+
+**Add a photo:**
+1. Open `files/gifts` and choose **Add file → Upload files**. Any size is fine, including photos straight from a phone. The site resizes them.
+2. Name the file simply, like `cherris-truffles.jpg`.
+3. Under the gift, add:
+   ```
+   image: files/gifts/cherris-truffles.jpg
+   image_alt: A box of nine truffles dusted with cocoa.
+   ```
+   The `image_alt` sentence describes the photo for people who can't see it. Always include it.
+4. If the crop cuts off the product, add `photo_focus: top` or `photo_focus: bottom`.
+
+Until a gift has a photo, its tag shows gift wrap in the business's directory pattern, with `wrap_label` written on it.
+
+**Add a gift:** copy a whole gift, from `- name:` down to the line before the next `- name:`, paste it under the same business and change it.
+
+**Add a business:** copy a whole business block, from `- business:` down to the line before the next `- business:`, and change it. `business:` is the end of its directory link: `directory.html#b-rustica` is `rustica`. For a business that isn't in the directory yet, use `name:` instead of `business:`.
+
+**Sold out or not ready:** add `draft: true` to the gift. Remove the line to show it again.
+
+**Waiting on details:** anything still in [square brackets] keeps a gift off the page, and so does a missing description. The Actions tab lists those in yellow, so you can see what's still missing. The site publishes either way.
+
+**The order of the gifts changes every morning**, when the site rebuilds itself, so no business is always first.
+
+**Links into the guide:** `holidays/gifts.html#foodie` opens the guide with "the foodie" already filled in. Any `for` choice works the same way, and so do `#experience`, `#stocking` and `#dollars`. Each plan's `gifts:` line in `content/itineraries.yml` uses these.
+
+If something's off, the Actions tab shows a red X that names the business, the gift and the problem.
+
+**After the holidays:** when `HOLIDAY_SEASON` changes to `False`, the directory's gift tags and filter go away on their own. Next fall, rename this year's file to `gift-guide-2026.yml` so it stays as a record, then start a new `content/gift-guide.yml` with this season's gifts. Photos in `files/gifts` can be reused.
 
 ---
 
@@ -248,12 +292,12 @@ If a line has a colon followed by a space, put the whole value in double quotes.
 
 ---
 
-## Pages that are switched off
+## Switching pages on and off
 
-A few parts of the site are turned off for now. Their content stays in the repository, so nothing is lost. Open `build.py` and find these lines near the top:
+Some parts of the site can be turned on or off. Their content stays in the repository either way, so nothing is lost. Open `build.py` and find these lines near the top. News is on; the other three are off for now:
 
 ```
-SHOW_NEWS = False
+SHOW_NEWS = True
 SHOW_HISTORY = False
 SHOW_ACCESS_GUIDE = False
 SHOW_ACCOMMODATION = False
@@ -264,7 +308,7 @@ SHOW_ACCOMMODATION = False
 - `SHOW_ACCESS_GUIDE`: the Accessible downtown guide
 - `SHOW_ACCOMMODATION`: the "Need an accommodation?" box on event, plan and Visit pages
 
-To bring one back, change `False` to `True` and commit. Its menu, footer and page links come back with it.
+To turn one on, change `False` to `True` and commit. To turn one off, change `True` to `False`. Its menu, footer and page links come back with it.
 
 ## Facebook and Instagram
 
