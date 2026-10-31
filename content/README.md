@@ -80,6 +80,11 @@ The series page lists the whole season: **Coming up** shows every date, with "Li
 
 **Holiday events** (Find the Holidays Downtown) are kept separately, in `holiday_content.py`. They also appear on the main calendar.
 
+The **Find the Holidays Downtown** page updates itself every morning from those events: **Next up** shows the next event, **Upcoming holiday events** drops dates once they pass, and **Make a day of it** features plans that go with the next events. Two settings sit near the top of `holiday_content.py`:
+
+- `SBS_GIVEAWAY` sets the dates the "Curious? Pick an envelope." card shows beside Downtown Dollars (`show_from` and `show_until`, both included). Change the dates to move it, or set `show_until` to an earlier date than `show_from` to hide it.
+- `HUB_PLAN_FALLBACK` lists the plans (by their slug from `content/itineraries.yml`) that fill the plan spots when there aren't enough upcoming events, in order.
+
 ---
 
 ## Post a budget, report or other board document
