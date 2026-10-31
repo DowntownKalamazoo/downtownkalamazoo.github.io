@@ -1,0 +1,102 @@
+# Downtown Dollars page (dollars.html)
+#
+# The numbers, the seasonal reminder and the video on the Downtown Dollars page live here.
+# The list of businesses that accept Downtown Dollars is NOT here: it comes from the business
+# directory (the "dd" flag in content/directory-updates.yml), so it stays in step with the directory.
+#
+# The spaces at the start of each line matter. Change the values, keep the spacing.
+# Write numbers without a dollar sign or commas: 392485, not $392,485.
+#
+# PRIVACY: only program-wide totals go on this page. Never add a single business's total,
+# a ranking, a single order, or anything that could point to who bought or spent what.
+
+# ---------------------------------------------------------------- Program totals
+# Update these from the Conpoto exports a few times a year.
+#   through:   the last month the numbers cover, as words, e.g. September 2026
+#   since:     the year the program started (2019)
+#   bought:    total value of all certificates bought or issued, voided orders left out
+#   spent:     total spent at downtown businesses (TotalRedemptionValue in the certificate export)
+#   waiting:   value still valid and waiting to be spent (balance on certificates with status "Open")
+
+through: September 2026
+since: 2019
+bought: 563890
+spent: 392485
+waiting: 109610
+
+# ---------------------------------------------------------------- Follow a Downtown Dollar
+# Words, shown as written.
+#   recipients:   how many different people have received Downtown Dollars (count of recipient emails)
+#   half_spent_weeks: half of all certificates are fully spent within this many weeks
+#   businesses:   how many businesses have ever welcomed a Downtown Dollar (merchant export, redemptions over $0)
+
+recipients: "3,000+"
+half_spent_weeks: 11
+businesses: about 60
+
+# ---------------------------------------------------------------- Where it lands
+# Out of every dollar spent, how many cents went to each kind of business. The three should add up to 100.
+# kind is one of: shop, dine, arts, services, stay (it picks the pattern, matching the directory).
+# Privacy rule for any group shown here: at least 5 businesses, and no single business over half the group.
+#   mall_share:    how much is spent on the Kalamazoo Mall, in words
+#   typical:       what the typical (median) participating business has welcomed in Downtown Dollars
+
+split:
+  - kind: shop
+    cents: 56
+    label: at shops
+  - kind: dine
+    cents: 39
+    label: at restaurants, bars and hospitality
+  - kind: services
+    cents: 5
+    label: at salons, studios and experiences
+mall_share: About half
+typical: "$3,000"
+
+# ---------------------------------------------------------------- This year, month by month
+# Shown in the "The numbers" panel near the bottom of the page.
+# Add one line a month: month name, number of businesses that welcomed Downtown Dollars,
+# amount bought and amount spent. At the start of a new year, change year:, clear months:
+# and set year_businesses: to 0.
+#   year_businesses: businesses that welcomed Downtown Dollars at least once this year
+
+year: 2026
+year_businesses: 27
+months:
+  - { month: January,   businesses: 17, bought: 555,  spent: 1185 }
+  - { month: February,  businesses: 11, bought: 3070, spent: 2385 }
+  - { month: March,     businesses: 16, bought: 1575, spent: 1505 }
+  - { month: April,     businesses: 12, bought: 3625, spent: 1020 }
+  - { month: May,       businesses: 14, bought: 1405, spent: 1205 }
+  - { month: June,      businesses: 18, bought: 1200, spent: 1295 }
+  - { month: July,      businesses: 21, bought: 5690, spent: 3870 }
+  - { month: August,    businesses: 22, bought: 3640, spent: 3120 }
+  - { month: September, businesses: 13, bought: 770,  spent: 515 }
+
+# ---------------------------------------------------------------- Seasonal reminder
+# A bar under the page header, shown only between show_from and show_until (YYYY-MM-DD).
+# The site rebuilds every morning, so it appears and disappears on its own.
+# To turn it off early, change show_until to yesterday's date.
+
+reminder:
+  show_from: 2026-11-01
+  show_until: 2026-12-31
+  text: "Have Downtown Dollars from 2021? Many expire December 31, 2026. Check the date on your certificate, then spend them downtown."
+
+# ---------------------------------------------------------------- How it works video
+# Leave file blank until the video is ready; the How it works section shows without it.
+# When it's ready, upload the files to files/dollars/ and fill in all four lines:
+#   file:       the video, an MP4 under 50 MB, e.g. files/dollars/how-downtown-dollars-work.mp4
+#   poster:     the still image shown before it plays, a 16:9 JPG, e.g. files/dollars/video-poster.jpg
+#   captions:   the captions file (.vtt), e.g. files/dollars/how-downtown-dollars-work.vtt
+#   transcript: everything said and shown in the video, as plain text
+# The video never plays on its own. Captions and a transcript are required, and the build
+# stops with a message if either is missing.
+
+video:
+  file: ""
+  poster: ""
+  captions: ""
+  length: about 1 minute
+  transcript: ""

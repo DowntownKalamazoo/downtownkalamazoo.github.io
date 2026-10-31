@@ -229,6 +229,37 @@ If something's off, the Actions tab shows a red X that names the business, the g
 
 ---
 
+## Downtown Dollars page
+
+The numbers, the seasonal reminder and the video on the Downtown Dollars page (`downtownkalamazoo.us/dollars.html`) live in `content/dollars.yml`. The notes at the top of that file explain every field.
+
+The list of businesses under **Where to spend them** comes from the business directory, so you never type it here. To add or remove a business, open `content/directory-updates.yml` and, under `update:`, add the business's id with `dd: true` (accepts them) or `dd: false` (doesn't). The page and the directory's Accepts Downtown Dollars tag update together.
+
+**Update the program totals** (a few times a year)
+1. Export the certificate and merchant reports from Conpoto.
+2. Open `content/dollars.yml` and choose the pencil icon.
+3. Change `through:` to the last month the numbers cover, then update `bought:`, `spent:` and `waiting:`. Write numbers with no $ or commas, like `392485`.
+4. If they've changed, update `recipients:`, `half_spent_weeks:`, `businesses:`, `mall_share:`, `typical:` and the cents under `split:`.
+5. Commit. Every number on the page, including the hero line and the four steps, updates from these.
+
+**Add each month's numbers**
+Under `months:`, copy the last line, paste it below itself, and change the month, businesses, bought and spent. Update `year_businesses:` too. At the start of a new year, change `year:`, delete the lines under `months:` and set `year_businesses: 0`.
+
+**The "Spend them soon" reminder**
+It shows under the page header only between `show_from` and `show_until`. Change the dates or the `text:` and commit. To turn it off early, set `show_until` to yesterday's date.
+
+**Add the How it works video**
+1. Open `files` and choose **Add file → Upload files**, then upload into a `dollars` folder: the video (an MP4 under 50 MB), a still image for before it plays (a 16:9 JPG), and the captions file (`.vtt`).
+2. In `content/dollars.yml`, fill in `file:`, `poster:` and `captions:` with those paths, for example `files/dollars/how-downtown-dollars-work.mp4`.
+3. Paste everything said and shown in the video under `transcript:`.
+4. Commit. The video appears beside the How it works steps. It never plays on its own.
+
+Captions and a transcript are required. If either is missing, or a file path is misspelled, the Actions tab shows a red X that says what to fix.
+
+**Privacy:** only program-wide totals go on this page. Never add a single business's total, a ranking, a single order, or anything that could point to who bought or spent what. Keep the Conpoto exports off GitHub; they include names, emails and active certificate codes.
+
+---
+
 ## Placemaking projects
 
 Each project on the Placemaking page is one file in `content/placemaking`. Each file makes its own page, for example `downtownkalamazoo.us/placemaking/rose-street-plaza.html`. The same instructions are in `content/placemaking/README.md`.
