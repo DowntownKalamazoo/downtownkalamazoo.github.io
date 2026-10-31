@@ -1038,41 +1038,7 @@ def build_sbs():
     page('holidays/sbs.html', 'Small Business Saturday', body, 'holidays', 'Shop small in Downtown Kalamazoo on Small Business Saturday, November 28, 2026.')
 
 # ---------------------------------------------------------------- Dollars
-def build_dollars():
-    city = 'https://kalamazoocity.org/Community/Downtown-Kalamazoo/Downtown-Dollars'
-    mapu = 'https://apps.conpoto.com/members/3725acad-1c4a-4e38-b149-3ee431751939/merchants/publicMap'
-    faqs = [
-        ('Where can I use them?', f'<p>At participating downtown restaurants, bars, shops, salons, cafés and entertainment venues. In the <a href="{{R}}directory.html#dollars">business directory</a>, look for the Accepts Downtown Dollars tag. The {ext(mapu, "Downtown Dollars merchant map")} has the official list.</p>'),
-        ('How long are they good for?', '<p>Five years from the date you buy them. Promotional certificates may expire sooner, and the expiration date is printed on each one.</p>'),
-        ('Do I need to print them?', '<p>No. You can show them on your phone or print them, whichever is easier.</p>'),
-        ('Can I buy a lot at once for my team or clients?', '<p>Yes. For orders of $1,000 or more, email downtown@kalamazoocity.org and the downtown team will help.</p>'),
-        ('Who do I contact with a problem?', '<p>Email downtown@kalamazoocity.org, call 311, or call (269) 337-8000.</p>'),
-    ]
-    faq_html = ''.join(f'<details><summary>{E(q)}</summary><div>{a}</div></details>' for q, a in faqs)
-    body = page_hero([('index.html', 'Home'), ('dollars.html', 'Downtown Dollars')], 'The gift that stays downtown', 'Downtown Dollars',
-                     'Digital gift certificates in $5, $10 and $20 amounts, good at participating downtown businesses for five years.', 'f-blue',
-                     f'<div class="btn-row" style="margin-top:1.25rem">{ext(city, "Buy Downtown Dollars", "btn btn-primary")}<a class="btn" href="{{R}}directory.html#dollars">See where they’re accepted</a></div>')
-    body += f'''<section class="section" aria-labelledby="how-title">
-  <div class="wrap">
-    {in_short('Downtown Dollars are gift certificates for downtown businesses. Buy them online, get them by email, and spend them at shops and restaurants downtown.')}
-    <h2 class="h2" id="how-title" style="margin-bottom:1.25rem">How it works</h2>
-    <ol class="strip" style="list-style:none">
-      <li class="f-blue"><span class="big">1. Buy online</span><span>Choose $5, $10 or $20 certificates on the City of Kalamazoo’s order page.</span></li>
-      <li class="f-pink"><span class="big">2. Get them by email</span><span>Your certificates arrive by email, ready to forward as a gift or print.</span></li>
-      <li class="f-green"><span class="big">3. Spend downtown</span><span>Show them on your phone or on paper at any participating business.</span></li>
-    </ol>
-  </div>
-</section>
-<section class="section" style="padding-top:0" aria-labelledby="faq-title">
-  <div class="wrap two-col">
-    <div><h2 class="h2" id="faq-title" style="margin-bottom:1rem">Questions</h2>{faq_html}</div>
-    <div class="aside">
-      <section class="panel f-blue"><h2>Last-minute gift</h2><p>Because they arrive by email, Downtown Dollars still work on Christmas Eve. See <a href="{{R}}plan/last-minute.html">A last-minute downtown outing</a>.</p></section>
-      <section class="panel"><h2>Businesses</h2><p>Want to accept Downtown Dollars? See <a href="{{R}}businesses.html">For businesses</a>.</p></section>
-    </div>
-  </div>
-</section>'''
-    page('dollars.html', 'Downtown Dollars', body, 'dollars', 'Downtown Dollars: digital gift certificates for Downtown Kalamazoo businesses.')
+# The Downtown Dollars page is built in dollars_section.py from content/dollars.yml.
 
 # ---------------------------------------------------------------- Visit
 def build_visit():
@@ -1424,6 +1390,9 @@ exec(open(os.path.join(HERE, 'plan_section.py'), encoding='utf-8').read())
 
 # The permanent, year-round pages live in their own file so they're easier to find and edit.
 exec(open(os.path.join(HERE, 'yearround_section.py'), encoding='utf-8').read())
+
+# The Downtown Dollars page (story, numbers and the merchant list).
+exec(open(os.path.join(HERE, 'dollars_section.py'), encoding='utf-8').read())
 
 if __name__ == '__main__':
     if os.path.exists(OUT): shutil.rmtree(OUT)

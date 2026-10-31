@@ -809,4 +809,18 @@
     catch (e) { const n = b.previousElementSibling; if (n) { const r = document.createRange(); r.selectNodeContents(n); const s = getSelection(); s.removeAllRanges(); s.addRange(r); } b.textContent = 'Selected, press Ctrl+C'; }
     setTimeout(() => { b.textContent = label; }, 2200);
   }));
+
+  /* ---------- Downtown Dollars: show one kind of business at a time ---------- */
+  const ddTabs = $('.dd-tabs');
+  if (ddTabs) {
+    const btns = $$('.dd-tab', ddTabs), groups = $$('.dd-cat'), status = $('#dd-where-status');
+    ddTabs.hidden = false;
+    btns.forEach(b => b.addEventListener('click', () => {
+      const cat = b.dataset.cat;
+      btns.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      let n = 0;
+      groups.forEach(g => { const on = cat === 'all' || g.dataset.cat === cat; g.hidden = !on; if (on) n += $$('li', g).length; });
+      if (status) status.textContent = cat === 'all' ? `Showing all ${n} businesses` : `Showing ${n} of ${btns[0].querySelector('span').textContent}: ${b.dataset.noun}`;
+    }));
+  }
 })();

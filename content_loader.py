@@ -409,3 +409,36 @@ def business_resources(today=None):
 
     return dict(stats=stats, tools=tools, resources=entries('resources', True), develop=entries('develop', False),
                 research=research, partners=partners, warnings=warnings)
+
+
+# ---------------------------------------------------------------- Downtown Dollars page
+def dollars():
+    """content/dollars.yml, checked so a typo shows up as a clear message on the Actions tab."""
+    d = load_yaml('dollars.yml', {}) or {}
+    where = 'content/dollars.yml'
+    for k in ('through', 'since', 'bought', 'spent', 'waiting', 'recipients', 'half_spent_weeks', 'businesses'):
+        if d.get(k) in (None, ''):
+            raise SystemExit(f'{where}: "{k}:" is missing or blank.')
+    for k in ('bought', 'spent', 'waiting'):
+        if not isinstance(d[k], int):
+            raise SystemExit(f'{where}: "{k}:" should be a plain number with no $ or commas, like 392485.')
+    total = sum(int(x.get('cents', 0)) for x in d.get('split') or [])
+    if d.get('split') and total != 100:
+        print(f'::warning file={where},title=Downtown Dollars::The cents under split: add up to {total}, not 100.')
+    for m in d.get('months') or []:
+        for k in ('month', 'businesses', 'bought', 'spent'):
+            if k not in m:
+                raise SystemExit(f'{where}: a line under months: is missing "{k}". Copy an existing line and change it.')
+    r = d.get('reminder') or {}
+    if r:
+        r['show_from'], r['show_until'] = _date(r.get('show_from')), _date(r.get('show_until'))
+    v = d.get('video') or {}
+    if v.get('file'):
+        for k in ('poster', 'captions', 'transcript'):
+            if not v.get(k):
+                raise SystemExit(f'{where}: the video needs "{k}:" too. Captions and a transcript are required so everyone can follow it.')
+        for k in ('file', 'poster', 'captions'):
+            if not os.path.exists(os.path.join(HERE, v[k])):
+                raise SystemExit(f'{where}: video {k} "{v[k]}" isn\'t in the repository. Check the folder and spelling.')
+    d['video'] = v
+    return d

@@ -1164,3 +1164,85 @@ a[href^="tel:"] { white-space: nowrap; }
 .env-front { inset: 0; background: var(--dk-mist); border-radius: 10px; clip-path: polygon(0 0, 50% 40%, 100% 0, 100% 100%, 0 100%); }
 .env-seal { left: 50%; top: 40%; width: 2.2rem; height: 2.2rem; margin: -1.1rem 0 0 -1.1rem; border-radius: 50%; background: var(--dk-red); border: 3px solid var(--dk-navy); box-sizing: border-box; }
 @media (forced-colors: active) { .envelope-art, .hub-dd-art { display: none; } }
+
+/* ---------- Downtown Dollars page ---------- */
+.f-sky { --accent: #bfe6f7; }
+.dd-intro { font-size: 1.1rem; max-width: 40rem; margin-block: .5rem 1.75rem; }
+.dd-source { margin-top: 1.5rem; font-size: .9rem; color: var(--muted); }
+
+/* Seasonal reminder */
+.dd-reminder { background: var(--note-bg); border-block: 2px solid var(--note-line); }
+.dd-reminder .wrap { display: flex; gap: .85rem; align-items: center; padding-block: .8rem; }
+.dd-reminder p { margin: 0; max-width: 60rem; }
+.dd-reminder-icon { flex: none; width: 1.6rem; height: 1.6rem; border: 2px solid var(--fg); border-top-width: 6px; border-radius: 4px; }
+
+/* Follow a Downtown Dollar: four stops along a dashed route */
+.dd-route { list-style: none; padding: 0; margin: 0; position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2.25rem; padding-bottom: 3rem; }
+.dd-route::before { content: ""; position: absolute; left: 0; right: 0; top: 4.25rem; height: 2.4rem; border-radius: 999px;
+  background: #058ac7 var(--pat-dashes) center / 300px auto; z-index: 0; }
+.dd-route li { position: relative; z-index: 1; background: var(--accent); color: var(--ink); border-radius: var(--radius);
+  padding: 1.1rem 1.15rem 1.25rem; display: grid; gap: .4rem; align-content: start; box-shadow: var(--shadow); }
+.dd-route li:nth-child(even) { margin-top: 3rem; margin-bottom: -3rem; }
+.dd-verb { display: flex; align-items: center; gap: .55rem; font-family: var(--font-ui); font-weight: 800; font-size: 1.05rem; }
+.dd-num { display: inline-grid; place-items: center; width: 1.9rem; height: 1.9rem; border-radius: 50%; background: var(--dk-navy); color: #fff; font-size: .9rem; }
+.dd-n { font-family: var(--font-display); font-weight: 900; font-size: clamp(2rem, 1.3rem + 2vw, 2.9rem); line-height: 1; font-variant-numeric: tabular-nums; margin: .15rem 0; }
+.dd-route p { margin: 0; }
+.dd-n small { font-size: .5em; font-weight: 800; }
+@media (max-width: 900px) {
+  .dd-route { grid-template-columns: 1fr; gap: 1rem; padding: 0 0 0 2.4rem; }
+  .dd-route::before { top: 0; bottom: 0; left: .5rem; right: auto; width: 1.4rem; height: auto; background-size: 200px auto; }
+  .dd-route li:nth-child(even) { margin: 0; }
+}
+
+/* How it works, with the video */
+.dd-how-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 2.5rem; align-items: center; }
+@media (max-width: 860px) { .dd-how-grid { grid-template-columns: 1fr; } }
+.dd-video { margin: 0; display: grid; gap: .7rem; }
+.dd-video-frame { background: var(--fg); padding: .7rem; border-radius: 14px; position: relative; }
+.dd-video-frame::before, .dd-video-frame::after { content: ""; position: absolute; top: 50%; width: 1.7rem; height: 1.7rem; margin-top: -.85rem; border-radius: 50%; background: var(--bg); z-index: 1; }
+.dd-video-frame::before { left: -.85rem; } .dd-video-frame::after { right: -.85rem; }
+.dd-video video { display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 8px; background: #058ac7 var(--pat-dashes) center / cover; }
+.dd-video figcaption > span:first-child { font-weight: 700; }
+.dd-video figcaption { display: flex; flex-wrap: wrap; gap: .25rem 1rem; align-items: baseline; font-family: var(--font-ui); }
+.dd-steps { list-style: none; counter-reset: s; padding: 0; margin: 1.25rem 0 1.5rem; display: grid; gap: 1rem; }
+.dd-steps li { counter-increment: s; display: grid; align-content: start; grid-template-columns: 2.4rem 1fr; column-gap: .9rem; }
+.dd-steps li::before { content: counter(s); grid-row: span 2; display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 50%;
+  border: 2px solid var(--fg); font-family: var(--font-display); font-weight: 800; }
+.dd-steps h3 { font-family: var(--font-ui); font-weight: 800; font-size: 1.05rem; margin: .2rem 0 .15rem; }
+.dd-steps p { margin: 0; }
+.dd-steps-row { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; max-width: 64rem; }
+@media (max-width: 760px) { .dd-steps-row { grid-template-columns: 1fr; } }
+.dd-transcript > div { max-width: 42rem; }
+
+/* Where it lands: a dollar split by kind of business */
+.dd-bill { display: flex; align-items: stretch; gap: 0; border: 3px solid var(--fg); border-radius: 12px; overflow: hidden; background: var(--bg); max-width: 56rem; }
+.dd-bill-k { display: grid; place-items: center; padding: 0 1.1rem; font-family: var(--font-display); font-weight: 900; font-size: 2rem; border-right: 3px solid var(--fg); }
+.dd-bill-bar { display: flex; flex: 1; min-height: 5.5rem; }
+.dd-seg { background-size: 260px auto; background-position: center; display: grid; place-items: center; border-left: 3px solid var(--fg); }
+.dd-seg:first-child { border-left: 0; }
+.dd-seg b { background: var(--dk-navy); color: #fff; font-family: var(--font-display); font-size: 1.25rem; padding: .25rem .6rem; border-radius: 6px; }
+.dd-legend { list-style: none; padding: 0; margin: 1.1rem 0 0; display: flex; flex-wrap: wrap; gap: .6rem 1.75rem; }
+.dd-legend li { display: flex; align-items: center; gap: .55rem; }
+.dd-swatch { width: 1.5rem; height: 1.5rem; border-radius: 4px; border: 2px solid var(--fg); background-size: 120px auto; background-position: center; }
+.dd-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: 1rem 2.5rem; margin-top: 2rem; max-width: 56rem; }
+.dd-facts p { margin: 0; border-top: 3px solid var(--fg); padding-top: .75rem; }
+.dd-fact-n { display: block; font-family: var(--font-display); font-weight: 900; font-size: 1.6rem; line-height: 1.1; }
+
+/* Where to spend them */
+.dd-sw { flex: none; display: inline-block; width: 1rem; height: 1rem; border-radius: 3px; border: 1.5px solid var(--fg); background-size: 90px auto; background-position: center; }
+/* Buttons that show one kind of business at a time (added by site.js) */
+.dd-tabs:not([hidden]) { display: flex; flex-wrap: wrap; gap: .5rem; border-bottom: 2px solid var(--fg); padding-bottom: .9rem; margin-bottom: 1.25rem; }
+.dd-tab { appearance: none; display: inline-flex; align-items: center; gap: .45rem; min-height: 2.5rem; padding: .35rem .9rem; border: 2px solid var(--fg); border-radius: 999px;
+  background: transparent; color: var(--fg); font-family: var(--font-ui); font-weight: 700; font-size: .9rem; cursor: pointer; }
+.dd-tab span:last-child { font-weight: 500; opacity: .8; }
+.dd-tab[aria-pressed="true"] { background: var(--dk-navy); color: #fff; border-color: var(--dk-navy); }
+.dd-tab[aria-pressed="true"] .dd-sw { border-color: #fff; }
+:root[data-theme="dark"] .dd-tab[aria-pressed="true"] { background: var(--dk-pink); color: var(--ink); border-color: var(--dk-pink); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .dd-tab[aria-pressed="true"] { background: var(--dk-pink); color: var(--ink); border-color: var(--dk-pink); } }
+.dd-tabpanel { list-style: none; padding: 0; margin: 0; columns: 3 15rem; column-gap: 2rem; }
+.dd-tabpanel li { break-inside: avoid; display: grid; padding: .45rem 0; border-bottom: 1px solid var(--line); }
+.dd-tabpanel .muted { font-size: .85rem; }
+.dd-cats { display: grid; gap: 2rem; }
+.dd-cat-h { display: flex; align-items: center; gap: .5rem; font-family: var(--font-ui); font-weight: 800; font-size: 1.05rem; margin: 0 0 .5rem; }
+.dd-cat-h .dd-sw { width: 1.2rem; height: 1.2rem; }
+.dd-table { margin-top: .25rem; }
