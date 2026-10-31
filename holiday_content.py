@@ -4,6 +4,14 @@ is not yet public, the copy says so rather than guessing."""
 
 TBA = 'To be announced'
 BRONSON = 'Bronson Park, 200 S. Rose St.'
+# Holiday hub settings (holidays/index.html).
+# The "Curious? Pick an envelope." card shows from show_from through show_until (both dates included).
+# Keep show_from on or after the press release date, so the giveaway isn't announced early.
+SBS_GIVEAWAY = dict(show_from='2026-11-02', show_until='2026-11-28')
+# "Make a day of it" features plans that go with the next holiday events on their own.
+# These fill any empty spots, in this order (slugs from content/itineraries.yml).
+HUB_PLAN_FALLBACK = ['shop-small', 'lights-and-trolley', 'last-minute']
+
 TROLLEY_TIP = 'The free Holly Jolly Trolley runs Thursday through Sunday, so it’s a warm way to hop between stops.'
 
 EVENTS = [

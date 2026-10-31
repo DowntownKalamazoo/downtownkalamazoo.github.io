@@ -2,7 +2,7 @@
 """Builds the Downtown Kalamazoo holiday site into ./out (full documents, ready to host)
 and ./artifact (same, with index.html stripped to page content for the artifact skeleton)."""
 import html, os, re, shutil, json, datetime as dt
-from holiday_content import EVENTS, GIFT_GUIDES
+from holiday_content import EVENTS, GIFT_GUIDES, SBS_GIVEAWAY, HUB_PLAN_FALLBACK
 import directory_page
 # Plan your day itineraries live in content/itineraries.yml (see itineraries.py and plan_section.py).
 import itineraries as IT
@@ -58,7 +58,7 @@ SITE_URL = 'https://downtownkalamazoo.us/'
 # Each part of the site has its own brand pattern, so people can tell where they are by texture as well as color.
 SECTION_PATTERN = {'directory': 'maze', 'events': 'confetti', 'plan': 'arcs', 'gifts': 'stripes', 'dollars': 'dashes',
                    'visit': 'waves', 'businesses': 'pinstripes', 'news': 'speckle'}
-PATH_PATTERN = {'index.html': 'squiggle', 'holidays/index.html': 'squiggle', 'holidays/sbs.html': 'quilt', 'newsletter.html': 'speckle',
+PATH_PATTERN = {'index.html': 'squiggle', 'holidays/index.html': 'dots', 'holidays/sbs.html': 'quilt', 'newsletter.html': 'speckle',
                 'accessibility.html': 'loops', 'access-guide.html': 'loops', 'take-home.html': 'quilt',
                 'your-downtown.html': 'squiggle', '404.html': 'quilt',
                 'about.html': 'squiggle', 'history.html': 'quilt', 'boards.html': 'stripes', 'projects.html': 'arcs',
@@ -301,7 +301,7 @@ def page(path, title, body, current=None, description='', root=None):
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{FONTS}">{f'{chr(10)}<link rel="stylesheet" href="https://use.typekit.net/{ADOBE_FONTS_KIT}.css">' if ADOBE_FONTS_KIT else ''}
 <style>{CSS}</style>
-<style>:root{{--pat-sq:url({r}pattern-squiggle.webp);--pat-dots:url({r}pattern-dots.webp);--pat-page:url({r}pattern-{pat}.webp);--pat-page-sm:url({r}pattern-{pat}-sm.webp);--brush-v:{BRUSH_V};--brush-h:{BRUSH_H}}}</style>'''
+<style>:root{{--pat-sq:url({r}pattern-squiggle.webp);--pat-dots:url({r}pattern-dots.webp);--pat-dashes:url({r}pattern-dashes.webp);--pat-page:url({r}pattern-{pat}.webp);--pat-page-sm:url({r}pattern-{pat}-sm.webp);--brush-v:{BRUSH_V};--brush-h:{BRUSH_H}}}</style>'''
     content = f'''{header(r, current, path)}
 <main id="main" tabindex="-1">
 {body}
@@ -508,48 +508,197 @@ def lights(n=34, seed=4):
             f'<path d="{wire}" fill="none" stroke="#121345" stroke-width="2"/>{bulbs}</svg></div>')
 
 
+# ---------------------------------------------------------------- Holiday hub pieces
+# "Today" for the hub. The site rebuilds every morning, so date-based pieces stay current.
+HUB_TODAY = dt.date.fromisoformat(os.environ['DK_TODAY']) if os.environ.get('DK_TODAY') else dt.date.today()
+
+
+def _ev_start(e):
+    return dt.date.fromisoformat(e['date'])
+
+
+def _ev_end(e):
+    return dt.date.fromisoformat(e.get('end') or e['date'])
+
+
+def _short_date(e):
+    """'Sat, Nov 21', 'Nov 28–Dec 24', or 'Through Dec 24' once a run has started."""
+    d, d2 = _ev_start(e), _ev_end(e)
+    if d2 == d:
+        return f'{DOW[d.weekday()]}, {MON[d.month]} {d.day}'
+    if d < HUB_TODAY:
+        return f'Through {MON[d2.month]} {d2.day}'
+    return f'{MON[d.month]} {d.day}–{MON[d2.month] + " " if d2.month != d.month else ""}{d2.day}'
+
+
+def snowfall(n=18, seed=7):
+    """Loose dots from the dots pattern, falling in front of it. Decorative; hidden when motion is reduced."""
+    rnd = _random.Random(seed)
+    flakes = ''.join(
+        f'<span style="--x:{(i + rnd.uniform(.15, .85)) * 100 / n:.1f}%;--s:{rnd.choice([8, 10, 12, 15, 18, 22])}px;'
+        f'--d:{rnd.uniform(10, 19):.1f}s;--w:{rnd.uniform(-1.4, 1.4):.1f}rem;animation-delay:-{rnd.uniform(0, 19):.1f}s"></span>'
+        for i in range(n))
+    return f'<div class="flakes" aria-hidden="true">{flakes}</div>'
+
+
+def next_up():
+    """The next holiday event that hasn't started yet (or starts today). Empty after the season."""
+    soon = sorted((e for e in EVENTS if _ev_start(e) >= HUB_TODAY), key=_ev_start)
+    if not soon:
+        return ''
+    e = soon[0]
+    label = 'Today' if _ev_start(e) == HUB_TODAY else 'Next up'
+    return f'''<a class="next-up" href="{{R}}events/{e["slug"]}.html">
+      {date_tile(e)}
+      <span class="nu-text"><span class="nu-label">{label}</span><span class="nu-title">{E(e["title"])}</span><span class="nu-meta">{E(e["when_short"])}</span></span>
+    </a>'''
+
+
+def season_strip(n=7):
+    """The next few holiday events as a strip of dated tags. Past events drop off at each build."""
+    items = sorted((e for e in EVENTS if _ev_end(e) >= HUB_TODAY), key=_ev_start)[:n]
+    return ''.join(
+        f'<li data-end="{_ev_end(e).isoformat()}"><a class="ss-tag {e["fill"]}" href="{{R}}events/{e["slug"]}.html">'
+        f'<span class="ss-date">{_short_date(e)}</span><span class="ss-title">{E(e["short_title"])}</span></a></li>'
+        for e in items)
+
+
+def hub_plans(n=3):
+    """Plans that go with the next holiday events, topped up from HUB_PLAN_FALLBACK."""
+    by_slug = {p['slug']: p for p in PLANS}
+    picks = []
+    for e in sorted((e for e in EVENTS if _ev_end(e) >= HUB_TODAY), key=_ev_start):
+        if len(picks) >= n - 1:
+            break
+        taken = [x[0]['slug'] for x in picks]
+        # The most specific plan for this event: it leads with the event, covers the fewest others and the fewest days.
+        fits = [p for p in PLANS if (p.get('events') or [None])[0] == e['slug'] and p['slug'] not in taken]
+        p = min(fits, key=lambda p: (len(p['events']), len(p['days']) if isinstance(p.get('days'), list) else 7)) if fits else None
+        if p:
+            picks.append((p, e))
+    for slug in HUB_PLAN_FALLBACK:
+        if len(picks) >= n:
+            break
+        if slug in by_slug and slug not in [x[0]['slug'] for x in picks]:
+            picks.append((by_slug[slug], None))
+    out = ''
+    for p, e in picks:
+        if e:
+            when, fill = _short_date(e), e['fill']
+        else:
+            days = p.get('days') if isinstance(p.get('days'), list) else []
+            order = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+            idx = sorted(order.index(d) for d in days if d in order)
+            if len(idx) == 7:
+                when = 'Any day'
+            elif idx and idx == list(range(idx[0], idx[-1] + 1)) and len(idx) > 1:
+                when = f'{DOW[idx[0]]}–{DOW[idx[-1]]}'
+            elif idx:
+                when = ', '.join(DOW[i] for i in idx)
+            else:
+                when = 'Any day'
+            fill = 'f-mist'
+        out += (f'<li><a class="plan-pick" href="{{R}}plan/{p["slug"]}.html">'
+                f'<span class="pp-when {fill}">{E(when)}</span><span class="pp-title">{E(p["title"])}</span>'
+                f'<span class="pp-sum">{E(p.get("summary", ""))}</span></a></li>')
+    return out
+
+
+def giveaway_on():
+    return dt.date.fromisoformat(SBS_GIVEAWAY['show_from']) <= HUB_TODAY <= dt.date.fromisoformat(SBS_GIVEAWAY['show_until'])
+
+
+def dollars_band():
+    dollars_url = 'https://kalamazoocity.org/Community/Downtown-Kalamazoo/Downtown-Dollars'
+    envelope = '''
+    <section class="envelope-card" aria-labelledby="envelope-title">
+      <div class="envelope-art" aria-hidden="true"><span class="env-back"></span><span class="env-front"></span><span class="env-seal"></span></div>
+      <p class="eyebrow">Small Business Saturday, Nov 28</p>
+      <h2 id="envelope-title">Curious? Pick an envelope.</h2>
+      <p>It’s a gift from downtown. Find us on the Kalamazoo Mall from 11 a.m. to 1 p.m., while envelopes last. Each one holds Downtown Dollars to spend downtown.</p>
+      <p class="env-cta"><a class="btn btn-pinkfill" href="{R}sbs.html">Small Business Saturday</a></p>
+    </section>''' if giveaway_on() else ''
+    return f'''<div class="section">
+  <div class="wrap hub-dd{' has-envelope' if envelope else ''}">
+    <section class="hub-dd-card" aria-labelledby="dd-band-title">
+      <div class="hub-dd-copy">
+        <p class="eyebrow">Downtown Dollars</p>
+        <h2 class="h2" id="dd-band-title">The gift that stays downtown</h2>
+        <p>Gift certificates for downtown shops and restaurants. Buy them online, send them by email, and they still arrive in time on Christmas Eve.</p>
+        <div class="btn-row">{ext(dollars_url, "Buy Downtown Dollars", "btn btn-primary")}<a class="btn" href="{{R}}directory.html#dollars">See where they’re accepted</a></div>
+      </div>
+      <div class="hub-dd-art" aria-hidden="true"></div>
+    </section>{envelope}
+  </div>
+</div>'''
+
+
 def build_home():
-    upcoming = ''.join(event_row(e, mark_next=False) for e in EVENTS)
-    pillars = ''.join(pillar(i + 1, p) for i, p in enumerate(PILLARS))
     finds = discover_data()
     first = next((b for b in finds if b['n'] == 'Kalamazoo Candle Company'), finds[0])
     data = json.dumps(finds, ensure_ascii=False).replace('</', '<\\/')
     dd = '<span class="dd-badge"><span class="dd-coin" aria-hidden="true">$</span>Accepts Downtown Dollars</span>'
-    body = f'''<section class="hero-weave" aria-labelledby="page-title" id="hero-weave">
-  {weave.weave_svg()}
-  {snow()}
-  <div class="wrap hero-weave-inner">
+    body = f'''<section class="hero-weave hero-snow" aria-labelledby="page-title" id="hero-weave">
+  {snowfall()}
+  <div class="wrap hero-snow-inner">
     <div class="hero-card">
+      <p class="eyebrow">November 6 to December 31</p>
       <h1 class="display" id="page-title">Find the Holidays Downtown</h1>
       <p class="tagline">Shop. Dine. Celebrate. Find it downtown.</p>
-      <p class="lede">Downtown has more to experience than you remember. Come back, explore, and make a full day or evening of it.</p>
+      <p class="lede">Parades, lights, local gifts and a free trolley between them. Downtown has more to experience than you remember, so make a full day of it.</p>
       <div class="btn-row" style="margin-top:1.6rem">
-        <a class="btn btn-primary" href="{{R}}plan.html">Plan your downtown experience</a>
+        <a class="btn btn-primary" href="{{R}}plan.html">Plan your downtown day</a>
         <a class="btn" href="{{R}}events.html">See holiday events</a>
       </div>
     </div>
+    {next_up()}
   </div>
   <button class="weave-toggle" type="button" id="weave-toggle">Pause motion</button>
+  <svg class="snowbank" aria-hidden="true" focusable="false" viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0 46 C120 18 220 60 340 40 S560 8 700 36 S940 70 1080 38 S1320 14 1440 42 L1440 80 L0 80 Z"/></svg>
 </section>
 
-<section class="section" aria-labelledby="pillars-title">
-  <div class="wrap">
-    <div class="section-head"><div><p class="eyebrow">Start anywhere</p><h2 class="h2" id="pillars-title">Four ways to find the holidays</h2></div></div>
-    {in_short('There are four ways to use this site: find local businesses, find things to do, find holiday traditions, and find your way around downtown.')}
-    <ul class="pillars">{pillars}</ul>
-  </div>
-</section>
-
-<section class="section" style="padding-top:0" aria-labelledby="upcoming-title">
+<section class="section hub-upcoming" aria-labelledby="upcoming-title">
   <div class="wrap">
     <div class="section-head">
-      <div><p class="eyebrow">Find more to do</p><h2 class="h2" id="upcoming-title">What’s next downtown</h2></div>
-      <a class="btn" href="{{R}}events.html">All 11 holiday events</a>
+      <div><p class="eyebrow">Find more to do</p><h2 class="h2" id="upcoming-title">Upcoming holiday events</h2></div>
+      <a class="btn" href="{{R}}events.html">More holiday events</a>
     </div>
-    {in_short('These are the next few holiday events. Select one to see the time, place and cost.')}
-    <ul class="event-list" id="upcoming">{upcoming}</ul>
+    {in_short('These are the next holiday events, in date order. Select one to see the time, place and cost.')}
+    <ol class="season-strip">{season_strip()}</ol>
   </div>
 </section>
+
+<section class="section band" aria-labelledby="hub-plan-title">
+  <div class="wrap">
+    <div class="section-head">
+      <div><p class="eyebrow">Plan your day</p><h2 class="h2" id="hub-plan-title">Make a day of it</h2>
+      <p class="hub-lede">50 ready-made plans pair an event with lunch, shops and a warm-up stop, all a few blocks apart. Or build your own.</p></div>
+      <a class="btn btn-primary" href="{{R}}plan/build-your-own.html">Build your own plan</a>
+    </div>
+    {in_short('These plans go with the next holiday events. Each one lists the stops, timing and cost.')}
+    <ul class="plan-picks">{hub_plans()}</ul>
+  </div>
+</section>
+
+{dollars_band()}
+
+<section class="section" style="padding-top:0" aria-labelledby="visit-title">
+  <div class="wrap">
+    <div class="section-head"><div><p class="eyebrow">Find your way</p><h2 class="h2" id="visit-title">Easy to get to, easy to get around</h2></div>
+    <a class="btn" href="{{R}}visit.html">Parking and trolley details</a></div>
+    <ul class="strip">
+      <li class="f-blue"><span class="big">90 minutes free</span><span>In the Epic Center and Kalamazoo Mall ramps, all year.</span></li>
+      <li class="f-pink"><span class="big">Free trolley</span><span>The Holly Jolly Trolley loops downtown Thursday through Sunday until Christmas Eve.</span></li>
+      <li class="f-green"><span class="big">Walkable</span><span>The Kalamazoo Mall, Bronson Park and most holiday events sit within a few blocks.</span></li>
+    </ul>
+    <div class="construction" style="margin-top:1rem">
+      <strong>Streets for All construction</strong>
+      <p>Some downtown streets are being rebuilt. Downtown businesses are open throughout, and the city posts current closures and detours.</p>
+      <p>{ext(STREETS_FOR_ALL, "See current Streets for All updates")}</p>
+    </div>
+  </div>
+</section>
+
 
 <section class="section band" aria-labelledby="discover-title">
   <div class="wrap discover">
@@ -574,22 +723,6 @@ def build_home():
   <script type="application/json" id="discover-data">{data}</script>
 </section>
 
-<section class="section" aria-labelledby="visit-title">
-  <div class="wrap">
-    <div class="section-head"><div><p class="eyebrow">Find your way</p><h2 class="h2" id="visit-title">Easy to get to, easy to get around</h2></div>
-    <a class="btn" href="{{R}}visit.html">Parking and trolley details</a></div>
-    <ul class="strip">
-      <li class="f-blue"><span class="big">90 minutes free</span><span>In the Epic Center and Kalamazoo Mall ramps, all year.</span></li>
-      <li class="f-pink"><span class="big">Free trolley</span><span>The Holly Jolly Trolley loops downtown Thursday through Sunday until Christmas Eve.</span></li>
-      <li class="f-green"><span class="big">Walkable</span><span>The Kalamazoo Mall, Bronson Park and most holiday events sit within a few blocks.</span></li>
-    </ul>
-    <div class="construction" style="margin-top:1rem">
-      <strong>Streets for All construction</strong>
-      <p>Some downtown streets are being rebuilt. Downtown businesses are open throughout, and the city posts current closures and detours.</p>
-      <p>{ext(STREETS_FOR_ALL, "See current Streets for All updates")}</p>
-    </div>
-  </div>
-</section>
 
 <section class="section" style="padding-top:0" aria-labelledby="host-title">
   <div class="wrap">

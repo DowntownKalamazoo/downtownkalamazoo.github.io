@@ -1096,3 +1096,71 @@ a[href^="tel:"] { white-space: nowrap; }
   padding: .22rem .7rem .22rem .25rem; font-family: var(--font-ui); font-weight: 700; font-size: .72rem; letter-spacing: .02em; line-height: 1.2; }
 .gift-swatch { width: 1.2rem; height: 1.2rem; border-radius: 50%; background-size: cover; background-position: center; flex: none; box-shadow: inset 0 0 0 1.5px var(--bg); }
 .chip-gift .gift-swatch { box-shadow: none; border: 1.5px solid currentColor; }
+
+/* ---------- Holiday hub (holidays/index.html): snowfall header and season sections ---------- */
+/* The dots pattern drifts down slowly; loose dots fall faster in front of it, so the snow has depth.
+   Reduced motion (system setting or Display settings) stops both and hides the loose dots. */
+.hero-snow { background: #2cace2 var(--pat-dots) 0 0 / 600px auto repeat; animation: snow-drift 70s linear infinite; }
+@keyframes snow-drift { from { background-position: 0 0; } to { background-position: 0 528px; } }
+.hero-snow-inner { position: relative; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1.5rem 2rem; padding-block: clamp(3rem, 7vw, 5.5rem) clamp(6rem, 9vw, 7.5rem); }
+.hero-snow .hero-card { flex: 999 1 30rem; max-width: 42rem; box-shadow: 0 8px 0 var(--dk-navy); }
+.hero-snow .hero-card h1 { font-size: clamp(2.2rem, 1.2rem + 3.8vw, 4.1rem); line-height: 1.02; }
+.flakes { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.flakes span { position: absolute; left: var(--x); top: -5%; width: var(--s); height: calc(var(--s) * .92); background: #fff;
+  border-radius: 47% 53% 44% 56% / 55% 45% 55% 45%; animation: flake-fall var(--d) linear infinite; }
+@keyframes flake-fall { 0% { top: -5%; transform: translateX(0); } 50% { transform: translateX(var(--w)); } 100% { top: 105%; transform: translateX(0); } }
+.hero-snow.is-paused, .hero-snow.is-paused .flakes span { animation-play-state: paused; }
+.hero-snow .weave-toggle { bottom: clamp(3.25rem, 6vw, 4.5rem); }
+.snowbank { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: clamp(2.25rem, 5vw, 4rem); display: block; fill: var(--bg); }
+:root.a11y-motion .hero-snow { animation: none; }
+:root.a11y-motion .flakes { display: none; }
+@media (prefers-reduced-motion: reduce) { .hero-snow { animation: none; } .flakes { display: none; } }
+@media (forced-colors: active) { .hero-snow { background: Canvas; } .snowbank { display: none; } }
+
+/* Next up: a ticket beside the headline card */
+.next-up { flex: 1 1 17rem; display: flex; gap: 1rem; align-items: center; background: var(--dk-navy); color: #fff; border: 2px solid var(--dk-navy);
+  border-radius: 16px; padding: 1rem 1.1rem; text-decoration: none; }
+.next-up:hover { background: #24267a; }
+.next-up .date-tile { width: 4.5rem; }
+.nu-text { display: grid; gap: .2rem; }
+.nu-label { font-family: var(--font-ui); font-weight: 800; font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--dk-pink); }
+.nu-title { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; line-height: 1.2; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .2em; }
+.nu-meta { font-size: .95rem; color: var(--dk-mist); }
+
+/* Upcoming holiday events: dated tags in a strip */
+.hub-upcoming { padding-top: 1.5rem; }
+.season-strip { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); gap: .85rem; }
+.season-strip .is-past { display: none; }
+.ss-tag { display: flex; flex-direction: column; height: 100%; border: 2px solid var(--fg); border-radius: 14px; overflow: hidden; color: var(--fg); background: var(--bg); text-decoration: none; }
+.ss-date { background: var(--accent); color: var(--ink); padding: .5rem .8rem; font-family: var(--font-ui); font-weight: 800; font-size: .8rem; letter-spacing: .04em; text-transform: uppercase; }
+.ss-title { padding: .65rem .8rem .85rem; font-weight: 600; font-size: 1.05rem; line-height: 1.3; }
+.ss-tag:hover .ss-title { text-decoration: underline; text-underline-offset: .2em; }
+
+/* Make a day of it: featured plans */
+.hub-lede { max-width: 40rem; font-size: 1.1rem; margin: 0; }
+.plan-picks { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; }
+.plan-pick { display: flex; flex-direction: column; gap: .5rem; height: 100%; box-sizing: border-box; background: var(--bg); color: var(--fg); border: 2px solid var(--fg); border-radius: 16px; padding: 1.25rem; text-decoration: none; }
+.pp-when { align-self: flex-start; background: var(--accent); color: var(--ink); border-radius: 999px; padding: .2rem .7rem; font-family: var(--font-ui); font-weight: 800; font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; }
+.pp-when.f-mist { border: 1.5px solid var(--ink); }
+.pp-title { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; line-height: 1.25; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .2em; }
+.pp-sum { line-height: 1.45; }
+
+/* Downtown Dollars, with the Small Business Saturday envelope beside it while the giveaway runs */
+.hub-dd { display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: stretch; }
+.hub-dd-card { flex: 999 1 30rem; min-width: 0; display: flex; flex-direction: column; border: 2px solid var(--fg); border-radius: 22px; overflow: hidden; background: var(--bg); }
+.hub-dd-art { flex: 1 0 6rem; background: #058ac7 var(--pat-dashes) center / 420px auto; }
+.hub-dd-copy { padding: clamp(1.25rem, 3vw, 2.25rem); display: grid; gap: .8rem; align-content: start; }
+.hub-dd-copy .h2, .hub-dd-copy p { margin: 0; }
+.envelope-card { flex: 1 1 18rem; display: flex; flex-direction: column; gap: .8rem; background: var(--dk-navy); color: #fff; border: 2px solid var(--line); border-radius: 22px; padding: clamp(1.25rem, 3vw, 2.25rem); }
+.envelope-card .eyebrow { color: var(--dk-pink); margin: 0; }
+.envelope-card h2 { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; font-size: clamp(1.3rem, 1rem + 1.2vw, 1.85rem); line-height: 1.12; margin: 0; }
+.envelope-card p { margin: 0; color: var(--dk-mist); }
+.env-cta { margin-top: auto !important; padding-top: .4rem; }
+.btn-pinkfill { background: var(--dk-pink); color: var(--ink); border-color: var(--dk-pink); }
+.btn-pinkfill:hover { background: #fff; color: var(--ink); }
+.envelope-art { position: relative; width: min(13rem, 100%); height: 7.25rem; align-self: center; margin-bottom: .25rem; }
+.envelope-art span { position: absolute; }
+.env-back { inset: 0; background: var(--dk-pink); border-radius: 10px; }
+.env-front { inset: 0; background: var(--dk-mist); border-radius: 10px; clip-path: polygon(0 0, 50% 40%, 100% 0, 100% 100%, 0 100%); }
+.env-seal { left: 50%; top: 40%; width: 2.2rem; height: 2.2rem; margin: -1.1rem 0 0 -1.1rem; border-radius: 50%; background: var(--dk-red); border: 3px solid var(--dk-navy); box-sizing: border-box; }
+@media (forced-colors: active) { .envelope-art, .hub-dd-art { display: none; } }
