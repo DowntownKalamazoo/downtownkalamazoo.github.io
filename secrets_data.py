@@ -26,7 +26,7 @@ PARADE = fact('A tradition since 1962',
               ('events/holiday-parade.html', 'Parade details'))
 TROLLEY = fact('Room for 24',
                'The free Holly Jolly Trolley seats 24 and leaves City Hall on the hour and half hour. On busy nights, catch it at the start of the loop.',
-               ('visit.html', 'Trolley and parking details'), kicker='Insider tip')
+               ('events/holly-jolly-trolley.html', 'Trolley stops and hours'), kicker='Insider tip')
 
 # Corner cards in page heroes, keyed by page path
 PAGE_SECRETS = {

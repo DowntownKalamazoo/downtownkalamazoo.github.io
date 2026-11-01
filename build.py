@@ -1041,35 +1041,145 @@ def build_sbs():
 # The Downtown Dollars page is built in dollars_section.py from content/dollars.yml.
 
 # ---------------------------------------------------------------- Visit
+# Park Kalamazoo runs the city ramps, lots and meters. Rates and rules below were checked against
+# parkkalamazoo.org and City of Kalamazoo announcements in November 2026. Update them here when the City changes them.
+PARK_KZOO_PAGES = [
+    ('Parking locations and map', 'https://parkkalamazoo.org/parking-locations'),
+    ('How to pay for parking', 'https://parkkalamazoo.org/how-to-pay-for-parking'),
+    ('Monthly parking permits', 'https://parkkalamazoo.org/parking-permits-1'),
+    ('Pay a parking ticket', 'https://parkkalamazoo.org/paycitation'),
+    ('Reserve a meter for an event or move', 'https://parkkalamazoo.org/need-to-reserve-a-meter'),
+]
+
+def _map(address):
+    """A Google Maps link for a downtown address."""
+    from urllib.parse import quote_plus
+    return 'https://www.google.com/maps/search/?api=1&query=' + quote_plus(address + ', Kalamazoo, MI')
+
+# City-owned ramps (name, entrance, note) and lots (name, where)
+CITY_RAMPS = [
+    ('Epic Center Ramp (Ramp 2)', '136 E. South St.', 'First 90 minutes free'),
+    ('Kalamazoo Mall Ramp (Ramp 3)', '130 Portage St.', 'First 90 minutes free'),
+]
+CITY_LOTS = [
+    ('Haymarket Lot (Lot 1)', '140 S. Edwards St.'),
+    ('Festival Site Lot (Lot 6)', 'Eleanor St. at Koopsen’s Alley'),
+    ('Water Street Lot (Lot 9)', '162 E. Water St.'),
+]
+# Other parking open to the public, run by private owners. Their rates change on their own schedule,
+# so the page links out instead of listing prices.
+OTHER_PARKING = [
+    dict(name='Radisson Plaza ramp', where='West Michigan Ave. and Rose St. Enter from Rose St. or Church St.',
+         note='Run by the Radisson. Hourly, daily and monthly parking. Pay by card at the exit.',
+         link=('Radisson parking rates', 'https://radissonkzoo.com/amenities/parking/')),
+    dict(name='Arcadia Ramp (Ramp 4)', where='Rose St. and Eleanor St., with a second entrance on Kalamazoo Ave.',
+         note='Next to the Kalamazoo Valley Museum and Arcadia Creek Festival Place. Run by Ellis Parking.',
+         link=('Museum directions and parking', 'https://kalamazoomuseum.org/visit/directions-parking')),
+    dict(name='Bell’s Parking Emporium', where='N. Pitcher St. at E. Kalamazoo Ave., west of Bell’s Eccentric Café',
+         note='Paid lot. Up to five hours free with validation from a purchase at Bell’s. Card only, no cash.',
+         link=('Bell’s parking questions and answers', 'https://secure.bellsbeer.com/news/qas-about-our-new-parking-lot')),
+]
+
+def _trolley_last_day():
+    if not TROLLEY or not TROLLEY.get('closes'):
+        return None
+    days = [TROLLEY['closes']] + list((TROLLEY.get('special') or {}).keys())
+    return max(dt.date.fromisoformat(str(d)) for d in days)
+
+def trolley_in_season():
+    """The Holly Jolly Trolley note shows on the Visit page only during the holiday season, and comes down
+    on its own after the last ride (the site rebuilds every day). Next year, update the trolley dates in
+    content/itineraries.yml and switch HOLIDAY_SEASON back on."""
+    last = _trolley_last_day()
+    return bool(HOLIDAY_SEASON and last and HUB_TODAY <= last)
+
 def build_visit():
-    rates = [('First 90 minutes', 'Free'), ('Next hour', '$2'), ('Each additional half hour', '$1'), ('Daily maximum (24 hours)', '$10')]
-    rate_rows = ''.join(f'<tr><th scope="row">{a}</th><td class="num">{b}</td></tr>' for a, b in rates)
-    hours = [('Thursdays and Fridays', '5 to 9 p.m.'), ('Saturdays', 'Noon to 7 p.m.'), ('Sundays', 'Noon to 4 p.m. (no service Nov 29)'), ('December 21 to 23', '5 to 9 p.m.'), ('Christmas Eve', 'Noon to 4 p.m.'), ('New Year’s Eve', '6 to 11 p.m.')]
-    hour_rows = ''.join(f'<tr><th scope="row">{a}</th><td>{b}</td></tr>' for a, b in hours)
-    body = page_hero([('index.html', 'Home'), ('visit.html', 'Visit & park')], 'Getting here', 'Visit &amp; park',
-                     'Where to park, how to ride the free holiday trolley, and how to get around once you’re here.', 'f-green')
+    seasonal = trolley_in_season()
+    ramp_rates = [('First 90 minutes', 'Free'), ('Next hour', '$2'), ('Each additional half hour', '$1'), ('Sundays', 'Free all day')]
+    ramp_rate_rows = ''.join(f'<tr><th scope="row">{a}</th><td class="num">{b}</td></tr>' for a, b in ramp_rates)
+    street = [('Premium blocks, in the core of downtown', '$2 an hour', 'Monday to Saturday, 10 a.m. to 5 p.m.'),
+              ('Base blocks, on surrounding streets', '$1.50 an hour', 'Weekdays, 10 a.m. to 5 p.m.'),
+              ('Free blocks', 'Free', 'Follow the time limit on the sign')]
+    street_rows = ''.join(f'<tr><th scope="row">{a}</th><td>{b}</td><td>{c}</td></tr>' for a, b, c in street)
+    ramp_rows = ''.join(f'<tr><th scope="row">{E(n)}</th><td>{ext(_map(w), E(w))}</td><td>{E(note)}</td></tr>' for n, w, note in CITY_RAMPS)
+    lot_items = ''.join(f'<li><strong>{E(n)}</strong>, {ext(_map(w), E(w))}</li>' for n, w in CITY_LOTS)
+    other_items = ''.join(
+        f'<li class="panel"><h3>{E(o["name"])}</h3><p>{E(o["where"])}</p><p>{E(o["note"])}</p><p>{ext(o["link"][1], E(o["link"][0]))}</p></li>'
+        for o in OTHER_PARKING)
+    pk_links = ''.join(f'<li>{ext(u, E(t))}</li>' for t, u in PARK_KZOO_PAGES)
+
+    lede = ('Where to park, what it costs, and how to get around once you’re here.'
+            + (' This season, a free trolley loops downtown too.' if seasonal else ''))
+    summary = ('Park in the Epic Center or Kalamazoo Mall ramps, where the first 90 minutes are free. '
+               'Street parking downtown is free for the first 30 minutes, and parking is free on Sundays.'
+               + (' A free holiday trolley loops downtown Thursday through Sunday.' if seasonal else ''))
+    trolley_panel = ''
+    if seasonal:
+        trolley_panel = '''<section class="panel f-pink" aria-labelledby="trolley-title">
+        <h2 id="trolley-title">This season: Holly Jolly Trolley</h2>
+        <p>Park once and ride free. The trolley loops downtown Thursday through Sunday until Christmas Eve, plus New Year’s Eve, starting at City Hall, 241 W. South St. It stops near Santa’s Workshop, Bell’s Eccentric Café and the Kalamazoo Valley Museum.</p>
+        <p><a href="{R}events/holly-jolly-trolley.html">Trolley stops and hours</a></p>
+      </section>'''
+
+    body = page_hero([('index.html', 'Home'), ('visit.html', 'Visit & park')], 'Getting here', 'Visit &amp; park', lede, 'f-green')
     body += f'''<section class="section" aria-labelledby="park-title">
   <div class="wrap two-col">
     <div class="prose" style="max-width:none">
-      {in_short('Park in the Epic Center or Kalamazoo Mall ramps, where the first 90 minutes are free. A free trolley loops downtown Thursday through Sunday.')}
-      <h2 class="h2" id="park-title">Parking</h2>
-      <p>The Epic Center and Kalamazoo Mall parking ramps are the closest to the Kalamazoo Mall and Bronson Park. Since April 2026, the first 90 minutes in both ramps are free all year. Street meters downtown take coins and cards at the kiosks, or the ParkMobile app.</p>
-      <div class="table-wrap"><table><caption>Ramp rates during last year’s holiday season</caption><thead><tr><th scope="col">Time parked</th><th scope="col" class="num">Cost</th></tr></thead><tbody>{rate_rows}</tbody></table></div>
-      <p class="note">2026 holiday parking rates will be confirmed by the City of Kalamazoo. On parade day, expect road closures along the route from mid-morning into the afternoon.</p>
+      {in_short(summary)}
+      <h2 class="h2" id="park-title">Where to park</h2>
+      <ul class="checks f-green">
+        <li><strong>For a longer visit,</strong> use a city parking ramp. The first 90 minutes are free.</li>
+        <li><strong>For a quick stop,</strong> park on the street. The first 30 minutes are free on paid blocks.</li>
+        <li><strong>On Sundays,</strong> parking is free on the street and in the city ramps.</li>
+      </ul>
 
-      <h2 class="h2" id="trolley-title" style="margin-top:1.5rem">Holly Jolly Trolley</h2>
-      <p>The free Holly Jolly Trolley loops around downtown from November 27 to December 24, and on New Year’s Eve, starting and ending at City Hall, 241 W. South St. Stops include the Kalamazoo Mall by Santa’s Workshop, Peregrine Tower, Bates Alley, Bell’s Eccentric Café and the Kalamazoo Valley Museum. The last ride leaves City Hall 30 minutes before service ends. <a href="{{R}}events/holly-jolly-trolley.html">See every stop and date</a>.</p>
-      <div class="table-wrap"><table><caption>Trolley schedule, 2026</caption><tbody>{hour_rows}</tbody></table></div>
-      <p>The trolley seats 24 people. On busy nights it may be full and pass a stop, so leave a little extra time.</p>
+      <h2 class="h2" id="ramps-title" style="margin-top:1.5rem">City parking ramps</h2>
+      <p>The city’s two downtown ramps are a short walk from the Kalamazoo Mall and most downtown restaurants, and you don’t have to watch a meter.</p>
+      <div class="table-wrap"><table><caption>City parking ramps</caption><thead><tr><th scope="col">Ramp</th><th scope="col">Entrance</th><th scope="col">Good to know</th></tr></thead><tbody>{ramp_rows}</tbody></table></div>
+      <div class="table-wrap"><table><caption>Ramp rates</caption><thead><tr><th scope="col">Time parked</th><th scope="col" class="num">Cost</th></tr></thead><tbody>{ramp_rate_rows}</tbody></table></div>
 
-      <h2 class="h2" style="margin-top:1.5rem">Getting around</h2>
-      <p>The Kalamazoo Mall is a pedestrian street lined with shops and restaurants. Bronson Park, home to the tree lighting, December to Remember and New Year’s Fest, is a short walk west at 200 S. Rose St.</p>
+      <h2 class="h2" id="street-title" style="margin-top:1.5rem">Street parking</h2>
+      <p>Downtown blocks are paid, free or time-limited. The sign or kiosk on each block tells you which.</p>
+      <div class="table-wrap"><table><caption>Street parking rates and hours</caption><thead><tr><th scope="col">Where</th><th scope="col">Rate</th><th scope="col">When you pay</th></tr></thead><tbody>{street_rows}</tbody></table></div>
+      <ul>
+        <li><strong>The first 30 minutes are free</strong> on paid blocks, but you still need to start a session with your license plate at a kiosk or in the ParkMobile app.</li>
+        <li><strong>Pay</strong> at a kiosk with coins, a credit card or a debit card, or with the {ext('https://parkmobile.io/', 'ParkMobile app')}. You can add time from your phone.</li>
+        <li><strong>Most blocks allow up to three hours.</strong> Check the sign for the limit.</li>
+        <li><strong>Sundays and holidays</strong> are free on the street.</li>
+        <li><strong>No street parking from 2 to 6 a.m.</strong> unless you have a residential permit.</li>
+      </ul>
+
+      <h2 class="h2" id="other-title" style="margin-top:1.5rem">More public parking downtown</h2>
+      <p>These ramps and lots are privately run but open to the public. Each sets its own rates and hours, so check before you go.</p>
+      <ul class="cards">{other_items}</ul>
+
+      <h2 class="h2" id="monthly-title" style="margin-top:1.5rem">Monthly parking</h2>
+      <p>Work or live downtown? Park Kalamazoo sells monthly permits for both city ramps, a 10-hour street meter permit, and these city lots:</p>
+      <ul>{lot_items}</ul>
+      <p>Apply on the {ext('https://parkkalamazoo.org/parking-permits-1', 'Park Kalamazoo permits page')}. Permits are usually approved within one business day.</p>
+
+      <h2 class="h2" id="access-title" style="margin-top:1.5rem">Accessible parking</h2>
+      <p>The City is adding accessible parking spaces on downtown blocks that didn’t have them, along with updated curb ramps. For help finding an accessible space close to where you’re going, call Park Kalamazoo at (269) 342-6383.</p>
+
+      <h2 class="h2" id="around-title" style="margin-top:1.5rem">Getting around</h2>
+      <p>Downtown is easy to walk. The Kalamazoo Mall is a pedestrian street lined with shops and restaurants, and Bronson Park is a short walk west at 200 S. Rose St.</p>
+      <ul>
+        <li><strong>By bus:</strong> Kalamazoo Metro routes meet at the Kalamazoo Transportation Center, 459 N. Burdick St., a few blocks north of the Kalamazoo Mall. Amtrak, Greyhound and Indian Trails stop there too. {ext('https://www.kmetro.com/', 'Plan a Metro trip')}.</li>
+        <li><strong>By bike:</strong> Park Kalamazoo rents secure bike lockers by the month, season or year.</li>
+        <li><strong>On event nights,</strong> ramps and nearby blocks fill up. Give yourself extra time, or park a few blocks out and walk in.</li>
+      </ul>
     </div>
     <div class="aside">
-      <section class="panel f-green"><h2>Key addresses</h2><ul>
-        <li>City Hall and trolley stop: 241 W. South St.</li>
+      {trolley_panel}
+      <section class="panel f-green" aria-labelledby="pk-title"><h2 id="pk-title">Park Kalamazoo</h2>
+        <p>Runs the city’s ramps, lots and meters.</p>
+        <p>215 E. Water St.<br>Monday to Friday, 8 a.m. to 4 p.m.<br>(269) 342-6383</p>
+        <ul>{pk_links}</ul>
+      </section>
+      <section class="panel"><h2>Key addresses</h2><ul>
+        <li>City Hall: 241 W. South St.</li>
         <li>Bronson Park: 200 S. Rose St.</li>
-        <li>Santa’s Workshop, City Centre: 125 S. Kalamazoo Mall</li>
+        <li>Kalamazoo Transportation Center: 459 N. Burdick St.</li>
       </ul></section>
       {'<section class="panel f-blue"><h2>Accessible downtown</h2><p>Accessible parking, rides, places to rest and quieter times to visit. <a href="{R}access-guide.html">See the access guide</a>.</p></section>' if SHOW_ACCESS_GUIDE else ''}
       {ACCOMMODATION}
@@ -1077,7 +1187,9 @@ def build_visit():
     </div>
   </div>
 </section>'''
-    page('visit.html', 'Visit & park', body, 'visit', 'Parking, the free Holly Jolly Trolley, and getting around Downtown Kalamazoo.')
+    desc = ('Where to park in Downtown Kalamazoo: city ramps with 90 free minutes, street parking rates, other public ramps and lots, and getting around.'
+            + (' Plus the free Holly Jolly Trolley.' if seasonal else ''))
+    page('visit.html', 'Visit & park', body, 'visit', desc)
 
 # ---------------------------------------------------------------- Businesses
 def build_businesses():
