@@ -102,9 +102,11 @@ The spaces at the start of each line matter in this file. Copy an existing entry
 
 Small changes go in `content/directory-updates.yml`:
 
-- **Fix a listing:** under `update:`, add the business's id (the end of its directory link, for example `directory.html#b-rustica` → `rustica`) and the fields to change: `desc`, `website`, `phone`, `address`.
+- **Fix a listing:** under `update:`, add the business's id (the end of its directory link, for example `directory.html#b-rustica` → `rustica`) and the fields to change: `desc`, `website`, `phone`, `address`, `hours` or `cat`.
+- **Hours:** list one line per group of days under `hours:`, like `- Mon–Fri 10am–6pm`, `- Sat 10am–5pm`, `- Sun closed`. They show on the back of the card. Leave hours out and the card says "Not listed yet."
+- **Take a listing off the site:** add its id under `hide:` with a short reason. Offices and professional firms were taken off this way in November 2026, so the directory focuses on places people visit and community organizations.
 - **Social District:** add or remove ids in the `social_district:` list.
-- **Add a business:** copy an entry under `add:` and change it. `cat` is one of `shop`, `dine`, `arts`, `services`, `stay`, `offices` (offices & professional) or `orgs` (organizations). Offices and organizations show in the directory but not in Plan your day.
+- **Add a business:** copy an entry under `add:` and change it. `cat` is one of `shop`, `dine`, `arts`, `services`, `stay`, `offices` (offices & professional) or `orgs` (organizations). Offices and organizations show in the directory but not in Plan your day. A type with no listings gets no filter button.
 
 ---
 

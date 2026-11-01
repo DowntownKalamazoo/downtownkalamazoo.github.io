@@ -4,16 +4,461 @@
 # hide:            ids to keep off the site, with the reason
 # update:          change details for a business already in the directory, by its id
 #                  (the id is the end of its link, for example directory.html#b-rustica is "rustica")
-#                  fields: name, desc, website, phone, address, dd (Downtown Dollars), sd (Social District)
+#                  fields: name, desc, website, phone, address, hours, cat, dd (Downtown Dollars), sd (Social District)
+#                  hours: one line per group of days, for example
+#                    hours:
+#                      - Mon–Fri 10am–6pm
+#                      - Sat 10am–5pm
+#                      - Sun closed
+#                  cat: move a business to another type (shop, dine, arts, services, stay, orgs)
 # social_district: extra ids to tag as Social District
-# add:             businesses that aren't in the spreadsheet yet (name, cat, address, phone, website, desc,
+# add:             businesses that aren't in the spreadsheet yet (name, cat, address, phone, website, desc, hours,
 #                  social_district: true, downtown_dollars: true). cat is shop, dine, arts, services, stay, offices or orgs.
+#
+# November 2026 update: offices and professional firms were taken off the site (listed under hide:), and
+# hours, phone numbers and website links were added from each business's own website, checked Oct 30-31, 2026.
 
-hide: {}
+hide:
+  7-generations-architecture-engineering: Office or professional firm; removed from the visitor directory Nov 2026
+  abonmarche: Office or professional firm; removed from the visitor directory Nov 2026
+  abonmarche-byce: Office or professional firm; removed from the visitor directory Nov 2026
+  acrisure-keyser-insurance-group: Office or professional firm; removed from the visitor directory Nov 2026
+  bdo: Office or professional firm; removed from the visitor directory Nov 2026
+  burnham-flower-insurance-group: Office or professional firm; removed from the visitor directory Nov 2026
+  catalyst-development-company: Office or professional firm; removed from the visitor directory Nov 2026
+  circa-brand-agency: Office or professional firm; removed from the visitor directory Nov 2026
+  coworking-kalamazoo: Office or professional firm; removed from the visitor directory Nov 2026
+  csm-group: Office or professional firm; removed from the visitor directory Nov 2026
+  dover-birch: Office or professional firm; removed from the visitor directory Nov 2026
+  eckert-wordell: Office or professional firm; removed from the visitor directory Nov 2026
+  elite-companies: Office or professional firm; removed from the visitor directory Nov 2026
+  greenleaf-hospitality-group: Office or professional firm; removed from the visitor directory Nov 2026
+  greenstreet-marketing-design: Office or professional firm; removed from the visitor directory Nov 2026
+  inform-architecture: Office or professional firm; removed from the visitor directory Nov 2026
+  intersect-studio: Office or professional firm; removed from the visitor directory Nov 2026
+  lkf-marketing: Office or professional firm; removed from the visitor directory Nov 2026
+  maestro: Office or professional firm; removed from the visitor directory Nov 2026
+  newmind-group: Office or professional firm; removed from the visitor directory Nov 2026
+  peregrine-company: Office or professional firm; removed from the visitor directory Nov 2026
+  plazacorp-realty-advisors: Office or professional firm; removed from the visitor directory Nov 2026
+  room-35: Office or professional firm; removed from the visitor directory Nov 2026
+  rose-street-advisors: Office or professional firm; removed from the visitor directory Nov 2026
+  signwriter: Office or professional firm; removed from the visitor directory Nov 2026
+  sleeping-giant-capital: Office or professional firm; removed from the visitor directory Nov 2026
+  slick-raven-marketing: Office or professional firm; removed from the visitor directory Nov 2026
+  stahrs-of-kalamazoo: Office or professional firm; removed from the visitor directory Nov 2026
+  title-check: Office or professional firm; removed from the visitor directory Nov 2026
+  towerpinkster: Office or professional firm; removed from the visitor directory Nov 2026
+  treystar: Office or professional firm; removed from the visitor directory Nov 2026
+  varnum-llp: Office or professional firm; removed from the visitor directory Nov 2026
+  veritas-law-group: Office or professional firm; removed from the visitor directory Nov 2026
+  warner-norcross-judd-llp: Office or professional firm; removed from the visitor directory Nov 2026
+  welsh-associates: Office or professional firm; removed from the visitor directory Nov 2026
+  kzoom: Marketing agency office; removed from the visitor directory Nov 2026
 
 update:
   the-spirit-of-kalamazoo:
     name: The Spirit of Kalamazoo
+  lmcu:
+    cat: services
+  southwest-michigan-first:
+    cat: orgs
+  kalamazoo-defender:
+    cat: orgs
+    address: 151 S Rose St, Suite 300, Kalamazoo, MI 49007
+    hours:
+    - Mon–Fri 8:45am–5pm
+    - Walk-ins 8:45am–noon
+  caffe-casa:
+    website: ""
+  dabney-co:
+    phone: (269) 315-0689
+    hours:
+    - Tue–Thu 4–10pm
+    - Fri–Sat 4pm–12:30am
+    - Sun–Mon closed
+  memories-bridal-evening-wear:
+    phone: (269) 344-2404
+    hours:
+    - Tue–Fri 11am–7pm
+    - Sat 10am–5pm
+    - Sun noon–5pm
+    - Mon closed
+    - Shopping by appointment
+  water-street-coffee-joint:
+    phone: (269) 373-2840
+    hours:
+    - Mon–Fri 6:30am–7pm
+    - Sat 7am–7pm
+    - Sun 7:30am–7pm
+  kalamazoo-candle-company:
+    phone: (269) 532-9816
+    hours:
+    - Mon–Wed 10am–7pm
+    - Thu–Sat 10am–8pm
+    - Sun 11am–5pm
+  fifth-third-bank:
+    address: 136 E Michigan Ave, Kalamazoo, MI 49007
+    phone: (269) 567-7800
+    desc: A Fifth Third Bank branch with an ATM in the Fifth Third Bank Building on East Michigan Avenue.
+    website: https://locations.53.com/mi/kalamazoo/136-east-michigan-avenue.html
+  benny-dicarta-s:
+    website: https://www.bennysva.com/locations/dicartas
+    hours:
+    - Sun–Thu 11am–10pm
+    - Fri–Sat 11am–midnight
+  kalamazoo-spice-and-tea-merchants:
+    website: https://www.spicemerchants.biz/kalamazoo
+    hours:
+    - Mon–Sat 11am–6pm
+  walgreens:
+    website: https://www.walgreens.com/locator/walgreens-760+w+michigan+ave-kalamazoo-mi-49007/id=15690
+  grifols-plasma-donation-center:
+    website: https://www.grifolsplasma.com/en/-/kalamazoo-mi
+    hours:
+    - Mon–Fri 7am–6:30pm
+    - Sat 6:30am–3:30pm
+    - Sun closed
+  subway:
+    website: https://restaurants.subway.com/united-states/mi/kalamazoo/125-east-michigan-avenue
+    hours:
+    - Mon–Fri 9:30am–8pm
+    - Sat–Sun 10am–7pm
+  legal-aid-of-western-michigan:
+    website: https://lawestmi.org/location/kalamazoo-2/
+    hours:
+    - Mon–Fri 8:30am–noon and 1–4:30pm
+  catalyst-center:
+    website: https://www.southwestmichiganfirst.com/events/catalyst-center
+    hours:
+    - Event space; open for booked events
+  glow-hall:
+    website: https://www.theglowhall.com/
+    hours:
+    - Open for scheduled shows and programs
+  tattoos-by-raven:
+    website: https://www.tattoosbyraven.net/
+    hours:
+    - By appointment
+    - Tue and Thu–Sun 2–10pm
+  blue-dolphin:
+    website: https://www.thebluedolphinrestaurant.com/
+    hours:
+    - Open daily for breakfast, lunch and dinner
+  charters-guitars:
+    website: https://www.chartersguitars.com/
+    hours:
+    - Closed to the public; call or text
+  ladies-library-association:
+    website: https://ladieslibrarykzoo.org/
+  senior-care-partners-pace:
+    website: https://kalamazoo.seniorcarepartnersmi.org/
+  600-kitchen-and-bar:
+    hours:
+    - Mon–Thu 11am–9pm
+    - Fri 11am–10pm
+    - Sat–Sun brunch 10am–2pm
+    - Sat dinner 3–10pm; Sun 3–8pm
+    - Bar open later most nights
+  bell-s-eccentric-cafe:
+    hours:
+    - Tue–Thu 11am–10pm
+    - Fri–Sat 11am–11pm
+    - Sun 11am–9pm
+    - Mon closed
+    - Kitchen closes an hour earlier
+  bell-s-general-store:
+    hours:
+    - Tue–Thu 11am–8pm
+    - Fri–Sat 11am–9pm
+    - Sun 11am–8pm
+    - Mon closed
+  beowoof-provisions-for-pets:
+    hours:
+    - Mon–Fri 10am–7pm
+    - Sat 10am–6pm
+    - Sun closed
+  bimbo-s-pizza:
+    hours:
+    - Mon–Thu 11am–10pm
+    - Fri–Sat 11am–11pm
+    - Sun noon–10pm
+  blush-salon-spa:
+    hours:
+    - Tue–Thu 8am–8pm (after 5pm by appointment)
+    - Fri–Sat 8am–5pm
+  burdicks-bar-grill:
+    hours:
+    - Sun–Thu 11am–midnight
+    - Fri–Sat 11am–1am
+  checker-s:
+    hours:
+    - Sun–Thu 10am–1am
+    - Fri–Sat 10am–2am
+  cherri-s-chocol-art:
+    hours:
+    - Mon 9am–5pm
+    - Tue–Thu 9am–7pm
+    - Fri–Sat 9am–9pm
+    - Sun noon–5pm
+  civic-theatre:
+    hours:
+    - Box office Mon–Fri 10am–4pm
+    - and 90 minutes before each show
+  climb-kalamazoo:
+    hours:
+    - Mon–Fri noon–10pm
+    - Sat–Sun 10am–10pm
+  colors-cocktails:
+    hours:
+    - Daily 11am–6pm
+  combat-ready-art:
+    hours:
+    - Classes by booking
+  counterpoint-pilates-studio:
+    hours:
+    - Classes on a set schedule; private sessions by appointment
+  crafted-copper:
+    hours:
+    - Mon–Thu 5pm–midnight
+    - Fri 5pm–1am
+    - Sat noon–1am
+    - Sun 2–8pm
+  crawlspace-comedy-theatre:
+    hours:
+    - Open for scheduled shows and classes
+  farmers-alley-theatre:
+    hours:
+    - Show times vary by production
+  gazelle-sports:
+    hours:
+    - Mon–Fri 10am–7pm
+    - Sat 10am–6pm
+    - Sun noon–4pm
+  glass-art-kalamazoo:
+    hours:
+    - Tue–Fri 11am–6pm
+    - Sat noon–4pm
+    - Sun–Mon closed
+  gold-sass:
+    hours:
+    - Tue–Sat 9am–8pm
+    - Sun–Mon closed
+  hilton-garden-inn-downtown-home2-suites:
+    hours:
+    - Check-in 3pm, check-out 11am
+  honore-salon:
+    hours:
+    - Tue 10am–6pm
+    - Wed–Thu 10am–8pm
+    - Fri 10am–6pm
+    - Sat 10am–4pm
+    - Sun–Mon closed
+  hopcat:
+    hours:
+    - Mon–Thu 11am–11pm
+    - Fri 11am–midnight
+    - Sat 10am–midnight
+    - Sun 10am–11pm
+  the-hub-tavern-and-grill:
+    hours:
+    - Mon–Thu 11am–11pm
+    - Fri–Sat 11am–midnight
+    - Sun 11am–10pm
+  integrated-services-of-kalamazoo:
+    hours:
+    - Mon–Fri 8am–5pm
+    - Some services by appointment evenings and Saturdays
+  jimmy-john-s:
+    hours:
+    - Mon–Fri 10am–9pm
+    - Sat–Sun 10am–4pm
+  kalamazoo-book-arts-center:
+    hours:
+    - Mon–Fri 10am–5pm, or by appointment
+  kalamazoo-custom-tailoring:
+    hours:
+    - Mon–Fri 9am–6pm
+    - Sat 10am–3pm
+    - Sun closed
+  kalamazoo-house-bed-and-breakfast:
+    hours:
+    - Check-in from 3pm, check-out by 11am
+  kalamazoo-institute-of-arts:
+    hours:
+    - Wed, Fri, Sat 11am–5pm
+    - Thu 11am–8pm
+    - Sun noon–4pm
+    - Mon–Tue closed
+  kalamazoo-music-school:
+    hours:
+    - Office Sun–Thu 11am–8pm
+    - Fri–Sat closed
+  kalamazoo-sportswear-regalia:
+    hours:
+    - Mon–Fri 10am–5pm
+    - Sat–Sun closed
+  kalamazoo-state-theatre:
+    hours:
+    - Closed for restoration; reopening planned for 2027
+  kalamazoo-valley-museum:
+    hours:
+    - Tue–Sat 10am–4pm
+    - Sun noon–4pm
+    - Mon closed
+  kitten-flower-boutique:
+    hours:
+    - Mon–Sat 1–8:30pm
+    - Sun closed
+  kp-cinemas:
+    hours:
+    - Open for scheduled showtimes
+  lana-s-boutique:
+    hours:
+    - Mon–Thu 10am–6pm
+    - Fri–Sat 10am–7pm
+    - Sun 11am–5pm
+  lfg-gaming-bar:
+    hours:
+    - Mon–Thu 5pm–midnight
+    - Fri 5pm–1am
+    - Sat 2pm–1am
+    - Sun 2pm–midnight
+  maru-sushi-grill:
+    hours:
+    - Mon–Thu 4–9pm
+    - Fri–Sun 11:30am–9pm
+  mason-jar-plant-shop:
+    hours:
+    - Tue–Sat 11am–6pm
+    - Sun noon–4pm
+    - Mon closed
+  mercantile-bank-kalamazoo-globe-branch:
+    hours:
+    - Mon–Fri 8am–5pm
+    - Sat–Sun closed
+  morrison-jewelers:
+    hours:
+    - By appointment
+    - Wed–Fri noon–5pm
+    - Sat noon–4pm
+  nord-jewelers:
+    hours:
+    - Tue–Fri 9:30am–5:30pm
+    - Sat 9:30am–2:30pm
+    - Sun–Mon closed
+  okun-brothers-shoes:
+    hours:
+    - Mon–Sat 9am–6pm
+    - Sun closed
+  park-trades-center:
+    hours:
+    - Building Mon–Fri 8am–6pm
+    - Studios set their own hours
+  pedal-bicycles:
+    hours:
+    - Mon–Fri 10am–6pm
+    - Sat 10am–5pm
+    - Sun closed
+  pfc-natural-grocery-deli:
+    hours:
+    - Daily 8am–8pm
+  principle-food-drink:
+    hours:
+    - Tue–Thu 4:30–10pm
+    - Fri–Sat 4–11pm
+    - Sun 4:30–10pm
+    - Mon closed
+  roca:
+    hours:
+    - Mon–Thu 5–10pm
+    - Fri–Sat 4–11pm
+    - Sun closed
+  rustica:
+    hours:
+    - Tue–Sun from 5pm
+    - Mon closed
+  salon-noir:
+    hours:
+    - Tue–Fri 10am–7pm
+    - Sat 10am–2pm
+    - Sun–Mon closed
+  sarkozy-bakery:
+    hours:
+    - Mon–Fri 7:30am–5pm
+    - Sat 7:30am–4pm
+    - Sun 7:30am–3pm
+  shakespeare-s-pub:
+    hours:
+    - Sun–Wed 11:30am–11pm
+    - Thu 11:30am–midnight
+    - Fri–Sat 11:30am–1am
+  sit-and-stay-winery:
+    hours:
+    - Tue–Thu 2–8pm
+    - Fri 1–9pm
+    - Sat noon–9pm
+    - Sun noon–5pm
+    - Mon closed
+  stewart-company:
+    hours:
+    - Mon–Fri 9am–6pm
+    - Sat 9am–5pm
+    - Sun closed
+  studio-grill:
+    hours:
+    - Daily 7am–2:30pm
+  taco-bob-s:
+    hours:
+    - Mon–Thu 11am–7pm
+    - Fri 11am–8pm
+    - Sat 11am–7pm
+    - Sun closed
+  toba-sushi-and-ramen:
+    hours:
+    - Mon–Thu 11:30am–9:30pm
+    - Fri–Sat 11:30am–10pm
+    - Sun noon–9pm
+  trim-michigan-avenue-salon:
+    hours:
+    - Tue–Thu 10am–7pm
+    - Fri 10am–5pm
+  tye-chua-dance-kalamazoo-ballet:
+    hours:
+    - Classes on a set schedule
+  urban-asanas:
+    hours:
+    - Classes on a set schedule
+  the-waiting-room:
+    hours:
+    - Mon–Sat 10am–6pm
+    - Sun 11am–4pm
+  arts-council-of-greater-kalamazoo:
+    hours:
+    - Mon 9am–5pm
+    - Tue–Fri 9am–6pm
+  discover-kalamazoo:
+    hours:
+    - Visitor center Mon–Fri 9am–5pm
+  the-kalamazoo-promise:
+    hours:
+    - Mon–Fri 9am–5pm
+  irving-s-gilmore-foundation:
+    hours:
+    - Mon–Fri 9am–5pm
+    - "Summer: Fri until noon"
+  kvcc-arcadia-commons-campus:
+    hours:
+    - 'Fall and winter:'
+    - Mon, Wed, Thu 7:30am–6pm
+    - Tue 7:30am–7pm
+    - Fri 7:30am–5pm
+  kvcc-center-for-new-media:
+    hours:
+    - 'Fall and winter:'
+    - Mon–Thu 7:30am–8pm
+    - Fri 7:30am–5pm
+    - Sat 10am–3pm
 
 social_district: []
 

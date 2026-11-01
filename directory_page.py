@@ -9,6 +9,15 @@ BIZ = json.load(open(os.path.join(HERE, 'directory.json')))
 GIFTS = {}
 
 
+def _hours_lines(h):
+    """Hours from directory-updates.yml, as a list of lines. Accepts a list, or one string with lines split by ';'."""
+    if not h:
+        return []
+    if isinstance(h, str):
+        h = h.split(';')
+    return [str(x).strip() for x in h if str(x).strip()]
+
+
 def _apply_updates():
     """Layer staff edits from content/directory-updates.yml on top of directory.json."""
     import content_loader
@@ -19,18 +28,28 @@ def _apply_updates():
     missing = [i for i in list((up.get('update') or {}).keys()) + list(up.get('social_district') or []) if i not in by_id]
     if missing:
         print('directory-updates.yml: no business with these ids (check spelling):', ', '.join(missing))
-    for bid, fields in (up.get('update') or {}).items():
-        if bid in by_id and fields:
-            by_id[bid].update(fields)
-    for b in BIZ:
-        b.setdefault('sd', False)
-    for bid in up.get('social_district') or []:
-        if bid in by_id:
-            by_id[bid]['sd'] = True
     fills = {}
     for b in BIZ:
         fills.setdefault(b['cat'], b['fill'])
     labels = dict(BIZ_CATS)
+    for bid, fields in (up.get('update') or {}).items():
+        if bid in by_id and fields:
+            b = by_id[bid]
+            b.update(fields)
+            # Keep the fields that are worked out from others in step with the change.
+            if 'phone' in fields:
+                b['tel'] = ('tel:+1' + re.sub(r'\D', '', b['phone'])[-10:]) if b['phone'] else ''
+            if 'address' in fields:
+                b['where'] = re.sub(r',\s*Kalamazoo.*$', '', b['address'])
+            if 'cat' in fields:
+                b['cat_label'] = labels.get(b['cat'], b['cat'].title())
+                b['fill'] = fills.get(b['cat'], b['fill'])
+    for b in BIZ:
+        b.setdefault('sd', False)
+        b['hours'] = _hours_lines(b.get('hours'))
+    for bid in up.get('social_district') or []:
+        if bid in by_id:
+            by_id[bid]['sd'] = True
     for a in up.get('add') or []:
         name = a['name'].strip()
         bid = re.sub(r'[^a-z0-9]+', '-', name.lower()).strip('-')
@@ -41,7 +60,8 @@ def _apply_updates():
         b = dict(id=bid, name=name, cat=cat, cat_label=labels.get(cat, cat.title()), fill=a.get('fill') or fills.get(cat, 'f-green'),
                  address=addr, where=re.sub(r',\s*Kalamazoo.*$', '', addr), phone=a.get('phone', ''), tel=('tel:' + re.sub(r'\D', '', a['phone'])) if a.get('phone') else '',
                  website=a.get('website', ''), desc=a.get('desc') or ('Part of the downtown Social District.' if a.get('social_district') else ''),
-                 desc_es='', includes='', dd=bool(a.get('downtown_dollars')), featured=False, sd=bool(a.get('social_district')))
+                 desc_es='', includes='', dd=bool(a.get('downtown_dollars')), featured=False, sd=bool(a.get('social_district')),
+                 hours=_hours_lines(a.get('hours')))
         BIZ.append(b); by_id[bid] = b
     BIZ.sort(key=lambda b: re.sub(r'^the\s+', '', b['name'].lower()))
 BIZ_CATS = [('shop', 'Shop'), ('dine', 'Dine'), ('arts', 'Arts & Entertainment'), ('services', 'Services'), ('stay', 'Stay'),
@@ -94,6 +114,7 @@ def biz_card(b):
     else:
         phone = E(b['phone']) if b['phone'] else none
     web = ext(b['website'], 'Visit website') if b['website'] else none
+    hours = '<br>'.join(E(x) for x in b.get('hours') or []) or none
     desc = f'<p class="biz-desc">{E(b["desc"])}</p>' if b['desc'] else ''
     if b['includes']:
         desc += f'<p class="biz-desc"><strong>Inside:</strong> {E(b["includes"])}</p>'
@@ -124,6 +145,7 @@ def biz_card(b):
         f'<div class="back-body" tabindex="-1">{desc}'
         f'<dl class="biz-facts">'
         f'<div><dt>Location</dt><dd>{loc}</dd></div>'
+        f'<div><dt>Hours</dt><dd>{hours}</dd></div>'
         f'<div><dt>Phone</dt><dd>{phone}</dd></div>'
         f'<div><dt>Website</dt><dd>{web}</dd></div>'
         f'</dl>'
@@ -142,14 +164,15 @@ def directory_body(page_hero, in_short):
                  f'<span class="gift-swatch" aria-hidden="true" style="background-image:url({{R}}pattern-stripes-sm.webp);margin-inline-end:.4rem"></span>'
                  f'In the Holiday Gift Guide<span class="n">{n_gift}</span></button>') if n_gift else ''
     counts = {c: sum(1 for b in BIZ if b['cat'] == c) for c, _ in BIZ_CATS}
+    # A type with no businesses left (offices, since November 2026) gets no filter button.
     chips = (f'<li><button type="button" class="chip" data-cat="all" data-label="All" aria-pressed="true">All<span class="n">{total}</span></button></li>'
              + ''.join(f'<li><button type="button" class="chip" data-cat="{c}" data-label="{E(l)}"{CAT_NOUN.get(c, '')} aria-pressed="false"><span class="chip-swatch" aria-hidden="true" style="background-image:url({{R}}pattern-{CAT_PATTERN[c]}-sm.webp)"></span>{E(l)}'
-                       f'<span class="n">{counts[c]}</span></button></li>' for c, l in BIZ_CATS))
+                       f'<span class="n">{counts[c]}</span></button></li>' for c, l in BIZ_CATS if counts[c]))
     cards = ''.join(biz_card(b) for b in BIZ)
     stats = (f'<p class="dir-stats"><span><b>{total}</b>businesses</span><span><b>{n_dd}</b>accept Downtown Dollars</span>'
              f'<span><b>{n_sd}</b>in the Social District</span></p>')
     body = page_hero([('index.html', 'Home'), ('directory.html', 'Explore downtown')], 'Business directory', 'Explore downtown',
-                     'Shops, restaurants, studios, salons, places to stay, offices and community organizations in the heart of Kalamazoo. Hover over a card, or tap it, to see what each one offers and how to reach it.',
+                     'Shops, restaurants, studios, salons, places to stay and community organizations in the heart of Kalamazoo. Hover over a card, or tap it, to see what each one offers, when it’s open and how to reach it.',
                      'f-mist', stats)
     body += f'''<section class="section" aria-labelledby="dir-title">
   <div class="wrap">
@@ -175,7 +198,7 @@ def directory_body(page_hero, in_short):
     <ul class="biz-grid" id="biz-grid">{cards}</ul>
     <div class="note" id="dir-empty" hidden style="margin-top:1rem">No businesses match. Try another word, or <button type="button" id="dir-clear" style="background:none;border:0;padding:0;color:var(--link);font:inherit;font-weight:600;text-decoration:underline;cursor:pointer">clear all filters</button>.</div>
     <div class="two-col" style="margin-top:2.5rem">
-      <section class="panel"><h2>Something missing or out of date?</h2><p>Owners and visitors can send corrections, a website or a short description to downtown@kalamazoocity.org. Businesses can also <a href="{{R}}businesses.html">ask to be listed</a>.</p></section>
+      <section class="panel"><h2>Something missing or out of date?</h2><p>Hours come from each business’s own website and were last checked in October 2026. They can change, especially around holidays, so call ahead if you’re making a special trip.</p><p>Owners and visitors can send corrections, hours, a website or a short description to downtown@kalamazoocity.org. Businesses can also <a href="{{R}}businesses.html">ask to be listed</a>.</p></section>
       <section class="panel"><h2>Downtown Dollars</h2><p>Look for the {dd_badge()} tag. <a href="{{R}}dollars.html">How Downtown Dollars work</a>.</p></section>
       <section class="panel"><h2>Social District</h2><p>Look for the {sd_badge()} tag. Take your drink for a stroll. <a href="{{R}}social-district.html">How the Social District works</a>.</p></section>
     </div>
