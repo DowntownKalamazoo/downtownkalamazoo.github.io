@@ -82,7 +82,7 @@ The series page lists the whole season: **Coming up** shows every date, with "Li
 
 The **Find the Holidays Downtown** page updates itself every morning from those events: **Next up** shows the next event, **Upcoming holiday events** drops dates once they pass, and **Make a day of it** features plans that go with the next events. Two settings sit near the top of `holiday_content.py`:
 
-- `SBS_GIVEAWAY` sets the dates the "Curious? Pick an envelope." card shows beside Downtown Dollars (`show_from` and `show_until`, both included). Change the dates to move it, or set `show_until` to an earlier date than `show_from` to hide it.
+- `SBS_GIVEAWAY` sets the dates the Small Business Saturday giveaway shows on the site (`show_from` and `show_until`, both included): the "Curious? Pick an envelope." card beside Downtown Dollars, the giveaway sections on the Small Business Saturday page, and the giveaway wording on the Small Business Saturday event listing (its summary, "About this event" and the Cost line, written under `giveaway=` in that event). Change the dates to move them, or set `show_until` to an earlier date than `show_from` to hide them. After November 28 the Small Business Saturday page switches to a "Got an envelope? Spend it by December 31" note on its own. The page's other text is in `build_sbs` in `build.py`. The envelopes also hold a surprise that stays a secret, so don't mention it on the site.
 - `HUB_PLAN_FALLBACK` lists the plans (by their slug from `content/itineraries.yml`) that fill the plan spots when there aren't enough upcoming events, in order.
 
 ---
