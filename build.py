@@ -608,6 +608,19 @@ def giveaway_on():
     return dt.date.fromisoformat(SBS_GIVEAWAY['show_from']) <= HUB_TODAY <= dt.date.fromisoformat(SBS_GIVEAWAY['show_until'])
 
 
+def apply_giveaway():
+    """While SBS_GIVEAWAY is on, the Small Business Saturday listing mentions the giveaway everywhere it shows
+    (event page, holiday events list, calendar, hub). The wording is in holiday_content.py under giveaway=."""
+    if not giveaway_on():
+        return
+    for e in EVENTS:
+        g = e.get('giveaway')
+        if g:
+            e['summary'], e['plain'] = g['summary'], g['plain']
+            e['body'] = [g['body']] + list(e['body'])
+            e['glance'] = [(k, g['glance'][1]) if k == g['glance'][0] else (k, v) for k, v in e['glance']]
+
+
 def dollars_band():
     dollars_url = 'https://kalamazoocity.org/Community/Downtown-Kalamazoo/Downtown-Dollars'
     envelope = '''
@@ -959,6 +972,8 @@ def build_event(i, e):
     if next_e: pager += f'<a class="next" href="{{R}}events/{next_e["slug"]}.html"><span class="dir">Next event →</span><span>{E(next_e["title"])}</span><span class="muted">{E(next_e["when_short"])}</span></a>'
     pager += '</nav>'
     hero_extra = f'<div style="display:flex;gap:1rem;align-items:center;margin-top:1.25rem">{date_tile(e)}<p class="h3" style="font-weight:500">{E(e["when_long"])}</p></div>'
+    if e.get('cta'):
+        hero_extra += f'<div class="btn-row" style="margin-top:1.25rem"><a class="btn btn-primary" href="{{R}}{e["cta"][1]}">{E(e["cta"][0])}</a></div>'
     body = page_hero([('index.html', 'Home'), ('events.html', 'Holiday events'), (f'events/{e["slug"]}.html', e['title'])],
                      E(e['eyebrow']), E(e['title']), E(e['summary']), e['fill'], hero_extra)
     body += lights(seed=i + 5) + f'''<section class="section" aria-labelledby="glance-title">
@@ -1006,36 +1021,184 @@ def build_gifts():
         print(f'::warning file=content/gift-guide.yml,title=Gift guide::{w}')
 
 # ---------------------------------------------------------------- SBS
+SBS_CORNER = 'the corner of the Kalamazoo Mall and Michigan Avenue'   # where someone is always handing out envelopes
+
+def sbs_plan_picks(slugs):
+    out = ''
+    for slug, when, fill in slugs:
+        p = next((x for x in PLANS if x['slug'] == slug), None)
+        if not p:
+            continue
+        out += (f'<li><a class="plan-pick" href="{{R}}plan/{p["slug"]}.html"><span class="pp-when {fill}">{E(when)}</span>'
+                f'<span class="pp-title">{E(p["title"])}</span><span class="pp-sum">{E(p.get("summary", ""))}</span></a></li>')
+    return f'<ul class="plan-picks sbs-picks">{out}</ul>'
+
 def build_sbs():
+    """Small Business Saturday. The giveaway sections show while SBS_GIVEAWAY is on (holiday_content.py);
+    after the day they turn into a short "spend by December 31" note."""
     sbs = next(e for e in EVENTS if e['slug'] == 'small-business-saturday')
+    day = dt.date.fromisoformat(sbs['date'])
+    on = giveaway_on()
+    after = day < HUB_TODAY <= dt.date(day.year, 12, 31)
+    event_link = '{R}events/small-business-saturday.html'
+    days = (day - HUB_TODAY).days
+
+    if on:
+        lede = 'Downtown’s biggest shop-small day comes with 250 surprise envelopes of Downtown Dollars. Say yes, pick one, then <strong>find it downtown.</strong>'
+        buttons = f'<a class="btn btn-primary" href="#giveaway">How the giveaway works</a><a class="btn" href="{event_link}">Event details</a>'
+        countdown = 'Today!' if days == 0 else ('1 day to go' if days == 1 else f'{days} days to go')
+        side = (f'<div class="sbs-when">{date_tile(sbs)}<p><strong>{countdown}</strong><span>Envelopes 11 a.m.–1 p.m.</span></p></div>')
+    elif after:
+        lede = 'Thanks for finding it downtown. Got an envelope? Spend your Downtown Dollars at a downtown business by December 31.'
+        buttons = f'<a class="btn btn-primary" href="{{R}}directory.html#dollars">Where to spend them</a><a class="btn" href="{event_link}">Event details</a>'
+        side = ''
+    else:
+        lede = 'The Saturday after Thanksgiving is downtown’s biggest day to shop small. Start your list here, then stay for Santa.'
+        buttons = f'<a class="btn btn-primary" href="{event_link}">Event details</a><a class="btn" href="{{R}}plan/shop-small.html">Shop small itinerary</a>'
+        side = f'<div class="sbs-when">{date_tile(sbs)}</div>'
+
     body = page_hero([('index.html', 'Home'), ('sbs.html', 'Small Business Saturday')], 'Saturday, November 28, 2026', 'Small Business Saturday',
-                     'The Saturday after Thanksgiving is downtown’s biggest day to shop small. Start your list here, then stay for Santa.', 'f-green',
-                     f'<div class="btn-row" style="margin-top:1.25rem"><a class="btn btn-primary" href="{{R}}events/small-business-saturday.html">Event details</a><a class="btn" href="{{R}}plan/shop-small.html">Shop small itinerary</a></div>')
-    body += f'''<section class="section" aria-labelledby="why-title">
+                     lede, 'f-pink', f'<div class="btn-row" style="margin-top:1.25rem">{buttons}</div>')
+    if side:
+        body = body.replace('<!--CORNER-->', side, 1)
+
+    if on:
+        body += f'''<section class="section" id="giveaway" aria-labelledby="give-title">
   <div class="wrap two-col">
     <div class="prose">
-      {in_short('On November 28, shop at downtown’s local businesses. Santa’s Workshop opens the same day and visits are free.')}
-      <h2 class="h2" id="why-title">Why shop small downtown</h2>
-      <p>Downtown’s shops, restaurants and makers are owned by people who live here. Holiday spending at a local business stays closer to home, and it keeps the storefronts on the Kalamazoo Mall lit up all year.</p>
-      <h2 class="h3">How to make the most of the day</h2>
-      <ul class="checks f-green">
-        <li>Bring your list and start on the Kalamazoo Mall, where shops are a short walk apart.</li>
-        <li>Pay with <a href="{{R}}dollars.html">Downtown Dollars</a>, or buy some as gifts while you’re out.</li>
-        <li>Stop by <a href="{{R}}events/small-business-saturday.html">Santa’s Workshop</a> at City Centre, 125 S. Kalamazoo Mall. Visits are free.</li>
-        <li>Eat lunch at a downtown restaurant instead of a chain.</li>
-        <li>Share what you find with <strong>#SomethingNewKalamazoo</strong>.</li>
-      </ul>
-      <h2 class="h3">Need ideas?</h2>
-      <p>The <a href="{{R}}gifts.html">Holiday Gift Guide</a> has ideas for the foodie, the maker, the kids and everyone in between. The <a href="{{R}}directory.html">directory</a> lists places to start.</p>
+      {in_short(f'On Saturday, November 28, from 11 a.m. to 1 p.m., downtown staff and Downtown Ambassadors give away 250 envelopes of Downtown Dollars all over downtown. They are free, one per person. You can always find someone at {SBS_CORNER}. Spend the Downtown Dollars at downtown businesses by December 31.')}
+      <p class="eyebrow">The giveaway</p>
+      <h2 class="h2" id="give-title">Curious? Pick an envelope.</h2>
+      <p>From 11 a.m. to 1 p.m., downtown staff and the Downtown Ambassadors will be throughout downtown with sealed envelopes. Every one holds Downtown Dollars. Nobody knows how much until it’s open.</p>
+      <ol class="sbs-steps">
+        <li><span class="sbs-num" aria-hidden="true">1</span><div><h3>Say yes</h3><p>When someone from the downtown team asks, “Curious?” say yes. Or walk up and ask. No purchase, sign-up or app.</p></div></li>
+        <li><span class="sbs-num" aria-hidden="true">2</span><div><h3>Pick an envelope</h3><p>Choose one. Every envelope wins: $5, $10, $15 or $20.</p></div></li>
+        <li><span class="sbs-num" aria-hidden="true">3</span><div><h3>Find it downtown</h3><p>Spend it at a <a href="{{R}}directory.html#dollars">business that accepts Downtown Dollars</a> by December 31, 2026.</p></div></li>
+      </ol>
     </div>
     <div class="aside">
-      <section class="panel f-green"><h2>Santa’s Workshop</h2><p>Santa settles in at City Centre on Small Business Saturday. Last season’s Saturday hours were noon to 6 p.m. Bring a camera for the photo backdrops.</p></section>
-      {GETTING_HERE}
-      <section class="panel"><h2>Own a business?</h2><p>Get the Small Business Saturday toolkit, window decals and directory listing on the <a href="{{R}}businesses.html">For businesses</a> page.</p></section>
+      <section class="envelope-card sbs-inside" aria-labelledby="inside-title">
+        <div class="envelope-art" aria-hidden="true"><span class="env-back"></span><span class="env-front"></span><span class="env-seal"></span></div>
+        <p class="eyebrow">Every envelope wins</p>
+        <h2 id="inside-title">A gift from downtown</h2>
+        <ul class="sbs-amounts" aria-label="What an envelope can hold">
+          <li>$5</li><li>$10</li><li>$15</li><li>$20</li>
+        </ul>
+        <p>Each envelope holds Downtown Dollars worth one of these amounts. Open it to find out which.</p>
+      </section>
+    </div>
+  </div>
+  <div class="wrap">
+    <dl class="glance sbs-glance">
+      <div><dt>When</dt><dd>Sat, Nov 28<br>11 a.m.–1 p.m.</dd></div>
+      <div><dt>Where</dt><dd>Throughout downtown, and always at the Kalamazoo Mall and Michigan Avenue</dd></div>
+      <div><dt>How many</dt><dd>250 envelopes, one per person, while they last</dd></div>
+      <div><dt>Spend by</dt><dd>December 31, 2026</dd></div>
+    </dl>
+  </div>
+</section>
+<section class="band sbs-find" aria-labelledby="find-title">
+  <div class="wrap">
+    <p class="eyebrow">Where to find us</p>
+    <h2 class="h2" id="find-title">Throughout downtown</h2>
+    <div class="sbs-find-grid">
+      <section class="panel" aria-labelledby="roam-title">
+        <h3 id="roam-title">All over downtown</h3>
+        <p>Downtown staff and Downtown Ambassadors will be out across downtown with envelopes from 11 a.m. to 1 p.m. Say hi to anyone from the team.</p>
+        <p class="muted">Live updates on where we are: {ext(SOCIAL[0][1], 'Facebook')} and {ext(SOCIAL[1][1], 'Instagram')}.</p>
+      </section>
+      <section class="panel" aria-labelledby="base-title">
+        <h3 id="base-title">Always someone here</h3>
+        <p><strong>Kalamazoo Mall and Michigan Avenue</strong><br>11 a.m. to 1 p.m.</p>
+        <p>Can’t find anyone, or walking around downtown is hard? Head to this corner. Someone from the team is there the whole time.</p>
+        <p class="muted"><a href="{{R}}ambassadors.html">Meet the Downtown Ambassadors</a></p>
+      </section>
     </div>
   </div>
 </section>'''
-    page('holidays/sbs.html', 'Small Business Saturday', body, 'holidays', 'Shop small in Downtown Kalamazoo on Small Business Saturday, November 28, 2026.')
+    elif after:
+        body += f'''<section class="section" aria-labelledby="after-title">
+  <div class="wrap">
+    <section class="panel f-pink sbs-after" aria-labelledby="after-title">
+      <h2 id="after-title">Got an envelope?</h2>
+      <p>Giveaway Downtown Dollars work like cash at participating businesses through December 31, 2026. Look for the “Accepts Downtown Dollars” tag in the <a href="{{R}}directory.html#dollars">business directory</a>.</p>
+    </section>
+  </div>
+</section>'''
+
+    giveaway_row = ('<li class="sbs-day-star"><time>11 a.m.–1 p.m.</time><div><span class="sbs-tag">Don’t miss it</span><h3>Downtown Dollars giveaway</h3>'
+                    f'<p>Find someone from the downtown team, or head to the Kalamazoo Mall and Michigan Avenue. <a href="#giveaway">How it works</a></p></div></li>') if on else ''
+    day_title = 'Your Saturday downtown' if not after else 'Small Business Saturday, the day'
+    if not after:
+        body += f'''<section class="section"{' style="padding-top:0"' if not on else ''} aria-labelledby="day-title">
+  <div class="wrap two-col">
+    <div class="prose">
+      <p class="eyebrow">Make a day of it</p>
+      <h2 class="h2" id="day-title">{day_title}</h2>
+      <ol class="sbs-day">
+        <li><time>10 a.m.</time><div><h3>Shops open</h3><p>Start on the Kalamazoo Mall, where shops are a short walk apart. Hours vary by business.</p></div></li>
+        {giveaway_row}
+        <li><time>Noon–6 p.m.</time><div><h3>Santa’s Workshop opens</h3><p>Free visits at City Centre, 125 S. Kalamazoo Mall. <a href="{{R}}events/santas-workshop.html">Workshop details</a></p></div></li>
+        <li><time>Noon–7 p.m.</time><div><h3>Free Holly Jolly Trolley</h3><p>Loops downtown from City Hall, 241 W. South St. <a href="{{R}}events/holly-jolly-trolley.html">Trolley details</a></p></div></li>
+        <li><time>Evening</time><div><h3>Dinner downtown</h3><p>End the day at a local restaurant{', and pay with your Downtown Dollars' if on else ''}.</p></div></li>
+      </ol>
+      <p style="margin-top:.5rem"><a href="{event_link}">Small Business Saturday event details</a></p>
+    </div>
+    <div class="aside">
+      <h3 class="sbs-aside-h">Ready-made plans</h3>
+      {sbs_plan_picks([('shop-small', 'Any day', 'f-mist'), ('sbs-challenge', 'Sat, Nov 28', 'f-pink'), ('family-afternoon', 'Sat, Nov 28', 'f-green')])}
+    </div>
+  </div>
+</section>'''
+
+    body += f'''<section class="section sbs-spend" aria-labelledby="spend-title" style="padding-top:0">
+  <div class="wrap">
+    <p class="eyebrow">Find it downtown</p>
+    <h2 class="h2" id="spend-title">{'Where your envelope takes you' if (on or after) else 'Where to start'}</h2>
+    <div class="sbs-spend-grid">
+      <a class="sbs-door" href="{{R}}directory.html#dollars"><span class="sbs-door-pat" style="background-image:url({{R}}pattern-dashes.webp)" aria-hidden="true"></span><span class="sbs-door-body"><span class="sbs-door-title">Businesses that take Downtown Dollars</span><span>Shops, restaurants, salons and venues. Look for the “Accepts Downtown Dollars” tag.</span></span></a>
+      <a class="sbs-door" href="{{R}}gifts.html"><span class="sbs-door-pat" style="background-image:url({{R}}pattern-stripes.webp)" aria-hidden="true"></span><span class="sbs-door-body"><span class="sbs-door-title">Holiday Gift Guide</span><span>Ideas for the foodie, the maker, the kids and everyone in between.</span></span></a>
+      <a class="sbs-door" href="{{R}}dollars.html"><span class="sbs-door-pat" style="background-image:url({{R}}pattern-confetti.webp)" aria-hidden="true"></span><span class="sbs-door-body"><span class="sbs-door-title">Give Downtown Dollars</span><span>Buy them online as gifts. They arrive by email, even on Christmas Eve.</span></span></a>
+    </div>
+  </div>
+</section>'''
+
+    faq = ''
+    if on:
+        faq = f'''<p class="eyebrow">Good to know</p>
+      <h2 class="h2" id="faq-title">Giveaway rules and questions</h2>
+      <details><summary>Do I have to buy anything?</summary><p>No. There’s no purchase, sign-up or app. Just say yes.</p></details>
+      <details><summary>How many envelopes can I get?</summary><p>One per person, while the 250 envelopes last. Every pick is final, so no swaps.</p></details>
+      <details><summary>When do the Downtown Dollars expire?</summary><p>December 31, 2026. They work like cash at participating businesses but can’t be turned in for cash.</p></details>
+      <details><summary>What if I can’t find anyone from the team?</summary><p>Go to {SBS_CORNER}. Someone is there with envelopes from 11 a.m. to 1 p.m.</p></details>
+      <details><summary>I need an accommodation. Who do I contact?</summary><p>Email <a href="mailto:downtown@kalamazoocity.org">downtown@kalamazoocity.org</a> or call 311 or {DOWNTOWN_PHONE} before the day.</p></details>'''
+    else:
+        faq = '''<p class="eyebrow">Why it matters</p>
+      <h2 class="h2" id="faq-title">Why shop small downtown</h2>
+      <p>Downtown’s shops, restaurants and makers are owned by people who live here. Holiday spending at a local business stays closer to home, and it keeps the storefronts on the Kalamazoo Mall lit up all year.</p>'''
+    share = 'Post your envelope reveal or your downtown finds' if on else 'Share what you find downtown'
+    body += f'''<section class="section sbs-faq" aria-labelledby="faq-title" style="padding-top:0">
+  <div class="wrap two-col">
+    <div class="prose">
+      {faq}
+    </div>
+    <div class="aside">
+      <section class="panel"><h2>Own a downtown business?</h2><p>Get the Small Business Saturday toolkit and window decals on the <a href="{{R}}businesses.html">holiday partner page</a>.</p></section>
+      <section class="panel"><h2>Share your finds</h2><p>{share} with <strong>#SomethingNewKalamazoo</strong>.</p></section>
+    </div>
+  </div>
+</section>
+<section class="band sbs-close" aria-labelledby="close-title">
+  <div class="sbs-close-pat" style="background-image:url({{R}}pattern-quilt.webp)" aria-hidden="true"></div>
+  <div class="wrap">
+    <p class="eyebrow">{'See you November 28' if not after else 'Thanks for shopping small'}</p>
+    <h2 class="display h2" id="close-title">{'Now go find it downtown.' if not after else 'Keep finding it downtown.'}</h2>
+    <div class="btn-row"><a class="btn sbs-btn-pink" href="{event_link}">Event details</a><a class="btn sbs-btn-line" href="{{R}}events.html">All holiday events</a></div>
+  </div>
+</section>'''
+    desc = ('Small Business Saturday in Downtown Kalamazoo, November 28, 2026: shop local, and pick a free envelope of Downtown Dollars from 11 a.m. to 1 p.m.'
+            if on else 'Shop small in Downtown Kalamazoo on Small Business Saturday, November 28, 2026.')
+    page('holidays/sbs.html', 'Small Business Saturday', body, 'holidays', desc)
 
 # ---------------------------------------------------------------- Dollars
 # The Downtown Dollars page is built in dollars_section.py from content/dollars.yml.
@@ -1519,6 +1682,7 @@ if __name__ == '__main__':
         for f in fs:
             src = os.path.join(root_, f); dst = os.path.join(OUT, os.path.relpath(src, assets))
             os.makedirs(os.path.dirname(dst), exist_ok=True); shutil.copy(src, dst)
+    apply_giveaway()
     build_home(); build_submit(); build_newsletter(); build_events(); build_plan_index(); build_directory(); build_gifts(); build_sbs(); build_dollars(); build_visit(); build_businesses(); build_accessibility()
     build_404(); build_take_home(); build_voices()
     if SHOW_ACCESS_GUIDE:

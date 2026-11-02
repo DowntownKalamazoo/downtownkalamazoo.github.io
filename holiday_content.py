@@ -91,9 +91,16 @@ EVENTS = [
          plain='On Saturday, November 28, shop at local stores downtown. Santa’s Workshop opens at noon that day and visiting Santa is free.',
          glance=[('When', 'Saturday, November 28<br>10 a.m.–6 p.m.; shop hours vary'), ('Where', 'Kalamazoo Mall and shops across downtown'), ('Cost', 'Free to come downtown'), ('Hosted by', 'Downtown Kalamazoo businesses')],
          body=['Spend the biggest shop-local day of the year downtown, where more than 200 shops, restaurants and makers sit within a few walkable blocks. Make your list, then work your way down the Kalamazoo Mall.',
-               '<a href="{R}events/santas-workshop.html">Santa’s Workshop</a> opens at noon at City Centre, 125 S. Kalamazoo Mall, and the <a href="{R}events/holly-jolly-trolley.html">Holly Jolly Trolley</a> runs free loops from noon to 7 p.m., so make a day of it. See the <a href="{R}sbs.html">Small Business Saturday page</a> for shopping ideas.'],
-         links=[('Small Business Saturday downtown', 'sbs.html'), ('Downtown Dollars', 'dollars.html')],
-         plans=['shop-small', 'family-afternoon'], biz=True),
+               '<a href="{R}events/santas-workshop.html">Santa’s Workshop</a> opens at noon at City Centre, 125 S. Kalamazoo Mall, and the <a href="{R}events/holly-jolly-trolley.html">Holly Jolly Trolley</a> runs free loops from noon to 7 p.m., so make a day of it. See the <a href="{R}sbs.html">Small Business Saturday page</a> for a plan for the day and places to start.'],
+         links=[('Small Business Saturday page', 'sbs.html'), ('Downtown Dollars', 'dollars.html')],
+         plans=['shop-small', 'family-afternoon'], biz=True,
+         cta=('Small Business Saturday page', 'sbs.html'),
+         # Shown on this event page only while SBS_GIVEAWAY is on (dates at the top of this file).
+         giveaway=dict(
+             summary='Shop downtown’s locally owned businesses, and pick a free envelope of Downtown Dollars from 11 a.m. to 1 p.m.',
+             plain='On Saturday, November 28, shop at local stores downtown. From 11 a.m. to 1 p.m., downtown staff and Downtown Ambassadors give away free envelopes of Downtown Dollars, one per person. Santa’s Workshop opens at noon.',
+             glance=('Cost', 'Free to come downtown<br>Free Downtown Dollars, 11 a.m.–1 p.m.'),
+             body='<strong>Curious? Pick an envelope.</strong> From 11 a.m. to 1 p.m., downtown staff and Downtown Ambassadors will be throughout downtown giving away 250 envelopes of Downtown Dollars, one per person. Someone is always at the corner of the Kalamazoo Mall and Michigan Avenue. <a href="{R}sbs.html#giveaway">How the giveaway works</a>')),
 
     dict(slug='santas-workshop', title='Santa’s Workshop', short_title='Santa’s Workshop', footer=False,
          date='2026-11-28', end='2026-12-24', fill='f-green', eyebrow='November 28 to December 24, 2026',
