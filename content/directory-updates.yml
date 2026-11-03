@@ -64,6 +64,10 @@ hide:
 update:
   the-spirit-of-kalamazoo:
     name: The Spirit of Kalamazoo
+    hours:
+    - Mon–Wed 11am–7pm
+    - Thu–Sat 11am–8pm
+    - Sun noon–5pm
   lmcu:
     cat: services
   southwest-michigan-first:
@@ -433,7 +437,9 @@ update:
     - Classes on a set schedule
   urban-asanas:
     hours:
-    - Classes on a set schedule
+    - Mon–Fri 7am–7pm
+    - Sat 7am–noon
+    - Sun 7am–7pm
   the-waiting-room:
     hours:
     - Mon–Sat 10am–6pm
@@ -464,6 +470,73 @@ update:
     - Mon–Thu 7:30am–8pm
     - Fri 7:30am–5pm
     - Sat 10am–3pm
+  # Hours from staff, Nov 3, 2026
+  the-aroma-labs:
+    hours:
+    - Mon, Tue, Thu, Fri 2–7pm
+    - Wed closed
+    - Sat 11am–7pm
+    - Sun noon–5pm
+  city-centre-market-and-deli:
+    hours:
+    - Mon–Fri 8am–8pm
+    - Sat–Sun 11am–6pm
+  earthly-delights-amy-zane:
+    hours:
+    - Mon–Sat 10am–6pm
+    - Sun noon–5pm
+  grazing-table:
+    hours:
+    - Tue–Sat 11am–3pm
+    - Sun–Mon closed
+  inspiring-hands-massage-spa:
+    hours:
+    - Mon–Wed 9am–7pm
+    - Thu 9am–5:30pm
+    - Fri 9am–7pm
+    - Sat 10am–5pm
+    - Sun closed
+  k-zoo-in-the-mitten:
+    hours:
+    - Mon–Thu 10am–6pm
+    - Fri 10am–8pm
+    - Sat 10am–7pm
+    - Sun noon–4pm
+  kalamazoo-dry-goods:
+    hours:
+    - Tue–Thu 10am–6pm
+    - Fri 10am–7pm
+    - Sat 10am–6pm
+    - Sun–Mon closed
+  pop-city-popcorn:
+    hours:
+    - Mon–Thu 11am–6pm
+    - Fri–Sat 11am–7pm
+    - Sun closed
+  rocket-fizz:
+    hours:
+    - Mon–Thu 10am–8pm
+    - Fri–Sat 10am–9pm
+    - Sun noon–6pm
+  stamped-robin:
+    hours:
+    - Mon–Sat 4pm–midnight
+    - Sun closed
+  terrapin-worldwide-imports:
+    hours:
+    - Mon–Sat 11am–6pm
+    - Sun noon–4pm
+  uncle-buddy-s-toy-stash:
+    hours:
+    - Mon–Thu noon–8pm
+    - Fri–Sat 10am–8pm
+    - Sun noon–6pm
+  unwind-massage-and-stretch:
+    hours:
+    - Mon–Thu 10am–9pm
+    - Fri 10am–8pm
+    - Sat 9am–5pm
+    - Sun 2–9pm
 
 social_district: []
 
