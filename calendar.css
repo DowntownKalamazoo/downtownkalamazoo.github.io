@@ -70,3 +70,6 @@
 .lineup-compact li { grid-template-columns: 1fr; gap: .1rem; padding: .5rem 0; }
 @media (max-width: 560px) { .lineup li { grid-template-columns: 1fr; gap: .1rem; } }
 .panel .lineup { padding-left: 0; margin-bottom: 0; }
+/* events.html?at=<business>: a note saying the calendar shows one business's events, with a way back to all of them */
+.cal-at { margin-block: 0 1rem; }
+.cal-at p { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; font-weight: 600; }

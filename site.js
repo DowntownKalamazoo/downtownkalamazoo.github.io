@@ -156,15 +156,26 @@
   const grid = $('#biz-grid');
   if (grid) {
     const cards = $$('.biz', grid);
-    const q = $('#dir-q'), chips = $$('#dir-cats .chip'), ddChip = $('#dir-dd'), sdChip = $('#dir-sd'), giftChip = $('#dir-gift'), count = $('#dir-count'), empty = $('#dir-empty');
+    const q = $('#dir-q'), chips = $$('#dir-cats .chip'), ddChip = $('#dir-dd'), sdChip = $('#dir-sd'), giftChip = $('#dir-gift'), evChip = $('#dir-ev'), count = $('#dir-count'), empty = $('#dir-empty');
     const VIEW_KEY = 'dk-dir-view';
     const canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    let cat = 'all', ddOnly = false, sdOnly = false, giftOnly = false;
+    let cat = 'all', ddOnly = false, sdOnly = false, giftOnly = false, evOnly = false;
     const hash = (location.hash || '').replace('#', '');
     if (hash === 'dollars') ddOnly = true;
     else if (hash === 'social') sdOnly = true;
     else if (hash === 'gifts' && giftChip) giftOnly = true;
+    else if (hash === 'events' && evChip) evOnly = true;
     else if (chips.some(c => c.dataset.cat === hash)) cat = hash;
+
+    // "Open today" on the front of a card, from hours the build could read plainly (see week_hours in directory_page.py).
+    // The day is the visitor's own, so it is right whenever the page is opened. Without JavaScript the line stays hidden.
+    const dow = String(new Date().getDay());
+    $$('.biz-today[data-hours]', grid).forEach(p => {
+      let week = {}; try { week = JSON.parse(p.dataset.hours); } catch (e) { return; }
+      if (!(dow in week)) return;
+      p.textContent = week[dow] ? `Open today ${week[dow]}` : 'Closed today';
+      p.hidden = false;
+    });
 
     const st = new Map(cards.map(c => [c, { pinned: false, hovered: false, suppress: false, timer: 0 }]));
     const listView = () => grid.classList.contains('view-list');
@@ -219,27 +230,29 @@
       const term = (q.value || '').trim().toLowerCase();
       let n = 0;
       cards.forEach(c => {
-        const ok = (cat === 'all' || c.dataset.cat === cat) && (!ddOnly || c.dataset.dd === '1') && (!sdOnly || c.dataset.sd === '1') && (!giftOnly || c.dataset.gift === '1') && (!term || c.dataset.search.includes(term));
+        const ok = (cat === 'all' || c.dataset.cat === cat) && (!ddOnly || c.dataset.dd === '1') && (!sdOnly || c.dataset.sd === '1') && (!giftOnly || c.dataset.gift === '1') && (!evOnly || c.dataset.ev === '1') && (!term || c.dataset.search.includes(term));
         c.hidden = !ok; if (ok) n++;
       });
       chips.forEach(c => c.setAttribute('aria-pressed', String(c.dataset.cat === cat)));
       ddChip.setAttribute('aria-pressed', String(ddOnly));
       if (sdChip) sdChip.setAttribute('aria-pressed', String(sdOnly));
       if (giftChip) giftChip.setAttribute('aria-pressed', String(giftOnly));
+      if (evChip) evChip.setAttribute('aria-pressed', String(evOnly));
       const label = cat === 'all' ? 'businesses' : (chips.find(c => c.dataset.cat === cat).dataset.noun || (chips.find(c => c.dataset.cat === cat).dataset.label + ' businesses'));
-      count.textContent = `Showing ${n} of ${cards.length} ${n === cards.length ? 'businesses' : label}${ddOnly ? ' that accept Downtown Dollars' : ''}${sdOnly ? ' in the Social District' : ''}${giftOnly ? ' in the Holiday Gift Guide' : ''}`;
+      count.textContent = `Showing ${n} of ${cards.length} ${n === cards.length ? 'businesses' : label}${ddOnly ? ' that accept Downtown Dollars' : ''}${sdOnly ? ' in the Social District' : ''}${giftOnly ? ' in the Holiday Gift Guide' : ''}${evOnly ? ' with events coming up' : ''}`;
       empty.hidden = n > 0;
     }
     chips.forEach(c => c.addEventListener('click', () => { cat = c.dataset.cat; run(); }));
     ddChip.addEventListener('click', () => { ddOnly = !ddOnly; run(); });
     if (sdChip) sdChip.addEventListener('click', () => { sdOnly = !sdOnly; run(); });
     if (giftChip) giftChip.addEventListener('click', () => { giftOnly = !giftOnly; run(); });
+    if (evChip) evChip.addEventListener('click', () => { evOnly = !evOnly; run(); });
     // Searches from the home page arrive as directory.html?q=…
     const qp = new URLSearchParams(location.search).get('q');
     if (qp) q.value = qp.slice(0, 80);
     let t; q.addEventListener('input', () => { clearTimeout(t); t = setTimeout(run, 150); });
     $('#dir-form').addEventListener('submit', e => e.preventDefault());
-    $('#dir-clear').addEventListener('click', () => { cat = 'all'; ddOnly = false; sdOnly = false; giftOnly = false; q.value = ''; run(); q.focus(); });
+    $('#dir-clear').addEventListener('click', () => { cat = 'all'; ddOnly = false; sdOnly = false; giftOnly = false; evOnly = false; q.value = ''; run(); q.focus(); });
 
     const viewBtns = $$('#view-group button');
     function setView(v, save) {

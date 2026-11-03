@@ -368,15 +368,35 @@ dialog::backdrop { background: var(--scrim); }
 :root.a11y-motion .back { transform: none; }
 :root.a11y-motion .biz:not(.is-flipped) .back, :root.a11y-motion .biz.is-flipped .front { visibility: hidden; }
 
-/* List view, and the no-script fallback: both sides shown, nothing flips */
-.biz-grid.view-list, :root:not(.js) .biz-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-@media (max-width: 760px) { .biz-grid.view-list, :root:not(.js) .biz-grid { grid-template-columns: 1fr; } }
-.view-list .biz-inner, :root:not(.js) .biz-inner { transform: none !important; display: block; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-.view-list .face, :root:not(.js) .face { transform: none; visibility: visible !important; border: 0; border-radius: 0; }
-.view-list .front .front-foot, .view-list .back-foot .flip-back, :root:not(.js) .front .front-foot, :root:not(.js) .flip-back { display: none; }
-.view-list .front-body, :root:not(.js) .front-body { padding-bottom: 0.25rem; }
-.view-list .back, :root:not(.js) .back { background: var(--bg); }
+/* Every card is the same size in the flip view; anything longer than the back scrolls inside it */
+:root.js .biz-grid:not(.view-list) .biz-inner { height: 27.5rem; }
+.face, .front-body { min-height: 0; }
+.back-body { overflow-y: auto; min-height: 0; }
+.biz-today { font-family: var(--font-ui); font-weight: 700; font-size: 0.85rem; margin: 0; }
+.biz-next { margin: 0; padding-top: 0.55rem; border-top: 1px solid var(--line); font-size: 0.9rem; line-height: 1.35; display: grid; gap: 0.1rem; }
+.biz-next .lbl { font-family: var(--font-ui); font-weight: 800; font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.biz-next .t { font-weight: 700; }
+.front-foot { flex-direction: column; align-items: flex-start; justify-content: flex-end; }
+.biz-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.biz-links { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.25rem 0.9rem; }
+.biz-links a { font-weight: 700; }
+.ev-badge { display: inline-flex; align-items: center; gap: .4rem; width: fit-content; background: transparent; color: var(--fg); border: 1.5px solid currentColor; border-radius: 999px;
+  padding: .12rem .65rem .12rem .15rem; font-family: var(--font-ui); font-weight: 700; font-size: .72rem; letter-spacing: .02em; line-height: 1.2; }
+.ev-badge .gift-swatch { box-shadow: none; border: 1.5px solid currentColor; }
+.chip-ev .gift-swatch { box-shadow: none; border: 1.5px solid currentColor; }
+
+/* All details view, and the no-script fallback: one business per row, the card's front and back side by side */
+.biz-grid.view-list, :root:not(.js) .biz-grid { grid-template-columns: 1fr; }
+.view-list .biz-inner, :root:not(.js) .biz-inner { transform: none !important; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.view-list .face, :root:not(.js) .face { grid-area: auto; transform: none; visibility: visible !important; border: 0; border-radius: 0; }
+.view-list .back, :root:not(.js) .back { background: var(--surface); border-inline-start: 1px dashed var(--line); }
+@media (max-width: 760px) {
+  .view-list .biz-inner, :root:not(.js) .biz-inner { grid-template-columns: 1fr; }
+  .view-list .back, :root:not(.js) .back { border-inline-start: 0; border-top: 1px dashed var(--line); }
+}
+.view-list .flip-cue, .view-list .back-foot, :root:not(.js) .flip-cue, :root:not(.js) .back-foot, .view-list .biz-next, :root:not(.js) .biz-next { display: none; }
 .view-list .back-head, :root:not(.js) .back-head { display: none; }
+.view-list .back-body, :root:not(.js) .back-body { padding-top: 0.9rem; overflow: visible; }
 .view-list .flip-btn::after, :root:not(.js) .flip-btn::after { content: none; }
 .view-list .flip-btn, :root:not(.js) .flip-btn { cursor: text; }
 
@@ -1311,3 +1331,12 @@ a[href^="tel:"] { white-space: nowrap; }
 @media (forced-colors: active) { .sbs-num, .sbs-door-pat, .sbs-close-pat { forced-color-adjust: auto; } .sbs-close-pat { display: none; } }
 .sbs-after { max-width: 46rem; }
 .sbs-when .date-tile { flex: none; }
+
+/* Event pages: the Hosted by box, filled from the business directory */
+.host-panel h2 { margin-bottom: .5rem; }
+.host-panel .biz-facts { margin-block: .75rem; }
+.host-panel .biz-tags { margin-block: .25rem .75rem; }
+.host-sub { font-family: var(--font-ui); font-weight: 800; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin: .75rem 0 .35rem; padding-top: .75rem; border-top: 1px solid var(--line); }
+.host-also { list-style: none; padding: 0; margin: 0 0 .75rem; display: grid; gap: .35rem; }
+.host-also .muted { color: var(--muted); font-size: .9rem; white-space: nowrap; }
+.panel .host-also, .panel .biz-links { list-style: none; padding-inline-start: 0; }

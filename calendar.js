@@ -35,7 +35,11 @@
     const status = $('#cal-status'), empty = $('#cal-empty');
     let tag = 'all', view = 'month', cur = minK, sel = todayIso, compact = null, total = 0;
 
-    const shows = e => tag === 'all' || e.tags.includes(tag);
+    // events.html?at=<business id> shows only that business's events (linked from its directory card and event pages).
+    let BIZ = {}; try { BIZ = JSON.parse(($('#cal-biz') || {}).textContent || '{}'); } catch (e) {}
+    let at = new URLSearchParams(location.search).get('at') || '';
+    if (!BIZ[at]) at = '';
+    const shows = e => (tag === 'all' || e.tags.includes(tag)) && (!at || e.b === at);
     // Events on one day: multi-day events first (oldest first) so their bars line up across the week.
     const on = d => d < todayIso ? [] : EVS.filter(e => shows(e) && e.s <= d && e.e >= d)
       .sort((a, b) => (b.e !== b.s) - (a.e !== a.s) || a.s.localeCompare(b.s) || (a.t + a.l).localeCompare(b.t + b.l));
@@ -179,7 +183,7 @@
           const past = day.dataset.day < todayIso;
           let any = false;
           $$('.cal-row', day).forEach(r => {
-            const ok = !past && (v === 'all' || (r.dataset.tags || '').split('|').includes(v));
+            const ok = !past && (v === 'all' || (r.dataset.tags || '').split('|').includes(v)) && (!at || r.dataset.biz === at);
             r.hidden = !ok;
             if (ok) { any = true; seen.add(r.dataset.occ); all.add(r.dataset.occ); }
           });
@@ -191,7 +195,7 @@
       total = all.size;
       empty.hidden = total > 0;
       if (view === 'month') render(false);
-      if (announce) status.textContent = `Showing ${plural(total, 'event')}`;
+      if (announce) status.textContent = `Showing ${plural(total, 'event')}${at ? ' at ' + BIZ[at] : ''}`;
     }
     chips.forEach(c => c.addEventListener('click', () => applyTag(c.dataset.tag, true)));
 
@@ -219,10 +223,25 @@
     else window.addEventListener('resize', fit);
     new MutationObserver(fit).observe(root, { attributes: true, attributeFilter: ['style', 'class'] });
 
+    const atBox = $('#cal-at');
+    function showAt() {
+      if (!atBox) return;
+      atBox.hidden = !at;
+      if (at) $('#cal-at-text').textContent = `Showing only events at ${BIZ[at]}.`;
+    }
+    if (atBox) $('#cal-at-clear').addEventListener('click', () => {
+      at = '';
+      try { history.replaceState(null, '', location.pathname + location.hash); } catch (e) {}
+      showAt(); applyTag(tag, true);
+      const first = chips.find(c => c.dataset.tag === tag) || chips[0]; if (first) first.focus();
+    });
+    showAt();
+
     let start = 'month';
     try { start = localStorage.getItem('dk-cal-view') === 'list' ? 'list' : 'month'; } catch (e) {}
     const hash = location.hash.slice(1);
     if (hash === 'list' || /^d-\d{4}-\d{2}-\d{2}$/.test(hash)) start = 'list';
+    if (at && hash !== 'month') start = 'list';
     else if (hash === 'month') start = 'month';
     applyTag('all', false);
     fit();

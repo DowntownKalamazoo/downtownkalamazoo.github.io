@@ -2,6 +2,7 @@
 # Pages for the permanent Downtown Kalamazoo site. Runs inside build.py (exec'd), so it uses its helpers:
 # page, page_hero, in_short, ext, E, date_tile, MON, DOW, EVENTS, SD, directory_page, weave, snow, k_window ...
 import content_loader as CL
+import urllib.parse
 
 TODAY = dt.date.fromisoformat(os.environ['DK_TODAY']) if os.environ.get('DK_TODAY') else dt.date.today()
 DOWNTOWN_EMAIL = 'downtown@kalamazoocity.org'
@@ -66,6 +67,42 @@ CAL_EVENTS, SERIES_WEEKS = _split_series(ALL_EVENT_FILES)
 INHERIT = ('time', 'where', 'tags', 'fill', 'link', 'link_text', 'summary')
 
 
+def events_by_business():
+    """Upcoming dates of calendar events that name a directory business with `business: <id>` in the event file.
+    The id is the end of the business's directory link (directory.html#b-<id>). The directory cards, the event
+    pages' Hosted by box and the calendar's per-business view all read this, so they stay in step on every build."""
+    known = {b['id']: b for b in directory_page.BIZ}
+    out = {}
+    for ev in CAL_EVENTS:
+        bid = str(ev.get('business') or '').strip().lower()
+        if bid.startswith('b-'):
+            bid = bid[2:]
+        if not bid:
+            ev['business'] = ''
+            continue
+        if bid not in known:
+            print(f'::warning file={ev.get("source_file")},title=Events::business: {bid} is not in the business directory, so this event '
+                  f'is not linked to a listing. Use the end of the business\'s directory link, after #b- (for example sit-and-stay-winery).')
+            ev['business'] = ''
+            continue
+        ev['business'] = bid
+        for d, end in CL.occurrences(ev, TODAY):
+            # A one-time event keeps its date after it passes, so drop it once its last day is over.
+            # A run that's already started (a show from Nov 5 to 22, seen on Nov 10) stays until it ends.
+            if (end or d) < TODAY:
+                continue
+            out.setdefault(bid, []).append(dict(date=d, end=end if end and end > d else None, title=ev['title'],
+                                                time=str(ev.get('time') or ''), href=f'events/{ev["slug"]}.html', slug=ev['slug']))
+    for v in out.values():
+        v.sort(key=lambda o: (o['date'], o['title']))
+    return out
+
+
+BIZ_EVENTS = events_by_business()
+directory_page.EVENTS = BIZ_EVENTS
+directory_page.TODAY = TODAY
+
+
 def night(series_ev, w):
     """One night of a series, with the series filling in whatever the night's file leaves out."""
     m = {k: series_ev.get(k) for k in INHERIT}
@@ -84,7 +121,7 @@ def calendar_items():
     for e in EVENTS:
         time = e['when_short'].split('·', 1)[1].strip() if '·' in e['when_short'] else ''
         items.append(dict(date=e['date'], end=e.get('end'), title=e['title'], when=e['when_short'], time=time, where=e['where_short'],
-                          summary=e['summary'], href=f'holidays/events/{e["slug"]}.html', external=False, fill=e['fill'], tags=['Holidays']))
+                          summary=e['summary'], href=f'holidays/events/{e["slug"]}.html', external=False, fill=e['fill'], tags=['Holidays'], biz=''))
     first = TODAY.replace(day=1)
     for ev in CAL_EVENTS:
         weeks = SERIES_WEEKS.get(ev['slug'], {})
@@ -98,7 +135,8 @@ def calendar_items():
             when = f'{DOW[d.weekday()]}, {MON[d.month]} {d.day}' + (f' · {o["time"]}' if o.get('time') else '')
             items.append(dict(date=d.isoformat(), end=end.isoformat() if end and end > d else None, title=ev['title'], lineup=o['lineup'],
                               when=when, time=str(o.get('time') or ''), where=o.get('where') or '', summary=o.get('summary') or '',
-                              href=f'events/{o["slug"]}.html', external=False, fill=o.get('fill') or 'f-green', tags=o.get('tags') or []))
+                              href=f'events/{o["slug"]}.html', external=False, fill=o.get('fill') or 'f-green', tags=o.get('tags') or [],
+                              biz=ev.get('business') or ''))
     items = [o for o in items if dt.date.fromisoformat(o['end'] or o['date']) >= TODAY]
     return sorted(items, key=lambda o: (o['date'], o['title']))
 
@@ -329,7 +367,7 @@ def cal_list_row(o, i, day):
         meta.append(E(o['where']))
     tags = ''.join(f'<span class="mini-tag">{E(t)}</span>' for t in o['tags'])
     summary = '' if cont else f'<p>{E(o["summary"])}</p>'
-    return f'''<li class="event-row cal-row {o['fill']}{' is-cont' if cont else ''}" data-occ="{i}" data-tags="{E('|'.join(o['tags']))}">
+    return f'''<li class="event-row cal-row {o['fill']}{' is-cont' if cont else ''}" data-occ="{i}" data-tags="{E('|'.join(o['tags']))}" data-biz="{E(o.get('biz') or '')}">
   <div class="body">
     <h4 class="h3"><a href="{{R}}{o["href"]}">{E(full_title(o))}</a></h4>
     <p class="meta">{''.join(f'<span>{m}</span>' for m in meta)}</p>
@@ -377,7 +415,8 @@ def build_calendar():
 
     # Month view: drawn in the browser from this data, so it can switch between a full grid and a tap-a-day grid.
     data = json.dumps([dict(s=o['date'], e=o['end'] or o['date'], t=o['title'], l=o.get('lineup') or '', time=o['time'], where=o['where'],
-                            href=o['href'], fill=o['fill'], tags=o['tags']) for o in items], ensure_ascii=False).replace('</', '<\\/')
+                            href=o['href'], fill=o['fill'], tags=o['tags'], b=o.get('biz') or '') for o in items], ensure_ascii=False).replace('</', '<\\/')
+    biz_names = json.dumps({b['id']: b['name'] for b in directory_page.BIZ if b['id'] in BIZ_EVENTS}, ensure_ascii=False).replace('</', '<\\/')
     last = max([dt.date.fromisoformat(o['end'] or o['date']) for o in items] or [TODAY])
     first_m, last_m = f'{TODAY.year}-{TODAY.month:02d}', f'{last.year}-{last.month:02d}'
 
@@ -395,6 +434,7 @@ def build_calendar():
       <div class="cal-tools"><span class="label" id="cal-filter-label">Show</span><ul class="chips" id="cal-filter" role="list" aria-labelledby="cal-filter-label">{chips}</ul></div>
       <div class="cal-switch"><span class="label" id="cal-view-label">View</span><span class="segmented" role="group" aria-labelledby="cal-view-label" id="cal-view"><button type="button" data-view="month" aria-pressed="true">Month</button><button type="button" data-view="list" aria-pressed="false">List</button></span></div>
     </div>
+    <div class="note cal-at" id="cal-at" hidden><p><span id="cal-at-text"></span> <button type="button" class="btn btn-small btn-quiet" id="cal-at-clear">Show all events</button></p></div>
     <p class="sr-only" id="cal-status" role="status" aria-live="polite"></p>
     <div class="cal-month-view" id="cal-month-view" hidden>
       <div class="cal-nav">
@@ -409,6 +449,7 @@ def build_calendar():
     <div class="cal-list-view" id="cal-list-view">{sections}</div>
     <p class="note" id="cal-empty" hidden>No events of this kind are on the calendar yet.</p>
     <script type="application/json" id="cal-data" data-first="{first_m}" data-last="{last_m}" data-today="{TODAY.isoformat()}">{data}</script>
+    <script type="application/json" id="cal-biz">{biz_names}</script>
     <div class="two-col" style="margin-top:2.5rem">
       <section class="panel f-pink"><h2>Hosting something downtown?</h2><p>Groups, venues and businesses can send an event for the calendar. Every event is reviewed before it’s posted. <a href="{{R}}submit-event.html">Submit an event</a></p></section>
       <section class="panel"><h2>Details can change</h2><p>Events are confirmed with organizers, but times and places sometimes change. Check the organizer’s link before you go, and see <a href="{{R}}visit.html">Visit &amp; park</a> for getting here.</p></section>
@@ -461,6 +502,35 @@ def lineup_section(ev):
     return html + '</div></section>'
 
 
+def host_panel(b, slug):
+    """The Hosted by box on an event page: the business's details, read from the directory on every build, and its other dates."""
+    dp = directory_page
+    facts = ''
+    if b['address']:
+        maps = 'https://www.google.com/maps/search/?api=1&query=' + urllib.parse.quote(b['name'] + ', ' + b['address'])
+        facts += f'<div><dt>Location</dt><dd>{E(b["where"])}<br>{ext(maps, "Get directions")}</dd></div>'
+    if b['phone']:
+        phone = f'<a href="{E(b["tel"])}">{E(b["phone"])}</a>' if b['tel'] else E(b['phone'])
+        facts += f'<div><dt>Phone</dt><dd>{phone}</dd></div>'
+    if b['website']:
+        facts += f'<div><dt>Website</dt><dd>{ext(b["website"], "Visit website")}</dd></div>'
+    tags = (dp.dd_badge() if b['dd'] else '') + (dp.sd_badge() if b.get('sd') else '')
+    evs = BIZ_EVENTS.get(b['id']) or []
+    others = [o for o in evs if o['slug'] != slug][:3]
+    also = ''
+    if others:
+        also = (f'<h3 class="host-sub">Also at {E(b["name"])}</h3><ul class="host-also">'
+                + ''.join(f'<li><a href="{{R}}{o["href"]}">{E(o["title"])}</a> <span class="muted">{E(dp._when(o))}</span></li>' for o in others) + '</ul>')
+    links = [f'<a href="{{R}}directory.html#b-{b["id"]}">See it in the business directory</a>']
+    if len(evs) > 1:
+        links.insert(0, f'<a href="{{R}}events.html?at={b["id"]}#list">All {len(evs)} upcoming events here</a>')
+    return (f'<section class="panel host-panel" aria-labelledby="host-h"><h2 id="host-h">Hosted by {E(b["name"])}</h2>'
+            + (f'<p>{E(b["desc"])}</p>' if b['desc'] else '')
+            + (f'<dl class="biz-facts">{facts}</dl>' if facts else '')
+            + (f'<div class="biz-tags">{tags}</div>' if tags else '')
+            + also + '<ul class="biz-links">' + ''.join(f'<li>{x}</li>' for x in links) + '</ul></section>')
+
+
 def build_cal_event_pages():
     for ev in CAL_EVENTS:
         dates = CL.occurrences(ev, TODAY)
@@ -475,10 +545,13 @@ def build_cal_event_pages():
         else:
             d, end = dates[0] if dates else (None, None)
             when = date_range_text(d, end) if d else ''
-        glance = [('When', E(when)), ('Time', E(ev.get('time', ''))), ('Where', E(ev.get('where', '')))]
+        host_b = next((b for b in directory_page.BIZ if b['id'] == ev.get('business')), None) if ev.get('business') else None
+        where = ev.get('where') or (f'{host_b["name"]}, {host_b["where"]}' if host_b else '')
+        glance = [('When', E(when)), ('Time', E(ev.get('time', ''))), ('Where', E(where))]
         if ev.get('link'):
             glance.append(('More', ext(ev['link'], E(ev.get('link_text') or 'Event website'))))
         gl = ''.join(f'<div><dt>{k}</dt><dd>{v}</dd></div>' for k, v in glance if v)
+        host = host_panel(host_b, ev['slug']) if host_b else ''
         about = ev.get('body_html') or (
             f'<p>For the latest details, see {ext(ev["link"], E(ev.get("link_text") or "the event website"))}.</p>' if ev.get('link')
             else '<p>More details will be posted here as the date gets closer.</p>')
@@ -492,7 +565,7 @@ def build_cal_event_pages():
 <section class="section" style="padding-top:0" aria-label="About this event">
   <div class="wrap two-col">
     <div class="prose">{about}</div>
-    <div class="aside">{upcoming}<section class="panel"><h2>Getting here</h2><p><a href="{{R}}visit.html">Parking and getting around</a>{ACCESS_GUIDE_LINK}</p></section></div>
+    <div class="aside">{upcoming}{host}<section class="panel"><h2>Getting here</h2><p><a href="{{R}}visit.html">Parking and getting around</a>{ACCESS_GUIDE_LINK}</p></section></div>
   </div>
 </section>
 {lineup_section(ev)}

@@ -83,13 +83,18 @@ def ext(href, text):
     return f'<a href="{E(href)}" target="_blank" rel="noopener">{text}<span class="sr-only"> (opens in a new tab)</span></a>'
 
 
-def dd_badge():
-    return '<span class="dd-badge"><span class="dd-coin" aria-hidden="true">$</span>Accepts Downtown Dollars</span>'
+def dd_badge(label='Accepts Downtown Dollars'):
+    return f'<span class="dd-badge"><span class="dd-coin" aria-hidden="true">$</span>{label}</span>'
 
 
-def gift_badge():
+def gift_badge(label='In the Gift Guide'):
     return ('<span class="gift-badge"><span class="gift-swatch" aria-hidden="true" style="background-image:url({R}pattern-stripes-sm.webp)"></span>'
-            'In the Gift Guide</span>')
+            f'{label}</span>')
+
+
+def ev_badge(label='Events coming up'):
+    return ('<span class="ev-badge"><span class="gift-swatch" aria-hidden="true" style="background-image:url({R}pattern-confetti-sm.webp)"></span>'
+            f'{label}</span>')
 
 
 def _and(names):
@@ -100,56 +105,125 @@ def sd_badge():
     return '<span class="sd-badge"><span class="sd-cup" aria-hidden="true"></span>Social District</span>'
 
 
+# Upcoming events by business id, set by yearround_section.py from event files that say `business: <id>`.
+EVENTS = {}
+TODAY = None   # the build's date, set with EVENTS so a run that has started reads "Now through …"
+_MON = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+_DOW = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+_DAY = {d.lower(): i for i, d in enumerate(_DOW)}
+_T = r'(?:\d{1,2}(?::\d{2})?(?:am|pm)?|noon|midnight)'
+_TIME = re.compile(rf'^{_T}\s*[–-]\s*{_T}(?:\s+and\s+{_T}\s*[–-]\s*{_T})?$', re.I)
+_DAYTOK = re.compile(r'^(mon|tue|wed|thu|fri|sat|sun)[a-z]*\.?(?:[–-](mon|tue|wed|thu|fri|sat|sun)[a-z]*\.?)?,?$', re.I)
+
+
+def week_hours(lines):
+    """Hours as {weekday: text} for the card's "Open today" line, with weekday 0 = Sunday to match the browser.
+    "" means closed that day. Returns None unless every line reads plainly, like "Tue–Thu 2–8pm", "Sat noon–9pm",
+    "Daily 11am–6pm" or "Mon closed"; a line with no days or times in it (a note like "Call ahead") is skipped.
+    Anything else ("Box office Mon–Fri…", "Sat brunch 10am–2pm") means no "Open today" line, rather than a wrong one."""
+    week = {}
+    for line in lines or []:
+        toks = line.replace(',', ', ').split()
+        days, i = [], 0
+        if toks and toks[0].lower() in ('daily', 'everyday'):
+            days, i = list(range(7)), 1
+        else:
+            while i < len(toks) and _DAYTOK.match(toks[i].strip()):
+                m = _DAYTOK.match(toks[i].strip())
+                a, b = _DAY[m.group(1).lower()], _DAY[(m.group(2) or m.group(1)).lower()]
+                days += [(a + k) % 7 for k in range((b - a) % 7 + 1)]
+                i += 1
+        rest = ' '.join(toks[i:]).strip()
+        if not days:
+            if re.search(r'\d|\b(mon|tue|wed|thu|fri|sat|sun)', line, re.I):
+                return None
+            continue
+        if rest.lower() == 'closed':
+            text = ''
+        elif _TIME.match(rest):
+            text = rest
+        else:
+            return None
+        for d in days:
+            week[str((d + 1) % 7)] = text
+    return week or None
+
+
+def _when(o):
+    """When an event is, for cards and the Hosted by box: "Tue, Nov 3 · 6–8 p.m.", or for a run of days
+    "Nov 5–22" (or "Now through Nov 22" once it has started)."""
+    d, end = o['date'], o.get('end')
+    if end:
+        import datetime as _dt
+        if d <= (TODAY or _dt.date.today()):
+            day = f'Now through {_MON[end.month]} {end.day}'
+        elif end.month == d.month:
+            day = f'{_MON[d.month]} {d.day}–{end.day}'
+        else:
+            day = f'{_MON[d.month]} {d.day} – {_MON[end.month]} {end.day}'
+    else:
+        day = f'{_DOW[d.weekday()]}, {_MON[d.month]} {d.day}'
+    return day + (f' · {o["time"]}' if o.get('time') else '')
+
+
 def biz_card(b):
     bid = 'b-' + b['id']
     none = '<span class="none">Not listed yet</span>'
+    links = []
     if b['address']:
         maps = 'https://www.google.com/maps/search/?api=1&query=' + urllib.parse.quote(b['name'] + ', ' + b['address'])
-        street = re.sub(r',\s*Kalamazoo,\s*MI\s*49007$', '', b['address'])
-        loc = f'{E(street)}<br>{ext(maps, "Get directions")}'
-    else:
-        loc = none
+        links.append(ext(maps, 'Directions'))
     if b['tel']:
         phone = f'<a href="{E(b["tel"])}">{E(b["phone"])}</a>'
     else:
         phone = E(b['phone']) if b['phone'] else none
-    web = ext(b['website'], 'Visit website') if b['website'] else none
+    if b['website']:
+        links.append(ext(b['website'], 'Website'))
     hours = '<br>'.join(E(x) for x in b.get('hours') or []) or none
     desc = f'<p class="biz-desc">{E(b["desc"])}</p>' if b['desc'] else ''
     if b['includes']:
         desc += f'<p class="biz-desc"><strong>Inside:</strong> {E(b["includes"])}</p>'
     gifts = GIFTS.get(b['id']) or []
     if gifts:
-        desc += (f'<p class="biz-desc"><strong>Gift ideas:</strong> {E(_and(gifts))}. '
-                 f'<a href="{{R}}gifts.html#from-{b["id"]}">See them in the Holiday Gift Guide</a></p>')
+        links.append(f'<a href="{{R}}gifts.html#from-{b["id"]}">Gift ideas</a>')
+    evs = EVENTS.get(b['id']) or []
+    facts = f'<div><dt>Hours</dt><dd>{hours}</dd></div><div><dt>Phone</dt><dd>{phone}</dd></div>'
+    front_next = ''
+    if evs:
+        nxt = evs[0]
+        facts += (f'<div><dt>Next event</dt><dd><a href="{{R}}{nxt["href"]}">{E(nxt["title"])}</a><br>{E(_when(nxt))}</dd></div>')
+        front_next = (f'<p class="biz-next"><span class="lbl">Next event</span> <span class="t">{E(nxt["title"])}</span>'
+                      f'<span class="d">{E(_when(nxt))}</span></p>')
+        links.append(f'<a href="{{R}}events.html?at={b["id"]}#list">All {len(evs)} upcoming events</a>' if len(evs) > 1
+                     else f'<a href="{{R}}{nxt["href"]}">Event details</a>')
+    week = week_hours(b.get('hours'))
+    today = (f'<p class="biz-today" data-hours="{E(json.dumps(week, ensure_ascii=False))}" hidden></p>' if week else '')
     search = ' '.join([b['name'], b['cat_label'], b['address'], b['where'], b['desc'], b['includes'],
                        'downtown dollars' if b['dd'] else '', 'social district' if b.get('sd') else '',
-                       'gift guide holiday gifts ' + ' '.join(gifts) if gifts else '']).lower()
+                       'gift guide holiday gifts ' + ' '.join(gifts) if gifts else '',
+                       'events ' + ' '.join(o['title'] for o in evs) if evs else '']).lower()
     initial = re.sub(r'^the\s+', '', b['name'], flags=re.I)[:1].upper()
-    dd = (dd_badge() if b['dd'] else '') + (sd_badge() if b.get('sd') else '') + (gift_badge() if gifts else '')
+    tags = ((dd_badge('Downtown Dollars') if b['dd'] else '') + (sd_badge() if b.get('sd') else '')
+            + (gift_badge('Gift Guide') if gifts else '') + (ev_badge('Events') if evs else ''))
     where = f'<p class="biz-where">{E(b["where"])}</p>' if b['where'] else ''
+    link_list = ('<ul class="biz-links">' + ''.join(f'<li>{x}</li>' for x in links) + '</ul>') if links else ''
     name = E(b['name'])
     return (
-        f'<li class="biz {b["fill"]}" style="--cat-pat:url({{R}}pattern-{CAT_PATTERN.get(b["cat"], "squiggle")}-sm.webp)" id="{bid}" data-cat="{b["cat"]}" data-dd="{1 if b["dd"] else 0}" data-sd="{1 if b.get("sd") else 0}" data-gift="{1 if gifts else 0}" data-search="{E(search)}">'
+        f'<li class="biz {b["fill"]}" style="--cat-pat:url({{R}}pattern-{CAT_PATTERN.get(b["cat"], "squiggle")}-sm.webp)" id="{bid}" data-cat="{b["cat"]}" data-dd="{1 if b["dd"] else 0}" data-sd="{1 if b.get("sd") else 0}" data-gift="{1 if gifts else 0}" data-ev="{1 if evs else 0}" data-search="{E(search)}">'
         f'<div class="biz-inner">'
         f'<article class="face front" aria-labelledby="{bid}-n">'
         f'<div class="front-band" aria-hidden="true"><span class="cat">{E(b["cat_label"])}</span><span class="initial">{E(initial)}</span></div>'
         f'<div class="front-body">'
         f'<h3 class="biz-name" id="{bid}-n"><button type="button" class="flip-btn" aria-expanded="false" aria-controls="{bid}-back">{name}</button></h3>'
-        f'{where}'
-        f'<div class="front-foot">{dd}<span class="flip-cue" aria-hidden="true">{FLIP_ICON}'
+        f'{where}{today}{front_next}'
+        f'<div class="front-foot"><div class="biz-tags">{tags}</div><span class="flip-cue" aria-hidden="true">{FLIP_ICON}'
         f'<span class="cue-hover">Hover for details</span><span class="cue-touch">Tap for details</span></span></div>'
         f'</div></article>'
         f'<section class="face back" id="{bid}-back" aria-label="{name} details" inert>'
         f'<div class="back-head"><span class="cat">{E(b["cat_label"])}</span><p class="back-name" aria-hidden="true">{name}</p></div>'
         f'<div class="back-body" tabindex="-1">{desc}'
-        f'<dl class="biz-facts">'
-        f'<div><dt>Location</dt><dd>{loc}</dd></div>'
-        f'<div><dt>Hours</dt><dd>{hours}</dd></div>'
-        f'<div><dt>Phone</dt><dd>{phone}</dd></div>'
-        f'<div><dt>Website</dt><dd>{web}</dd></div>'
-        f'</dl>'
-        f'<div class="back-foot">{dd}<button type="button" class="btn btn-small btn-quiet flip-back">Flip back'
+        f'<dl class="biz-facts">{facts}</dl>{link_list}'
+        f'<div class="back-foot"><button type="button" class="btn btn-small btn-quiet flip-back">Flip back'
         f'<span class="sr-only"> to {name}</span></button></div>'
         f'</div></section></div></li>'
     )
@@ -163,6 +237,10 @@ def directory_body(page_hero, in_short):
     gift_chip = (f'<button type="button" class="chip chip-gift" id="dir-gift" aria-pressed="false" aria-describedby="dd-label">'
                  f'<span class="gift-swatch" aria-hidden="true" style="background-image:url({{R}}pattern-stripes-sm.webp);margin-inline-end:.4rem"></span>'
                  f'In the Holiday Gift Guide<span class="n">{n_gift}</span></button>') if n_gift else ''
+    n_ev = sum(1 for b in BIZ if EVENTS.get(b['id']))
+    ev_chip = (f'<button type="button" class="chip chip-ev" id="dir-ev" aria-pressed="false" aria-describedby="dd-label">'
+               f'<span class="gift-swatch" aria-hidden="true" style="background-image:url({{R}}pattern-confetti-sm.webp);margin-inline-end:.4rem"></span>'
+               f'Events coming up<span class="n">{n_ev}</span></button>') if n_ev else ''
     counts = {c: sum(1 for b in BIZ if b['cat'] == c) for c, _ in BIZ_CATS}
     # A type with no businesses left (offices, since November 2026) gets no filter button.
     chips = (f'<li><button type="button" class="chip" data-cat="all" data-label="All" aria-pressed="true">All<span class="n">{total}</span></button></li>'
@@ -188,7 +266,7 @@ def directory_body(page_hero, in_short):
         <div class="field" style="flex:1 1 auto"><span class="label" id="cats-label">Type of business</span><div role="group" aria-labelledby="cats-label"><ul class="chips" id="dir-cats">{chips}</ul></div></div>
         <div class="field"><span class="label" id="dd-label">Show only</span><button type="button" class="chip chip-dd" id="dir-dd" aria-pressed="false" aria-describedby="dd-label"><span class="dd-coin" aria-hidden="true" style="margin-inline-end:.4rem">$</span>Accepts Downtown Dollars<span class="n">{n_dd}</span></button>
           <button type="button" class="chip chip-sd" id="dir-sd" aria-pressed="false" aria-describedby="dd-label"><span class="sd-cup" aria-hidden="true" style="margin-inline-end:.4rem"></span>Social District<span class="n">{n_sd}</span></button>
-          {gift_chip}</div>
+          {gift_chip}{ev_chip}</div>
       </div>
     </form>
     <div class="dir-result">
