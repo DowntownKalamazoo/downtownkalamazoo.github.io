@@ -2,6 +2,7 @@
 title: Craft Club
 date: 2026-11-18
 time: 6–8 p.m.
+business: sit-and-stay-winery
 where: Sit and Stay Winery, 260 E. Michigan Ave.
 summary: A cozy evening of crafting at Sit and Stay Winery, with a few projects to choose from and all the supplies provided.
 tags: [Arts, Community]
@@ -14,5 +15,3 @@ Take a break before the holiday rush. Pick from a few craft projects, with all t
 **Cost:** $5 to $30.
 
 **Who it’s for:** All ages, including families and kids.
-
-[Sit and Stay Winery](../directory.html#b-sit-and-stay-winery) is a dog-friendly winery at 260 E. Michigan Ave. that takes Downtown Dollars.

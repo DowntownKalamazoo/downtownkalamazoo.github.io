@@ -3,6 +3,7 @@ title: Waitress
 date: 2027-07-15
 end: 2027-08-01
 time: Evenings and weekend matinees
+business: farmers-alley-theatre
 where: Farmers Alley Theatre, 221 Farmers Alley
 summary: Farmers Alley Theatre closes its season with the musical about a small-town diner waitress and pie maker, with songs by Sara Bareilles.
 tags: [Arts, Music]

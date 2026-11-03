@@ -4,6 +4,7 @@ repeats: every tuesday
 starts: 2026-11-03
 until: 2026-11-24
 time: 6–8 p.m.
+business: sit-and-stay-winery
 where: Sit and Stay Winery, 260 E. Michigan Ave.
 summary: Friendly trivia every Tuesday in November at Sit and Stay Winery. Bring a team or join one.
 tags: [Community, Food & drink]
@@ -16,5 +17,3 @@ Test what you know (or how well you guess) at trivia night, every Tuesday in Nov
 **Cost:** Free to play.
 
 **Who it’s for:** Young adults and adults 21+.
-
-[Sit and Stay Winery](../directory.html#b-sit-and-stay-winery) is a dog-friendly winery at 260 E. Michigan Ave. that takes Downtown Dollars.

@@ -2,6 +2,7 @@
 title: Community puzzle swap
 date: 2026-11-19
 time: 6–8 p.m.
+business: sit-and-stay-winery
 where: Sit and Stay Winery, 260 E. Michigan Ave.
 summary: Bring jigsaw puzzles you’re done with and trade them for new-to-you ones at Sit and Stay Winery.
 tags: [Community, Family]
@@ -14,5 +15,3 @@ Bring a puzzle (or a few) you’re ready to pass on, browse what others brought,
 **Cost:** Free.
 
 **Who it’s for:** All ages.
-
-[Sit and Stay Winery](../directory.html#b-sit-and-stay-winery) is a dog-friendly winery at 260 E. Michigan Ave. that takes Downtown Dollars.

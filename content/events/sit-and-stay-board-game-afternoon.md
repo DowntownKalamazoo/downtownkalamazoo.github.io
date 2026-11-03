@@ -2,6 +2,7 @@
 title: Board game afternoon
 date: 2026-11-29
 time: Noon–5 p.m.
+business: sit-and-stay-winery
 where: Sit and Stay Winery, 260 E. Michigan Ave.
 summary: Gather your crew for an afternoon of board games at Sit and Stay Winery & Brewery.
 tags: [Community, Family]
@@ -14,5 +15,3 @@ Trade the holiday hustle for some time around the table. Strategists and casual 
 **Cost:** Free.
 
 **Who it’s for:** All ages, including families and kids.
-
-[Sit and Stay Winery](../directory.html#b-sit-and-stay-winery) is a dog-friendly winery at 260 E. Michigan Ave. that takes Downtown Dollars.

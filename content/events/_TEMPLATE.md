@@ -10,6 +10,7 @@ date: 2027-06-12          # YYYY-MM-DD
 # until: 2027-12-31       # last date for a repeating event
 time: 6–9 p.m.
 where: Bronson Park
+# business: sit-and-stay-winery   # optional: the host's directory id, the end of its directory link after #b-
 summary: One or two sentences for the calendar.
 tags: [Community]         # Arts, Community, Family, Food & drink, Music, Public meetings
 fill: f-green             # f-green, f-pink, f-blue, f-red or f-mist

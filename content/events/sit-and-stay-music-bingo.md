@@ -2,6 +2,7 @@
 title: Music bingo
 date: 2026-11-14
 time: 7–9 p.m.
+business: sit-and-stay-winery
 where: Sit and Stay Winery, 260 E. Michigan Ave.
 summary: Bingo where songs replace the numbers. Listen, mark your card and be the first to call it.
 tags: [Music, Food & drink]
@@ -14,5 +15,3 @@ Music bingo swaps the numbers for songs. Listen for each song, mark it on your c
 **Cost:** Free.
 
 **Who it’s for:** Young adults and adults 21+.
-
-[Sit and Stay Winery](../directory.html#b-sit-and-stay-winery) is a dog-friendly winery at 260 E. Michigan Ave. that takes Downtown Dollars.

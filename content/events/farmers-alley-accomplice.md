@@ -3,6 +3,7 @@ title: Accomplice
 date: 2027-01-28
 end: 2027-02-07
 time: Evenings and weekend matinees
+business: farmers-alley-theatre
 where: Farmers Alley Theatre, 221 Farmers Alley
 summary: A twisting comedy whodunit by Rupert Holmes, where a murder plot at a remote country cottage is not at all what it seems.
 tags: [Arts]

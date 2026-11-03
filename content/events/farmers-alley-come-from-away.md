@@ -3,6 +3,7 @@ title: Come From Away
 date: 2026-11-05
 end: 2026-11-22
 time: Evenings and weekend matinees
+business: farmers-alley-theatre
 where: Farmers Alley Theatre, 221 Farmers Alley
 summary: Farmers Alley Theatre brings back its fastest-selling show, the musical about a small Newfoundland town that took in thousands of stranded travelers after 9/11.
 tags: [Arts, Music]

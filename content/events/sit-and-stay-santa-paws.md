@@ -2,6 +2,7 @@
 title: Pet pictures with Santa Paws
 date: 2026-11-21
 time: 1–3 p.m.
+business: sit-and-stay-winery
 where: Sit and Stay Winery, 260 E. Michigan Ave.
 summary: After the holiday parade, bring your pet to Sit and Stay Winery for a photo with Santa Paws.
 tags: [Community, Family]
@@ -14,5 +15,3 @@ Keep the holiday fun going after the [Kalamazoo Holiday Parade](../holidays/even
 **Cost:** Free.
 
 **Who it’s for:** All ages, including families and kids (and pets).
-
-[Sit and Stay Winery](../directory.html#b-sit-and-stay-winery) is a dog-friendly winery at 260 E. Michigan Ave. that takes Downtown Dollars.

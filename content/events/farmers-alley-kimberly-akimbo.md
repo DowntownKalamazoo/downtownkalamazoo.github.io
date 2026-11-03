@@ -3,6 +3,7 @@ title: Kimberly Akimbo
 date: 2027-05-20
 end: 2027-06-06
 time: Evenings and weekend matinees
+business: farmers-alley-theatre
 where: Farmers Alley Theatre, 221 Farmers Alley
 summary: The Tony-winning musical about a New Jersey teenager with a rare condition that makes her age four times faster than everyone else.
 tags: [Arts, Music]
