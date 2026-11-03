@@ -738,10 +738,56 @@
       errs.forEach(([id, msg]) => { if (!firstFor[id]) { firstFor[id] = msg; setErr(id, msg); } });
       return Object.entries(firstFor);
     }
+    // Directory names and aliases, written by build_submit in build.py. norm() must match norm_name in directory_page.py.
+    let DIR = {}; try { DIR = JSON.parse(($('#dir-index') || {}).textContent || '{}'); } catch (e) {}
+    const norm = s => String(s || '').toLowerCase().replace(/&/g, ' and ').replace(/[’']/g, '')
+      .replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim().replace(/^the /, '');
+    const findBiz = s => DIR[norm(s)] || DIR[norm(String(s || '').split(',')[0])] || null;
+    // "18:30" and "20:00" → "6:30–8 p.m.", in the calendar's house style
+    const part = t => {
+      const [H, M] = t.split(':').map(Number);
+      if (H === 12 && !M) return ['noon', ''];
+      if (H === 0 && !M) return ['midnight', ''];
+      return [(H % 12 || 12) + (M ? ':' + String(M).padStart(2, '0') : ''), H < 12 ? 'a.m.' : 'p.m.'];
+    };
+    function timeText(s, e) {
+      if (!s) return '';
+      const a = part(s); let out;
+      if (!e) out = a[0] + (a[1] ? ' ' + a[1] : '');
+      else {
+        const b = part(e);
+        out = a[1] && a[1] === b[1] ? `${a[0]}–${b[0]} ${b[1]}` : `${a[0]}${a[1] ? ' ' + a[1] : ''}–${b[0]}${b[1] ? ' ' + b[1] : ''}`;
+      }
+      return out.charAt(0).toUpperCase() + out.slice(1);
+    }
+    // A ready-to-paste event file for staff, so the business: line and the date and time format come out right.
+    // The host (org) gets a business: line, so its page says "Hosted by". A venue that's in the directory needs no line:
+    // the build matches it from where: and says "At". The description stays in the email above to keep the email short.
+    function calendarFile() {
+      const v = id => (form.elements[id] && form.elements[id].value || '').trim();
+      const q = x => JSON.stringify(x);
+      const host = findBiz(v('org'));
+      const desc = v('description');
+      const first = (desc.match(/^.*?[.!?](\s|$)/) || [desc])[0].trim().slice(0, 160);
+      const cost = (form.querySelector('input[name="cost"]:checked') || {}).value || '';
+      const aud = $$('input[name="audience"]:checked', form).map(i => i.value).join(', ');
+      const slug = norm(v('title')).replace(/ /g, '-').slice(0, 60) || 'new-event';
+      const lines = ['---', 'title: ' + q(v('title')), 'date: ' + v('date')];
+      if (v('end_date')) lines.push('end: ' + v('end_date'));
+      if (v('start')) lines.push('time: ' + q(timeText(v('start'), v('end'))));
+      if (host) lines.push('business: ' + host[0]);
+      lines.push('where: ' + q(v('venue') + (v('address') ? ', ' + v('address') : '')), 'summary: ' + q(first),
+        'tags: []   # choose from Arts, Community, Family, Food & drink, Music, Public meetings', 'fill: f-green');
+      if (v('link')) lines.push('link: ' + v('link'), 'link_text: ' + q('Details from ' + v('org')));
+      lines.push('---', '[Description from above, edited to fit]', '',
+        '**Cost:** ' + (cost === 'Paid' ? (v('price') || 'Paid') : 'Free') + '.', '', '**Who it’s for:** ' + (aud || 'Everyone') + '.');
+      return { slug, host, text: lines.join('\n') };
+    }
     function compose() {
       const v = id => (form.elements[id] && form.elements[id].value || '').trim();
       const aud = $$('input[name="audience"]:checked', form).map(i => i.value).join(', ');
       const cost = (form.querySelector('input[name="cost"]:checked') || {}).value || '';
+      const cal = calendarFile();
       const when = v('date') + (v('end_date') ? ' to ' + v('end_date') : '') + ', ' + v('start') + (v('end') ? ' to ' + v('end') : '');
       return [
         'EVENT SUBMISSION: Downtown Kalamazoo events calendar', '',
@@ -750,7 +796,9 @@
         'Description:', v('description'), '',
         'Accessibility:', v('access') || 'Not provided', '',
         'Event link: ' + (v('link') || 'None'), 'Photo link: ' + (v('photo') || 'None'), '',
-        'Submitted by: ' + v('contact') + ', ' + v('org'), 'Email: ' + v('email'), 'Phone: ' + (v('phone') || 'Not provided')
+        'Submitted by: ' + v('contact') + ', ' + v('org'), 'Email: ' + v('email'), 'Phone: ' + (v('phone') || 'Not provided'), '',
+        'FOR DOWNTOWN KALAMAZOO STAFF', 'Directory: ' + (cal.host ? `${cal.host[1]} (business: ${cal.host[0]})` : (findBiz(v('venue')) ? 'Venue ' + findBiz(v('venue'))[1] + ' links on its own' : 'Not in the directory')),
+        `Calendar file: save as content/events/${cal.slug}.md, add the description and tags, then commit.`, '', cal.text
       ].join('\n');
     }
     form.addEventListener('submit', async e => {
@@ -773,7 +821,10 @@
       if (EVENT_FORM.endpoint) {
         btn.disabled = true; btn.textContent = 'Sending…';
         try {
-          const res = await fetch(EVENT_FORM.endpoint, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+          const fd = new FormData(form), cal = calendarFile();
+          fd.append('business_id', cal.host ? cal.host[0] : '');
+          fd.append('calendar_file', cal.text);
+          const res = await fetch(EVENT_FORM.endpoint, { method: 'POST', body: fd, headers: { Accept: 'application/json' } });
           if (!res.ok) throw new Error(res.status);
           form.hidden = true;
           done.innerHTML = '<h2 class="h3">Thanks. Your event was sent.</h2><p>Downtown Kalamazoo staff will review it and email you to confirm the details before it is posted.</p><p><a href="events.html">Back to the events calendar</a></p>';

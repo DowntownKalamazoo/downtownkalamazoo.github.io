@@ -774,6 +774,11 @@ def build_submit():
             ctl = f'<input type="{kind}" id="{fid}" name="{fid}"{r}{desc} {attrs}>'
         return f'<div class="field"><label for="{fid}">{label}{star}</label>{h}{ctl}<p class="err-msg" id="{fid}-err" hidden></p></div>'
 
+    by_id = {b['id']: b for b in directory_page.BIZ}
+    # Directory names and aliases for the form: {normalized name: [id, name, street]}. site.js matches what people type.
+    dir_index = json.dumps({k: [i, by_id[i]['name'], by_id[i]['where']] for k, i in directory_page.name_index().items()},
+                           ensure_ascii=False).replace('</', '<\\/')
+    dir_options = ''.join(f'<option value="{E(b["name"])}"></option>' for b in directory_page.BIZ)
     audience = ''.join(f'<label><input type="checkbox" name="audience" value="{v}"> {v}</label>' for v in
                        ['All ages', 'Families and kids', 'Students and young adults', 'Adults 21+'])
     body = page_hero([('index.html', 'Home'), ('events.html', 'Events'), ('submit-event.html', 'Submit an event')],
@@ -789,7 +794,7 @@ def build_submit():
         <p class="help">Fields marked <span class="req">*</span> are required.</p>
         <fieldset>
           <legend>About your group</legend>
-          {field('org', 'Group, business or venue name', req=True, attrs='autocomplete="organization"')}
+          {field('org', 'Group, business or venue name', req=True, help_='Start typing to pick a downtown business from the list, or type any name.', attrs='autocomplete="organization" list="dir-names"')}
           <div class="row2">
             {field('contact', 'Your name', req=True, attrs='autocomplete="name"')}
             {field('phone', 'Phone', 'tel', help_='Optional. Only used if we have a question.', attrs='autocomplete="tel"')}
@@ -808,7 +813,7 @@ def build_submit():
             {field('end', 'End time', 'time')}
           </div>
           <div class="row2">
-            {field('venue', 'Venue or location name', req=True, help_='For example, Bronson Park or the name of your shop.')}
+            {field('venue', 'Venue or location name', req=True, help_='For example, Bronson Park or the name of your shop. Downtown businesses show up as you type.', attrs='list="dir-names"')}
             {field('address', 'Street address', req=True, help_='Must be in downtown Kalamazoo.', attrs='autocomplete="street-address"')}
           </div>
           {field('description', 'Short description', 'textarea', req=True, help_='Two or three plain-language sentences about what people will see and do. Up to 400 characters.', attrs='maxlength="400"')}
@@ -837,6 +842,8 @@ def build_submit():
           <p class="err-msg" id="agree-err" hidden></p>
         </div>
         <div class="btn-row"><button class="btn btn-primary" type="submit" id="event-submit">Submit event</button></div>
+        <datalist id="dir-names">{dir_options}</datalist>
+        <script type="application/json" id="dir-index">{dir_index}</script>
       </form>
       <div class="done" id="event-done" tabindex="-1" hidden></div>
     </div>

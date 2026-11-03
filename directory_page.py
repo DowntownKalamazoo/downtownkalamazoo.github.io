@@ -50,6 +50,12 @@ def _apply_updates():
     for bid in up.get('social_district') or []:
         if bid in by_id:
             by_id[bid]['sd'] = True
+    # Other names a business goes by, so an event's where: line or a form submission still finds it
+    for bid, names in (up.get('aliases') or {}).items():
+        if bid in by_id:
+            by_id[bid]['aliases'] = [str(n) for n in (names if isinstance(names, list) else [names]) if str(n).strip()]
+        else:
+            print(f'directory-updates.yml: aliases: no business with the id {bid} (check spelling)')
     for a in up.get('add') or []:
         name = a['name'].strip()
         bid = re.sub(r'[^a-z0-9]+', '-', name.lower()).strip('-')
@@ -108,6 +114,32 @@ def sd_badge():
 # Upcoming events by business id, set by yearround_section.py from event files that say `business: <id>`.
 EVENTS = {}
 TODAY = None   # the build's date, set with EVENTS so a run that has started reads "Now through …"
+
+
+def norm_name(s):
+    """A business name reduced for matching: lowercase, "&" read as "and", no leading "The", no punctuation.
+    "The Sit & Stay Winery!" and "sit and stay winery" both become "sit and stay winery". site.js does the same
+    for the event form, so keep the two in step."""
+    s = str(s or '').lower().replace('&', ' and ').replace('’', "'")
+    s = re.sub(r"[^a-z0-9 ]+", ' ', s.replace("'", ''))
+    s = re.sub(r'\s+', ' ', s).strip()
+    return re.sub(r'^the ', '', s)
+
+
+def name_index():
+    """{normalized name or alias: business id}. A name two businesses share is left out, so it never links to the wrong one."""
+    idx, clash = {}, set()
+    for b in BIZ:
+        for n in [b['name']] + list(b.get('aliases') or []):
+            k = norm_name(n)
+            if not k:
+                continue
+            if k in idx and idx[k] != b['id']:
+                clash.add(k)
+            idx[k] = b['id']
+    for k in clash:
+        idx.pop(k, None)
+    return idx
 _MON = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 _DOW = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 _DAY = {d.lower(): i for i, d in enumerate(_DOW)}

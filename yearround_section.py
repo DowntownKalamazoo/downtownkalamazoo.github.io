@@ -3,6 +3,7 @@
 # page, page_hero, in_short, ext, E, date_tile, MON, DOW, EVENTS, SD, directory_page, weave, snow, k_window ...
 import content_loader as CL
 import urllib.parse
+import difflib
 
 TODAY = dt.date.fromisoformat(os.environ['DK_TODAY']) if os.environ.get('DK_TODAY') else dt.date.today()
 DOWNTOWN_EMAIL = 'downtown@kalamazoocity.org'
@@ -64,27 +65,55 @@ def _split_series(files):
 
 
 CAL_EVENTS, SERIES_WEEKS = _split_series(ALL_EVENT_FILES)
+# An event file pasted from a form submission starts with "[Description from above, edited to fit]" in place of
+# the description. Hold it back until that's replaced, so the placeholder never reaches the site.
+_held = [ev for ev in CAL_EVENTS if '[Description from above' in (ev.get('body_html') or '') + str(ev.get('summary') or '')]
+for ev in _held:
+    print(f'::warning file={ev.get("source_file")},title=Events::Not shown yet: replace "[Description from above, edited to fit]" '
+          f'with the event\'s description, then commit again.')
+CAL_EVENTS = [ev for ev in CAL_EVENTS if ev not in _held]
 INHERIT = ('time', 'where', 'tags', 'fill', 'link', 'link_text', 'summary')
 
 
 def events_by_business():
-    """Upcoming dates of calendar events that name a directory business with `business: <id>` in the event file.
-    The id is the end of the business's directory link (directory.html#b-<id>). The directory cards, the event
-    pages' Hosted by box and the calendar's per-business view all read this, so they stay in step on every build."""
+    """Upcoming dates of calendar events connected to a directory listing. An event connects in one of two ways:
+    - `business: <id>` in the event file (the end of the listing's link, after #b-). Its page says "Hosted by".
+    - No business: line, and its where: line starts with a listing's name or one of its aliases (set in
+      directory-updates.yml), like "Sit and Stay Winery, 260 E. Michigan Ave.". Its page says "At …", because
+      the place isn't always the host. `business: none` turns this off for one event.
+    The directory cards, the event pages' box and the calendar's per-business view all read this."""
     known = {b['id']: b for b in directory_page.BIZ}
-    out = {}
+    idx = directory_page.name_index()
+    out, auto = {}, []
     for ev in CAL_EVENTS:
-        bid = str(ev.get('business') or '').strip().lower()
-        if bid.startswith('b-'):
-            bid = bid[2:]
-        if not bid:
+        raw = str(ev.get('business') or '').strip().lower()
+        ev['host_via'] = ''
+        if raw in ('none', 'no', 'false'):
             ev['business'] = ''
             continue
-        if bid not in known:
-            print(f'::warning file={ev.get("source_file")},title=Events::business: {bid} is not in the business directory, so this event '
-                  f'is not linked to a listing. Use the end of the business\'s directory link, after #b- (for example sit-and-stay-winery).')
-            ev['business'] = ''
-            continue
+        bid = raw[2:] if raw.startswith('b-') else raw
+        if bid:
+            if bid not in known:
+                print(f'::warning file={ev.get("source_file")},title=Events::business: {bid} is not in the business directory, so this event '
+                      f'is not linked to a listing. Use the end of the business\'s directory link, after #b- (for example sit-and-stay-winery).')
+                ev['business'] = ''
+                continue
+            ev['host_via'] = 'business'
+        else:
+            where = str(ev.get('where') or '')
+            head = directory_page.norm_name(where.split(',')[0])
+            bid = idx.get(head) or idx.get(directory_page.norm_name(where))
+            if not bid:
+                close = difflib.get_close_matches(head, list(idx), n=1, cutoff=0.86) if head else []
+                if close:
+                    b = known[idx[close[0]]]
+                    print(f'::notice file={ev.get("source_file")},title=Events::where: starts with "{where.split(",")[0].strip()}", which is close to '
+                          f'{b["name"]} in the directory. If that\'s the place, add business: {b["id"]} (or add the name to its aliases in '
+                          f'directory-updates.yml). If not, add business: none.')
+                ev['business'] = ''
+                continue
+            ev['host_via'] = 'where'
+            auto.append(f'{ev["slug"]} → {bid}')
         ev['business'] = bid
         for d, end in CL.occurrences(ev, TODAY):
             # A one-time event keeps its date after it passes, so drop it once its last day is over.
@@ -93,6 +122,8 @@ def events_by_business():
                 continue
             out.setdefault(bid, []).append(dict(date=d, end=end if end and end > d else None, title=ev['title'],
                                                 time=str(ev.get('time') or ''), href=f'events/{ev["slug"]}.html', slug=ev['slug']))
+    if auto:
+        print('Events linked to directory listings from their where: line: ' + ', '.join(auto))
     for v in out.values():
         v.sort(key=lambda o: (o['date'], o['title']))
     return out
@@ -502,8 +533,9 @@ def lineup_section(ev):
     return html + '</div></section>'
 
 
-def host_panel(b, slug):
-    """The Hosted by box on an event page: the business's details, read from the directory on every build, and its other dates."""
+def host_panel(b, slug, via='business'):
+    """The box on an event page with the business's details, read from the directory on every build, and its other dates.
+    "Hosted by" when the event file names the business; "At" when it was matched from where:, since the place isn't always the host."""
     dp = directory_page
     facts = ''
     if b['address']:
@@ -524,7 +556,8 @@ def host_panel(b, slug):
     links = [f'<a href="{{R}}directory.html#b-{b["id"]}">See it in the business directory</a>']
     if len(evs) > 1:
         links.insert(0, f'<a href="{{R}}events.html?at={b["id"]}#list">All {len(evs)} upcoming events here</a>')
-    return (f'<section class="panel host-panel" aria-labelledby="host-h"><h2 id="host-h">Hosted by {E(b["name"])}</h2>'
+    lead = 'At' if via == 'where' else 'Hosted by'
+    return (f'<section class="panel host-panel" aria-labelledby="host-h"><h2 id="host-h">{lead} {E(b["name"])}</h2>'
             + (f'<p>{E(b["desc"])}</p>' if b['desc'] else '')
             + (f'<dl class="biz-facts">{facts}</dl>' if facts else '')
             + (f'<div class="biz-tags">{tags}</div>' if tags else '')
@@ -551,7 +584,7 @@ def build_cal_event_pages():
         if ev.get('link'):
             glance.append(('More', ext(ev['link'], E(ev.get('link_text') or 'Event website'))))
         gl = ''.join(f'<div><dt>{k}</dt><dd>{v}</dd></div>' for k, v in glance if v)
-        host = host_panel(host_b, ev['slug']) if host_b else ''
+        host = host_panel(host_b, ev['slug'], ev.get('host_via')) if host_b else ''
         about = ev.get('body_html') or (
             f'<p>For the latest details, see {ext(ev["link"], E(ev.get("link_text") or "the event website"))}.</p>' if ev.get('link')
             else '<p>More details will be posted here as the date gets closer.</p>')
