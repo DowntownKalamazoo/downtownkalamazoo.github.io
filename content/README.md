@@ -59,6 +59,16 @@ Posts appear on the News & stories page (`news.html`) once you commit.
 3. For an event that runs more than one day, like a weekend festival, add `end:` with the last day. It shows as one bar across those days in the month view, and under each of those days in the list.
 4. For something that happens every month, use `repeats: first friday` (or `second`, `third`, `fourth` or `last`, plus any day) instead of `date`. For something weekly, use `repeats: every wednesday` (or any day). Add `starts:` with the first date, `until:` with the last date, and `skip:` for any dates to leave out. Repeating events show on the calendar up to a year ahead.
 5. Write a description below the second `---` line if you have one. Every event gets its own page either way. Without a description, the page points people to `link` for details.
+6. If a downtown business or organization in the directory is putting on the event, add `business:` with its id (the end of its directory link, for example `directory.html#b-sit-and-stay-winery` → `sit-and-stay-winery`). Leave it out for events in public spaces like Bronson Park, or for hosts that aren't in the directory.
+
+**What `business:` does.** On every build the site connects the event and the listing, so nothing needs updating by hand:
+
+- The event page gets a **Hosted by** box with the business's description, address and directions, phone, website and badges, read from the directory. Fix a listing in `directory-updates.yml` and every one of its event pages updates too. The box also lists the business's next few events and links to all of them.
+- If the event file has no `where:`, it uses the business's name and street address.
+- The business's directory card shows its **next event** on the front and an **Events** tag, and the back links to the event and to **All upcoming events**, which opens the calendar showing only that business's events. A **Events coming up** filter shows every business with something on the calendar.
+- Once an event's dates pass, it drops off the card on its own.
+
+If the id doesn't match a listing, the build shows a yellow warning that names the file, and the event appears on the calendar without the link.
 
 The calendar page has two views. **Month** shows a calendar grid (on phones, a smaller grid where people tap a day to see its events). **List** shows every event by day. Visitors switch between them, and the filter buttons come from each event's `tags`.
 
@@ -104,6 +114,8 @@ Small changes go in `content/directory-updates.yml`:
 
 - **Fix a listing:** under `update:`, add the business's id (the end of its directory link, for example `directory.html#b-rustica` → `rustica`) and the fields to change: `desc`, `website`, `phone`, `address`, `hours` or `cat`.
 - **Hours:** list one line per group of days under `hours:`, like `- Mon–Fri 10am–6pm`, `- Sat 10am–5pm`, `- Sun closed`. They show on the back of the card. Leave hours out and the card says "Not listed yet."
+  When every line follows that pattern (days, then a time or `closed`), the front of the card also shows **Open today** with that day's hours, or **Closed today**, for the day the visitor opens the page. Days can be single (`Thu`), a range (`Tue–Thu`), a list (`Wed, Fri, Sat`) or `Daily`. A line that's only a note, like `- Call ahead on holidays`, is fine. Anything else in a line, like `- Box office Mon–Fri 10am–4pm` or `- Sat brunch 10am–2pm`, means that card skips the Open today line rather than guess, and the hours still show on the back.
+- **Card size:** every card is the same size. The front has the name, address, today's hours, the next event and the badges. The back has the description, hours, phone and links. Keep descriptions to about two sentences (under 140 characters is a good target). A longer one still works but scrolls inside the card. The **All details** view shows each business as one row, with the front and back side by side.
 - **Take a listing off the site:** add its id under `hide:` with a short reason. Offices and professional firms were taken off this way in November 2026, so the directory focuses on places people visit and community organizations.
 - **Social District:** add or remove ids in the `social_district:` list.
 - **Add a business:** copy an entry under `add:` and change it. `cat` is one of `shop`, `dine`, `arts`, `services`, `stay`, `offices` (offices & professional) or `orgs` (organizations). Offices and organizations show in the directory but not in Plan your day. A type with no listings gets no filter button.
