@@ -12,6 +12,11 @@
 #                      - Sun closed
 #                  cat: move a business to another type (shop, dine, arts, services, stay, orgs)
 # social_district: extra ids to tag as Social District
+# aliases:         other names a business goes by, by its id, for example
+#                    aliases:
+#                      sit-and-stay-winery: [Sit & Stay Winery & Brewery]
+#                  An event whose where: line starts with the business's name or one of these links to its listing
+#                  on its own, and the event form suggests them. Capitals, "The", punctuation and & vs. and don't matter.
 # add:             businesses that aren't in the spreadsheet yet (name, cat, address, phone, website, desc, hours,
 #                  social_district: true, downtown_dollars: true). cat is shop, dine, arts, services, stay, offices or orgs.
 #
@@ -463,3 +468,6 @@ update:
 social_district: []
 
 add: []
+
+aliases:
+  sit-and-stay-winery: [Sit & Stay Winery & Brewery, Sit & Stay Winery, Sit and Stay Winery & Brewery]
