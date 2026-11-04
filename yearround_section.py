@@ -1107,12 +1107,12 @@ def build_social():
         <li>Use the trash and recycling bins when you’re done.</li>
       </ul>
       <h2 class="h2" id="list-title" style="margin-top:2rem">Participating businesses</h2>
-      <p>These {len(sd)} open downtown businesses are on the City of Kalamazoo’s list of Social District licensees (April 2026). Look for the Social District tag in the <a href="{{R}}directory.html#social">directory</a>.</p>
+      <p>These {len(sd)} open downtown businesses hold a State of Michigan Social District permit and are on the City of Kalamazoo’s downtown Social District map (checked November 2026). Look for the Social District tag in the <a href="{{R}}directory.html#social">directory</a>.</p>
       <ul class="sd-list" aria-labelledby="list-title">{cards}</ul>
       <p class="note">The list can change. Look for Social District signs and cups at the business, or check the city’s map.</p>
       <h2 class="h2" style="margin-top:2rem">A little history</h2>
       <p>Michigan made social districts possible in 2020. Kalamazoo’s City Commission approved the downtown district unanimously on August 3, 2020, as a way to give people more room outdoors. Kalamazoo now has two: the downtown Central Commons and the Northside Cultural Business District.</p>
-      {sources_list([('City of Kalamazoo: Central Commons Refreshment Area', CITY + '/Community/Downtown-Kalamazoo/Central-Commons-Refreshment-Area'), ('City of Kalamazoo: Social District map, licensees and maintenance plan (April 2026)', map_pdf), ('City of Kalamazoo: Social Districts', CITY + '/Community/Social-Districts'), ('Second Wave Media: Kalamazoo’s Social District (August 2020)', HISTORY_SOURCES['swm-sd'][1])])}
+      {sources_list([('City of Kalamazoo: Central Commons Refreshment Area', CITY + '/Community/Downtown-Kalamazoo/Central-Commons-Refreshment-Area'), ('City of Kalamazoo: Social District map, licensees and maintenance plan (April 2026)', map_pdf), ('City of Kalamazoo: Social Districts', CITY + '/Community/Social-Districts'), ('Michigan Liquor Control Commission: Social District permits by local government and licensee (updated October 29, 2026)', 'https://www.michigan.gov/lara/bureau-list/lcc/licensing-list'), ('Second Wave Media: Kalamazoo’s Social District (August 2020)', HISTORY_SOURCES['swm-sd'][1])])}
     </div>
     <div class="aside">
       <section class="panel f-pink"><h2>Hours</h2><p class="big-num">10 a.m. – midnight</p><p>Every day.</p></section>
