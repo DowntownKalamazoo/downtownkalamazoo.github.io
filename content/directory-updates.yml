@@ -82,6 +82,9 @@ update:
     - Walk-ins 8:45am–noon
   caffe-casa:
     website: ""
+    hours:
+    - Mon–Sat 7:30am–4pm
+    - Sun closed
   dabney-co:
     phone: (269) 315-0689
     hours:
@@ -153,9 +156,12 @@ update:
     - By appointment
     - Tue and Thu–Sun 2–10pm
   blue-dolphin:
+    name: Blue Dolphin
+    desc: A Greek and Mediterranean restaurant on South Burdick Street serving breakfast, lunch and dinner.
     website: https://www.thebluedolphinrestaurant.com/
     hours:
-    - Open daily for breakfast, lunch and dinner
+    - Mon–Sat 7am–8:30pm
+    - Sun 8am–1:30pm
   charters-guitars:
     website: https://www.chartersguitars.com/
     hours:
@@ -390,7 +396,9 @@ update:
     - Sun closed
   rustica:
     hours:
-    - Tue–Sun from 5pm
+    - Tue–Thu 5–8pm
+    - Fri–Sat 5–9pm
+    - Sun 5–8pm
     - Mon closed
   salon-noir:
     hours:
@@ -594,10 +602,116 @@ update:
     - Wed–Fri noon–6pm
     - Sat–Sun 10am–6pm
     - Mon–Tue closed
+  alley-cat:
+    hours:
+    - Mon–Wed 2–11pm
+    - Thu 2pm–midnight
+    - Fri–Sat noon–1am
+    - Sun noon–10pm
+  brick-and-brine:
+    hours:
+    - Mon 4–9pm
+    - Tue–Thu 4–10pm
+    - Fri–Sat 4–11pm
+    - Sun closed
+  cairo-s-kitchen:
+    hours:
+    - Mon–Sat 11am–8pm
+    - Sun closed
+  comensoli-s:
+    hours:
+    - Tue 5–8pm
+    - Wed–Thu 5–9pm
+    - Fri–Sat 4:30–9pm
+    - Sun 5–8pm
+    - Mon closed
+  coney-island-hot-dogs:
+    hours:
+    - Tue–Sat 11am–6pm
+    - Sun–Mon closed
+  copper-s-dog-house:
+    hours:
+    - Mon–Thu 11am–3pm
+    - Fri–Sat 11am–7pm
+    - Sun closed
+  dessert-first:
+    hours:
+    - Tue–Fri 7am–3pm
+    - Sat 9am–1pm
+    - Sun–Mon closed
+  factory-coffee-shop:
+    hours:
+    - Daily 7am–6pm
+  just-fresh:
+    hours:
+    - Mon–Sat 11am–7:30pm
+    - Sun closed
+  the-kalamazoo-stillhouse:
+    hours:
+    - Sun 1–5pm
+    - Mon–Sat closed
+    - Other times by appointment; call or text
+  la-familia:
+    hours:
+    - Mon–Fri 8am–3pm
+    - Sat 8am–2pm
+    - Sun closed
+  locals-bar:
+    hours:
+    - Sun–Thu 11am–midnight
+    - Fri–Sat 11am–1am
+  matchar-a:
+    hours:
+    - Tue–Fri 7:30am–4pm
+    - Sat–Sun 8am–3pm
+    - Mon closed
+  old-dog-tavern:
+    hours:
+    - Tue–Thu 4pm–1am
+    - Fri–Sat 4pm–2am
+    - Sun 4–10pm
+    - Mon closed
+  old-skool:
+    hours:
+    - Mon–Thu 4pm–midnight
+    - Fri–Sat 4pm–1am
+    - Sun closed
+    - Kitchen closes an hour before the bar
+  totally-brewed-caf:
+    hours:
+    - Mon–Thu 7am–3pm
+    - Fri 7am–2pm
+    - Sat–Sun closed
+  wl-social-house:
+    hours:
+    - Tue–Thu 3–10pm
+    - Fri 3pm–midnight
+    - Sat noon–midnight
+    - Sun–Mon closed
+  green-top-tavern:
+    hours:
+    - Mon–Thu 11am–midnight
+    - Fri–Sat 11am–1am
+    - Sun noon–midnight
+  highdive-kitchen-bar:
+    hours:
+    - Mon 11am–9pm
+    - Tue–Thu 11am–10pm
+    - Fri 11am–midnight
+    - Sat 10am–midnight
+    - Sun 10am–9pm
 
 social_district: []
 
-add: []
+add:
+  - name: Papa Pete's
+    cat: dine
+    address: 502 S. Burdick St., Kalamazoo, MI 49007
+    desc: A late-night tavern on South Burdick Street, in the same building as the Blue Dolphin.
+    social_district: true
+    hours:
+    - Mon–Sat 4pm–2am
+    - Sun 4pm–midnight
 
 aliases:
   sit-and-stay-winery: [Sit & Stay Winery & Brewery, Sit & Stay Winery, Sit and Stay Winery & Brewery]
