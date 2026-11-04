@@ -60,6 +60,8 @@ hide:
   warner-norcross-judd-llp: Office or professional firm; removed from the visitor directory Nov 2026
   welsh-associates: Office or professional firm; removed from the visitor directory Nov 2026
   kzoom: Marketing agency office; removed from the visitor directory Nov 2026
+  kalamazoo-pickers: Removed from the directory at staff request, Nov 3, 2026
+  luxe-gift-shop-boutique: Removed from the directory at staff request, Nov 3, 2026
 
 update:
   the-spirit-of-kalamazoo:
@@ -157,7 +159,9 @@ update:
   charters-guitars:
     website: https://www.chartersguitars.com/
     hours:
-    - Closed to the public; call or text
+    - Tue–Fri 11am–6pm
+    - Sat 10am–2pm
+    - Sun–Mon closed
   ladies-library-association:
     website: https://ladieslibrarykzoo.org/
   senior-care-partners-pace:
@@ -351,6 +355,7 @@ update:
     - By appointment
     - Wed–Fri noon–5pm
     - Sat noon–4pm
+    - Sun–Tue closed
   nord-jewelers:
     hours:
     - Tue–Fri 9:30am–5:30pm
@@ -537,6 +542,58 @@ update:
     - Fri 10am–8pm
     - Sat 9am–5pm
     - Sun 2–9pm
+  bos-kitchens:
+    hours:
+    - Tue–Thu 10am–6pm
+    - Fri 10am–5pm
+    - Sat 10am–2pm
+    - Sun–Mon closed
+  bottom-s-up-snacks-spirits:
+    hours:
+    - Mon–Thu 10am–midnight
+    - Fri–Sat 10am–1am
+    - Sun 11am–11pm
+  c-s-perfect-tie:
+    hours:
+    - Tue–Fri noon–6pm
+    - Sat 11am–3:30pm
+    - Sun–Mon closed
+  fireplace-grill-shoppe:
+    hours:
+    - Tue–Thu 10am–6pm
+    - Fri 10am–5pm
+    - Sat 10am–2pm
+    - Sun–Mon closed
+  golden-needle-tailor-shop:
+    hours:
+    - Mon–Fri 10am–5pm
+    - Sat 10am–1pm
+    - Sun closed
+  jp-coins-collectibles:
+    hours:
+    - Mon–Fri noon–4pm
+    - Sat 11am–3pm
+    - Sun closed
+  kalamazoo-antique-mall:
+    hours:
+    - Mon–Fri 11am–5pm
+    - Sat 10am–5pm
+    - Sun closed
+  michigan-office-environments:
+    hours:
+    - Mon–Thu 8am–5pm
+    - Fri 8am–4pm
+    - Sat–Sun closed
+  south-street-cigars-spirits:
+    hours:
+    - Mon–Fri 9:30am–6pm
+    - Sat 9:30am–3pm
+    - Sun closed
+  the-velvet-daisy:
+    hours:
+    - Wed–Fri noon–6pm
+    - Sat–Sun 10am–6pm
+    - Mon–Tue closed
 
 social_district: []
 
