@@ -20,6 +20,10 @@
 # add:             businesses that aren't in the spreadsheet yet (name, cat, address, phone, website, desc, hours,
 #                  social_district: true, downtown_dollars: true). cat is shop, dine, arts, services, stay, offices or orgs.
 #
+# Social District tags checked Nov 3, 2026, against the State (MLCC) Social District permit list (updated
+# Oct 29, 2026) and the City's downtown Social District map (April 2026). Only businesses on both are tagged.
+# To take the tag off a business, add sd: false under its id in update:.
+#
 # November 2026 update: offices and professional firms were taken off the site (listed under hide:), and
 # hours, phone numbers and website links were added from each business's own website, checked Oct 30-31, 2026.
 
@@ -395,6 +399,7 @@ update:
     - Fri–Sat 4–11pm
     - Sun closed
   rustica:
+    sd: false
     hours:
     - Tue–Thu 5–8pm
     - Fri–Sat 5–9pm
@@ -499,6 +504,7 @@ update:
     - Mon–Sat 10am–6pm
     - Sun noon–5pm
   grazing-table:
+    sd: false
     hours:
     - Tue–Sat 11am–3pm
     - Sun–Mon closed
@@ -626,6 +632,7 @@ update:
     - Sun 5–8pm
     - Mon closed
   coney-island-hot-dogs:
+    sd: false
     hours:
     - Tue–Sat 11am–6pm
     - Sun–Mon closed
@@ -640,6 +647,7 @@ update:
     - Sat 9am–1pm
     - Sun–Mon closed
   factory-coffee-shop:
+    sd: false
     hours:
     - Daily 7am–6pm
   just-fresh:
@@ -701,7 +709,7 @@ update:
     - Sat 10am–midnight
     - Sun 10am–9pm
 
-social_district: []
+social_district: [locals-bar]
 
 add:
   - name: Papa Pete's
@@ -712,6 +720,14 @@ add:
     hours:
     - Mon–Sat 4pm–2am
     - Sun 4pm–midnight
+  - name: Monaco Bay & Wild Bull
+    cat: dine
+    address: 300 E Michigan Ave, Kalamazoo, MI 49007
+    social_district: true
+  - name: Park Club
+    cat: dine
+    address: 219 W South St, Kalamazoo, MI 49007
+    social_district: true
 
 aliases:
   sit-and-stay-winery: [Sit & Stay Winery & Brewery, Sit & Stay Winery, Sit and Stay Winery & Brewery]
