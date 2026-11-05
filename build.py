@@ -866,7 +866,38 @@ NEWS_INTERESTS = ['Weekend and holiday events', 'New shops and restaurants', 'Gi
                   'Arts, music and culture', 'Parking and construction updates']
 
 
+# Michigan Downtown Association conference pop-up. Through this date, the homepage shows it
+# instead of the holiday welcome. The daily rebuild switches back on its own the next morning.
+MDA_POPUP_UNTIL = dt.date(2026, 11, 6)
+
+
+def mda_dialog():
+    return '''<dialog class="welcome mda" id="mda-dialog" aria-labelledby="mda-title" aria-describedby="mda-desc">
+  <button class="icon-btn welcome-x" type="button" data-mda-close aria-label="Close">✕</button>
+  <div class="welcome-art" aria-hidden="true" style="background-image:url({R}pattern-quilt.webp)"></div>
+  <div class="welcome-body" tabindex="-1" id="mda-body">
+    <p class="eyebrow">Michigan Downtown Association Conference · Nov. 5–6</p>
+    <h2 id="mda-title">Welcome, downtown advocates</h2>
+    <p id="mda-desc">Thank you for spending these days in Downtown Kalamazoo. You know better than most why a downtown matters: the shops, the stages, the sidewalks and the people who keep them busy.</p>
+    <div class="note mda-note">
+      <strong>A note for our business owners</strong>
+      Conference guests are downtown through Friday: the people who manage and champion downtowns across Michigan. Say hello when they stop in, and show them what makes Downtown Kalamazoo work.
+    </div>
+    <p class="mda-week"><span class="mda-label">Friday, Nov. 6</span> <a href="{R}holidays/events/first-friday-nov.html">First Friday &amp; Art Hop</a>: galleries, shops and studios open their doors from 5 p.m. This month’s theme is Legacy.</p>
+    <p class="mda-sig">Shop local while you’re here. Every purchase downtown keeps a small business open.</p>
+    <ul class="mda-picks" aria-label="Where to start">
+      <li><a href="{R}directory.html" style="--c:var(--dk-blue)"><span class="mda-t">Explore downtown</span> <span>Shops, restaurants, studios and stages</span></a></li>
+      <li><a href="{R}holidays/plan.html" style="--c:var(--dk-pink)"><span class="mda-t">Plan your day</span> <span>50 ready-made plans, or build your own</span></a></li>
+      <li><a href="{R}dollars.html" style="--c:var(--dk-green)"><span class="mda-t">Downtown Dollars</span> <span>The gift that stays downtown</span></a></li>
+    </ul>
+    <div class="btn-row mda-foot"><a class="btn btn-primary" href="{R}events.html">See what’s on this week</a><button class="linkish" type="button" data-mda-close>Maybe later</button></div>
+  </div>
+</dialog>'''
+
+
 def welcome_dialog():
+    if HUB_TODAY <= MDA_POPUP_UNTIL:
+        return mda_dialog()
     return '''<dialog class="welcome" id="welcome-dialog" aria-labelledby="welcome-title" aria-describedby="welcome-text">
   <div class="welcome-art" aria-hidden="true" style="background-image:url({R}pattern-squiggle.webp)"></div>
   <div class="welcome-body" tabindex="-1" id="welcome-body">

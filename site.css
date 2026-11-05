@@ -628,6 +628,24 @@ dialog::backdrop { background: var(--scrim); }
 .news-done { border-radius: var(--radius); padding: 1rem 1.1rem; background: var(--surface); border: 2px solid var(--fg); display: grid; gap: .6rem; }
 .news-done[hidden] { display: none; }
 
+/* ---------- MDA conference pop-up (shares the .welcome shell; still band, no drift) ---------- */
+.welcome.mda { width: min(38rem, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; overscroll-behavior: contain; }
+.mda .welcome-art { animation: none; height: 7rem; background-size: 440px auto; }
+.mda .welcome-x { z-index: 1; }
+.mda .note { max-width: none; font-size: 1rem; }
+.mda .note strong { display: block; font-family: var(--font-ui); font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; margin-bottom: .25rem; }
+.mda-week { border: 2px solid var(--fg); border-radius: var(--radius); padding: .75rem 1rem; }
+.mda-label { display: block; font-family: var(--font-ui); font-weight: 800; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
+.welcome p.mda-sig { font-size: .95rem; color: var(--muted); }
+.mda-picks { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; }
+.mda-picks a { box-sizing: border-box; display: grid; align-content: start; gap: .15rem; height: 100%; padding: .75rem .9rem; border-radius: var(--radius); background: var(--surface); color: var(--fg); border: 1px solid var(--line); border-top: 8px solid var(--c); text-decoration: none; font-family: var(--font-body); font-weight: 500; font-size: .88rem; }
+.mda-picks .mda-t { font-family: var(--font-ui); font-weight: 700; font-size: .92rem; }
+.mda-picks a:hover .mda-t { text-decoration: underline; }
+.mda-foot { align-items: center; }
+.mda-foot .linkish { min-height: 2.75rem; }
+@media (max-width: 620px) { .mda-picks { grid-template-columns: 1fr; } .mda .welcome-art { height: 4.5rem; } .mda .welcome-body { padding: 1.2rem 1.2rem 1.4rem; } }
+@media (forced-colors: active) { .mda-picks a { border-top-color: CanvasText; } }
+
 /* ---------- Brand patterns by section, painted edges ---------- */
 .page-hero { position: relative; overflow: hidden; isolation: isolate; }
 .hero-pat { position: absolute; top: 0; bottom: 0; right: 0; width: calc(13rem + max(0px, (100vw - 72rem) / 2)); z-index: -1;

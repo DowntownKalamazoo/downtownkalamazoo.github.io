@@ -469,6 +469,29 @@
     }
   }
 
+  /* ---------- Home: MDA conference pop-up, once per visitor (own key, so the holiday welcome still shows later) ---------- */
+  const mda = $('#mda-dialog');
+  if (mda && mda.showModal) {
+    let seen = true;
+    try { seen = !!localStorage.getItem('dk-mda-seen'); } catch (e) {}
+    const markSeen = () => { try { localStorage.setItem('dk-mda-seen', '1'); } catch (e) {} };
+    let lastFocus = null;
+    const closeMda = () => { mda.close(); };
+    mda.addEventListener('close', () => { markSeen(); if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true }); });
+    $$('[data-mda-close]', mda).forEach(b => b.addEventListener('click', closeMda));
+    mda.addEventListener('click', e => { if (e.target === mda) closeMda(); });
+    if (!seen) {
+      setTimeout(() => {
+        if ($$('dialog[open]').length) return;
+        lastFocus = document.activeElement;
+        mda.showModal();
+        mda.scrollTop = 0;
+        $('#mda-body', mda).focus({ preventScroll: true });
+        markSeen();
+      }, 3500);
+    }
+  }
+
   /* ---------- Home hero: pause or play the weaving lines ---------- */
   const weaveBtn = $('#weave-toggle'), weaveBox = $('#hero-weave');
   if (weaveBtn && weaveBox) {
