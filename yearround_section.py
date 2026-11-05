@@ -1135,8 +1135,10 @@ LEADS = {
                        intro='The DDA and DEGA boards decide these projects together at their public monthly meetings.'),
     'City': dict(label='Led by the City of Kalamazoo', group='Led by the City of Kalamazoo', cls='lead-city',
                  intro='City of Kalamazoo projects and plans that shape downtown, from street rebuilds to parking and the citywide vision.'),
+    'Private': dict(label='Private owner or developer', group='Private investment', cls='lead-private',
+                    intro='Restorations and new buildings by private owners and developers.'),
 }
-LEAD_ORDER = ['DEGA', 'DDA & DEGA', 'DDA', 'City']
+LEAD_ORDER = ['DEGA', 'DDA & DEGA', 'DDA', 'City', 'Private']
 
 
 def lead_line(lead):
@@ -1145,36 +1147,13 @@ def lead_line(lead):
     return f'<p class="lead-tag {LEADS[lead]["cls"]}"><span class="lead-mark" aria-hidden="true"></span>{E(LEADS[lead]["label"])}</p>'
 
 
-PROJECTS = [
-    dict(title='Placemaking projects', lead='DEGA', status='Underway', pat='squiggle', fill='f-green',
-         text='Turning downtown’s alleys, plazas and streets into places people want to spend time. Four projects are fully or partially funded: Farmers Alley Pocket Park, Rose Street Plaza, Water Street and the South Burdick festival street. Farmers Alley and Rose Street move to construction first.',
-         links=[('City of Kalamazoo project page', CITY + '/Community/Projects/2025/Downtown-Kalamazoo-Placemaking')], page='placemaking.html', page_label='See the placemaking projects'),
-    dict(title='Downtown Master Pedestrian Wayfinding and Signage', lead='DEGA', status='In planning', pat='loops', fill='f-mist',
-         text='A master plan for the signs, maps and markers that help people on foot find their way around downtown: to businesses, parking, parks, trails and events. It’s part of the first phase of the DDA and DEGA’s ten-year plan for downtown, with the master plan scheduled for 2026 and new signs phased in starting in 2027.',
-         links=[('WWMT: the DDA and DEGA’s ten-year plan (June 2025)', 'https://wwmt.com/news/local/support-kalamazoo-ten-year-transformation-plan-downtown-development-business-safety-signage-project')]),
-    dict(title='Bigbelly expansion', lead='DEGA', status='Complete', pat='dots', fill='f-green',
-         text='Twenty-six new smart trash and recycling units replaced 58 old cans in 2025, bringing downtown to 51 dual units, funded by the DEGA.',
-         links=[], page='waste-recycling.html'),
-    dict(title='Arcadia Creek Festival Place', lead='City', status='Underway', pat='waves', fill='f-blue',
-         text='A $3.6 million transformation of downtown’s festival grounds, with a new pedestrian bridge, stages, a playground, water features, a pavilion and amphitheater, and a plaza. The park closed in December 2025 for the work and is expected to reopen in 2027 at the earliest.',
-         links=[('WOOD TV 8 coverage (March 2026)', 'https://www.woodtv.com/news/kalamazoo-county/kalamazoo-pride-other-events-still-happening-at-arcadia-creek-amid-renovation/amp')]),
-    dict(title='Streets for All: Kalamazoo Avenue', lead='City', status='Underway', pat='dashes', fill='f-red',
-         text='Kalamazoo Avenue is being rebuilt from the ground up, starting in July 2026 and moving east one block at a time through 2028: new water and storm lines, buried power lines, new lighting, sidewalks and street trees. Later it will become a two-way street. One lane stays open for most of the work.',
-         links=[('Project page and current detours', STREETS_FOR_ALL), ('Construction email updates', 'https://mailchi.mp/kalamazoocity/kalamazoo-ave-streets-for-all')]),
-    dict(title='Downtown parking updates', lead='City', status='Complete', pat='maze', fill='f-mist',
-         text='New parking zones and rates started April 1, 2026, with the first 90 minutes free in the Epic Center and Kalamazoo Mall ramps. New accessible parking spaces are being added on downtown blocks that didn’t have them, after curb ramp upgrades.',
-         links=[('City of Kalamazoo announcement', 'https://www.kalamazoocity.org/News-articles/Downtown-Parking-Updates-Take-Effect-to-Improve-Parking-Access-and-Availability')], news='downtown-parking-updates'),
-    dict(title='Imagine Kalamazoo 2035', lead='City', status='Open for comment', pat='quilt', fill='f-mist',
-         text='The City’s updated vision for Kalamazoo, which will guide future priorities and investments. A draft was released for public review in September 2026.',
-         links=[('Review the draft vision', 'https://www.kalamazoocity.org/News-articles/Review-and-Comment-on-the-Draft-Imagine-Kalamazoo-2035-Vision')]),
-]
-
 # Styles for the Projects, Placemaking and Investment pages live here, so this section can be updated without touching site.css.
 SECTION_CSS = ('<style>'
     '.lead-tag { margin: 0; display: flex; align-items: center; gap: .45rem; font-family: var(--font-ui); font-weight: 700; font-size: .85rem; }'
     '.lead-mark { width: .95rem; height: .95rem; flex: none; border: 2px solid var(--fg); }'
     '.lead-dega .lead-mark, .lead-dda .lead-mark { background: var(--dk-blue); border-radius: 50%; }'
     '.lead-city .lead-mark { background: var(--dk-red); border-radius: 3px; }'
+    '.lead-private .lead-mark { background: var(--bg); width: .78rem; height: .78rem; margin: 0 .09rem; transform: rotate(45deg); }'
     '.lead-group + .lead-group { margin-top: 3rem; }'
     '.lead-group > h2 { display: flex; align-items: center; gap: .6rem; }'
     '.lead-group > h2 .lead-mark { width: 1.3rem; height: 1.3rem; }'
@@ -1203,31 +1182,209 @@ def project_card(p):
             f'<div class="project-body">{status_tag(p["status"])}<h3 class="h3">{E(p["title"])}</h3>{lead_line(p.get("lead"))}<p>{E(p["text"])}</p>{f"<ul class=project-links>{links}</ul>" if links else ""}</div></li>')
 
 
+# ---------------------------------------------------------------- Projects page ("Downtown in progress")
+# One page for every project downtown, grouped by where it stands. The projects come from three content folders:
+# content/projects (City, DDA and DEGA projects), content/placemaking and content/investment (private projects).
+PROJECT_FILES = CL.projects()
+STAGES = [
+    ('Under construction', 'pj-now', 'Under construction now', 'Work you can see today. Businesses nearby are open; check detours before you go.'),
+    ('Approved', 'pj-next', 'Approved, coming next', 'Plans and funding are approved. Construction hasn’t started yet.'),
+    ('Planning', 'pj-plan', 'In planning and design', 'Ideas taking shape. Designs and dates may still change.'),
+    ('Finished', 'pj-done', 'Recently finished', 'Finished in the last two years.'),
+]
+STEP_OF = {k: i + 1 for i, k in enumerate(CL.PROGRESS)}
+STEP_NAME = {'Planning': 'Planning and design', 'Approved': 'Approved', 'Under construction': 'Under construction', 'Finished': 'Finished'}
+DEFAULT_PATS = ['arcs', 'pinstripes', 'maze', 'stripes', 'speckle', 'squiggle', 'waves', 'dashes', 'confetti', 'dots', 'loops', 'quilt']
+PROJECTS_CSS = ('<style>'
+    '.pj-glance { background: var(--dk-navy); color: #fff; padding-block: 1.6rem; }'
+    '.pj-glance h2 { font-family: var(--font-ui); font-weight: 800; font-size: .9rem; letter-spacing: .06em; text-transform: uppercase; margin: 0 0 1rem; color: #fff; }'
+    '.pj-glance ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }'
+    '@media (max-width: 560px) { .pj-glance ul { gap: .6rem; } .pj-glance li { font-size: .85rem; line-height: 1.3; } .pj-glance .n { font-size: 1.6rem; } }'
+    '.pj-glance li { border-top: 4px solid var(--accent); padding-top: .6rem; }'
+    '.pj-glance .n { display: block; font-family: var(--font-display); font-weight: 800; font-size: 2.2rem; line-height: 1.1; }'
+    '.pj-controls { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1rem 2rem; margin: 0 0 .5rem; }'
+    ':root:not(.js) .pj-filter { display: none; }'
+    '.pj-filter .label { margin: 0 0 .5rem; }'
+    '.pj-controls .lead-key { margin: 0; }'
+    '.pj-stage { margin-top: 3.25rem; }'
+    '.pj-stage-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem 1rem; border-bottom: 3px solid var(--fg); padding-bottom: .6rem; margin-bottom: 1.25rem; }'
+    '.pj-stage-head h2 { margin: 0; }'
+    '.pj-stage-head p { margin: 0; }'
+    '.pj-count { font-family: var(--font-ui); font-weight: 700; font-size: .9rem; }'
+    '.pj-stage-head .pj-intro { flex-basis: 100%; }'
+    '.pj-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: 1.25rem; }'
+    '.pj-card { border: 2px solid var(--fg); border-radius: 16px; overflow: hidden; background: var(--bg); display: flex; flex-direction: column; }'
+    '.pj-card[hidden] { display: none; }'
+    '.pj-band { height: 4.25rem; border-bottom: 2px solid var(--fg); background-size: 260px auto; background-position: center; display: flex; align-items: center; padding: 0 .8rem; margin: 0; }'
+    '.pj-now .pj-band { height: 8.25rem; align-items: flex-end; padding-bottom: .8rem; }'
+    '.pj-band-photo { height: 8.25rem; width: 100%; object-fit: cover; border-bottom: 2px solid var(--fg); }'
+    '.pj-kind { background: var(--bg); color: var(--fg); border: 2px solid var(--fg); padding: .15rem .6rem; font-family: var(--font-ui); font-weight: 700; font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; }'
+    '@media (prefers-reduced-motion: no-preference) { .pj-band { transition: background-position .6s ease; } .pj-card:hover .pj-band { background-position: calc(50% + 40px) center; } }'
+    '.pj-body { padding: 1rem 1.15rem 1.2rem; display: flex; flex-direction: column; gap: .55rem; flex: 1; }'
+    '.pj-body h3 { font-family: var(--font-ui); font-weight: 700; font-size: 1.2rem; line-height: 1.25; margin: 0; }'
+    '.pj-body h3 a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: .2em; } .pj-body h3 a:hover { color: var(--link); }'
+    '.pj-body p { margin: 0; }'
+    '.pj-track { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }'
+    '.pj-track span { height: 8px; border: 1px solid var(--fg); border-radius: 2px; }'
+    '.pj-track .on { background: var(--fg); }'
+    '@media (forced-colors: active) { .pj-track .on { forced-color-adjust: none; background: CanvasText; } }'
+    '.pj-step { font-family: var(--font-ui); font-weight: 700; font-size: .8rem; }'
+    '.pj-next { margin-top: auto !important; padding-top: .55rem; border-top: 1px solid var(--line); font-size: .95rem; }'
+    '.pj-next strong { font-family: var(--font-ui); }'
+    '.pj-older { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); gap: 0 2rem; }'
+    '.pj-older li { display: flex; justify-content: space-between; align-items: center; gap: .75rem; padding: .7rem 0; border-bottom: 1px solid var(--line); }'
+    '.pj-older li[hidden] { display: none; }'
+    '.pj-older .sw { width: 2.25rem; height: 2.25rem; flex: none; border: 2px solid var(--fg); border-radius: 4px; background-size: 120px auto; background-position: center; }'
+    '.pj-older .t { display: flex; align-items: center; gap: .75rem; font-weight: 600; }'
+    '.pj-older .y { font-family: var(--font-ui); font-weight: 600; font-size: .9rem; white-space: nowrap; }'
+    '.pj-empty { font-style: italic; }'
+    '</style>')
+
+PROJECTS_JS = """(function(){var root=document.getElementById('pj');if(!root)return;
+var btns=root.querySelectorAll('[data-pj-filter]'),live=document.getElementById('pj-status');
+function apply(f,say){var total=0;btns.forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-pj-filter')===f));});
+root.querySelectorAll('[data-pj-stage]').forEach(function(sec){var n=0;sec.querySelectorAll('[data-type]').forEach(function(li){var show=f==='all'||li.getAttribute('data-type')===f;li.hidden=!show;if(show)n++;});
+var c=sec.querySelector('.pj-count');if(c)c.textContent=n+(n===1?' project':' projects');var e=sec.querySelector('.pj-empty');if(e)e.hidden=n>0;total+=n;});
+if(say&&live)live.textContent='Showing '+total+(total===1?' project.':' projects.');}
+btns.forEach(function(b){b.addEventListener('click',function(){var f=b.getAttribute('data-pj-filter');apply(f,true);
+try{history.replaceState(null,'',f==='all'?location.pathname:'#'+f);}catch(e){}});});
+var h=location.hash.slice(1);if(h==='public'||h==='private')apply(h,false);})();"""
+
+
+def _all_projects():
+    """Every project from the three folders, each tagged with its source so the cards can link the right way."""
+    out = []
+    for p in PROJECT_FILES:
+        out.append(dict(p, source='projects', type='public', kind=p['kind'] or 'Project'))
+    for p in PLACEMAKING:
+        out.append(dict(p, source='placemaking', type='public', kind=p['kind'] or 'Placemaking'))
+    for p in INVESTMENTS:
+        out.append(dict(p, source='investment', type='private', kind=p['kind'] or 'Private investment'))
+    for i, p in enumerate(out):
+        p['pattern'] = p['pattern'] or DEFAULT_PATS[i % len(DEFAULT_PATS)]
+    return out
+
+
+def _next_line(text):
+    """'Finishes: November 2026' shows the part before the colon in bold."""
+    if not text:
+        return ''
+    head, sep, rest = text.partition(':')
+    if sep and len(head) <= 24:
+        return f'<p class="pj-next"><strong>{E(head)}:</strong> {E(rest.strip())}</p>'
+    return f'<p class="pj-next">{E(text)}</p>'
+
+
+def _card_links(p):
+    links = ''
+    if p['source'] == 'placemaking':
+        links += f'<li><a href="{{R}}placemaking/{p["slug"]}.html">More about {E(p["title"])}</a></li>'
+    if p.get('page'):
+        links += f'<li><a href="{{R}}{E(p["page"])}">{E(p.get("page_label") or "Learn more")}</a></li>'
+    if p.get('news') and SHOW_NEWS and p['source'] == 'projects':
+        links += f'<li><a href="{{R}}news/{E(p["news"])}.html">Read our story</a></li>'
+    links += ''.join(link_item(l['text'], str(l['url']).strip()) for l in p['links'])
+    return f'<ul class="project-links">{links}</ul>' if links else ''
+
+
+def project_tile(p):
+    step = STEP_OF[p['progress']]
+    track = ''.join(f'<span{" class=on" if n <= step else ""}></span>' for n in range(1, 5))
+    if p.get('image'):
+        band = f'<img class="pj-band-photo" src="{{R}}{E(p["image"])}" alt="{E(p["image_alt"])}" loading="lazy">'
+    else:
+        band = f'<p class="pj-band" style="background-image:url({{R}}pattern-{p["pattern"]}-sm.webp)"><span class="pj-kind"><span class="sr-only">Type: </span>{E(p["kind"])}</span></p>'
+    title = (f'<a href="{{R}}placemaking/{p["slug"]}.html">{E(p["title"])}</a>' if p['source'] == 'placemaking' else E(p['title']))
+    where = f'<p class="place-where"><span class="sr-only">Where: </span>{E(p["where"])}</p>' if p.get('where') else ''
+    summary = f'<p>{E(p["summary"])}</p>' if p.get('summary') else ''
+    nxt = _next_line(p['next'] or (p.get('status') if p['source'] == 'investment' else ''))
+    return (f'<li class="pj-card" data-type="{p["type"]}">{band}<div class="pj-body">'
+            f'<div class="pj-track" aria-hidden="true">{track}</div><p class="pj-step">Step {step} of 4: {STEP_NAME[p["progress"]]}</p>'
+            f'<h3>{title}</h3>{lead_line(p["lead"])}{where}{summary}{nxt}{_card_links(p)}</div></li>')
+
+
 def build_projects():
-    groups = ''
-    for k in LEAD_ORDER:
-        items = [p for p in PROJECTS if p.get('lead') == k]
+    allp = _all_projects()
+    recent_from = TODAY.year - 1
+    sort_key = lambda p: (p['type'] == 'private', p['order'], p['title'])
+    groups, counts = '', {}
+    for prog, sid, heading, intro in STAGES:
+        items = [p for p in allp if p['progress'] == prog and (prog != 'Finished' or (p['finished'] or 0) >= recent_from)]
+        items.sort(key=sort_key)
+        counts[prog] = len(items)
         if not items:
             continue
-        gid = 'lead-' + re.sub(r'[^a-z]+', '-', k.lower()).strip('-')
-        more = f' <a href="{{R}}boards.html">Meet the DDA &amp; DEGA</a>.' if k != 'City' else ''
-        groups += (f'<section class="lead-group" aria-labelledby="{gid}"><h2 class="h2 {LEADS[k]["cls"]}" id="{gid}"><span class="lead-mark" aria-hidden="true"></span>{E(LEADS[k]["group"])}</h2>'
-                   f'<p class="lead-intro">{E(LEADS[k]["intro"])}{more}</p><ul class="projects">{"".join(project_card(p) for p in items)}</ul></section>')
-    body = SECTION_CSS + page_hero([('index.html', 'Home'), ('about.html', 'About'), ('projects.html', 'Projects')], 'Downtown in progress', 'Projects',
-                     'New plazas and pocket parks, rebuilt streets, a creekside festival site and new signs. Here’s what’s changing downtown, who’s leading it, and where to follow along.', 'f-red')
-    body += f'''<section class="section" aria-label="Projects by who leads them">
+        n = len(items)
+        groups += (f'<section class="pj-stage {sid}" data-pj-stage aria-labelledby="{sid}-h"><div class="pj-stage-head">'
+                   f'<h2 class="h2" id="{sid}-h">{heading}</h2><p class="pj-count">{n} project{"s" if n != 1 else ""}</p><p class="pj-intro">{E(intro)}</p></div>'
+                   f'<p class="pj-empty" hidden>Nothing in this stage matches the filter.</p>'
+                   f'<ul class="pj-grid">{"".join(project_tile(p) for p in items)}</ul></section>')
+    older = sorted([p for p in allp if p['progress'] == 'Finished' and (p['finished'] or 0) < recent_from],
+                   key=lambda p: (-(p['finished'] or 0), p['title']))
+    older_html = ''
+    if older:
+        rows = ''
+        for p in older:
+            name = ext(str(p['links'][0]['url']).strip(), E(p['title'])) if p['links'] else E(p['title'])
+            rows += (f'<li data-type="{p["type"]}"><span class="t"><span class="sw" style="background-image:url({{R}}pattern-{p["pattern"]}-sm.webp)" aria-hidden="true"></span>{name}</span>'
+                     f'<span class="y">{p["finished"] or "Finished"}</span></li>')
+        older_html = (f'<section class="pj-stage" data-pj-stage aria-labelledby="pj-older-h"><div class="pj-stage-head"><h2 class="h2" id="pj-older-h">Finished since 2016</h2>'
+                      f'<p class="pj-intro">Restored landmarks and new buildings that have already opened.</p></div>'
+                      f'<p class="pj-empty" hidden>Nothing here matches the filter.</p><ul class="pj-older">{rows}</ul></section>')
+    glance = ''.join(f'<li class="{fill}"><span class="n">{counts.get(k, 0)}</span>{label}</li>' for k, label, fill in [
+        ('Under construction', 'under construction now', 'f-pink'), ('Approved', 'approved and coming next', 'f-blue'), ('Planning', 'in planning and design', 'f-green')])
+    key = '<ul class="lead-key" aria-label="Who leads each project">' + ''.join(f'<li>{lead_line(k)}</li>' for k in ['DEGA', 'City', 'Private']) + '</ul>'
+    chips = ''.join(f'<button type="button" class="chip" data-pj-filter="{v}" aria-pressed="{"true" if v == "all" else "false"}">{t}</button>'
+                    for v, t in [('all', 'All projects'), ('public', 'Public spaces and streets'), ('private', 'Private investment')])
+    body = SECTION_CSS + PROJECTS_CSS + page_hero([('index.html', 'Home'), ('about.html', 'About'), ('projects.html', 'Projects')], 'Projects', 'Downtown in progress',
+                     'New plazas, rebuilt streets, a new arena and restored landmarks. Here’s everything changing downtown, where it stands, and how to follow along.', 'f-red')
+    body += f'''<section class="pj-glance" aria-labelledby="pj-glance-h"><div class="wrap"><h2 id="pj-glance-h">At a glance</h2><ul>{glance}</ul></div></section>
+<section class="section" id="pj" aria-label="Projects by stage">
   <div class="wrap">
-    {in_short('Projects are grouped by who leads them: the Downtown Economic Growth Authority (DEGA), or the City of Kalamazoo. Each project shows what is happening now and links for updates.')}
-    {lead_key({p.get('lead') for p in PROJECTS})}
-    {groups}
-    <div class="two-col" style="margin-top:2.5rem">
-      <section class="panel f-blue"><h2>Investing in downtown</h2><p>Restored landmarks and new buildings from private owners and developers.</p><p><a href="{{R}}investment.html">See private investment downtown</a></p></section>
-      <section class="panel"><h2>Construction and detours</h2><p>Downtown businesses stay open during construction. For current closures, see {ext(STREETS_FOR_ALL, 'Streets for All updates')}, or call 311.</p></section>
+    {in_short('Every project downtown, public and private, grouped by where it stands: in planning, approved, under construction or finished. The circle, square and diamond show who leads each one.')}
+    <div class="pj-controls">
+      <div class="pj-filter"><p class="label" id="pj-show">Show</p><div class="chips" role="group" aria-labelledby="pj-show">{chips}</div></div>
+      {key}
     </div>
-    <section class="panel f-pink" style="margin-top:1rem"><h2>Have a question about a project?</h2><p>Email {DOWNTOWN_EMAIL} or call {DOWNTOWN_PHONE}. DDA and DEGA projects are discussed at the monthly <a href="{{R}}boards.html">DDA &amp; DEGA meetings</a>.</p></section>
+    <p class="sr-only" id="pj-status" role="status" aria-live="polite"></p>
+    {groups}
+    {older_html}
+    <section class="pj-stage" id="placemaking" aria-labelledby="pj-place-h">
+      <div class="pj-stage-head"><h2 class="h2" id="pj-place-h">About placemaking</h2></div>
+      <div class="two-col">
+        <div class="prose" style="max-width:none">
+          <p>One-way streets and fast traffic push people on foot toward downtown’s alleys and the Kalamazoo Mall. Placemaking makes those spaces worth lingering in, with lighting, public art, landscaping, places to sit and room for events, and ties them together so it’s easy to walk from one to the next. The work follows the Downtown Kalamazoo Placemaking plan, designed by SmithGroup with the City of Kalamazoo, and projects move ahead as funding is secured.</p>
+          <p>Also in the plan, with schedules that depend on funding:</p>
+          <ul>
+            <li><strong>Exchange Alley:</strong> lighting, public art and painted pavement, with a walking connection from Farmers Alley to Rose Street.</li>
+            <li><strong>North Kalamazoo Mall:</strong> a design that’s more open to festivals, pop-up events, walking and biking.</li>
+          </ul>
+        </div>
+        <div class="aside">
+          <section class="panel f-green" aria-labelledby="pj-place-docs"><h3 id="pj-place-docs">Plans and designs</h3><ul>{link_item('City of Kalamazoo project page', PLACE_URL)}{link_item('Designs from SmithGroup', 'https://downtown-placemaking-smithgroup.hub.arcgis.com/')}{link_item('DDA & DEGA budgets and reports', 'boards.html')}</ul></section>
+        </div>
+      </div>
+    </section>
+    <div class="two-col" style="margin-top:2.5rem">
+      <section class="panel f-blue"><h2>Construction and detours</h2><p>Downtown businesses stay open during construction. For current closures, see {ext(STREETS_FOR_ALL, 'Streets for All updates')}, or call 311.</p></section>
+      <section class="panel f-pink"><h2>Have a question about a project?</h2><p>Email {DOWNTOWN_EMAIL} or call {DOWNTOWN_PHONE}. DDA and DEGA projects are discussed at the monthly <a href="{{R}}boards.html">DDA &amp; DEGA meetings</a>. Thinking about investing downtown? See <a href="{{R}}businesses.html">business resources</a>.</p></section>
+    </div>
   </div>
-</section>'''
-    page('projects.html', 'Projects', body, None, 'Downtown Kalamazoo projects led by the DEGA and the City of Kalamazoo: placemaking, wayfinding and signage, Arcadia Creek, Streets for All and more.')
+</section>
+<script>{PROJECTS_JS}</script>'''
+    page('projects.html', 'Projects', body, None, 'Every project changing downtown Kalamazoo, public and private, grouped by where it stands: planning, approved, under construction and finished.')
+
+
+def moved_page(path, title, target, text):
+    """A small page at an old address that sends people to where the content lives now."""
+    body = page_hero([('index.html', 'Home'), (path, title)], 'This page has moved', title, text, 'f-mist')
+    body += f'<section class="section"><div class="wrap"><p><a class="btn btn-primary" href="{{R}}{target}">Go to Projects</a></p></div></section>'
+    page(path, title, body, None, text)
+    out = os.path.join(OUT, path)
+    html = open(out, encoding='utf-8').read()
+    html = html.replace('<meta name="description"', f'<meta http-equiv="refresh" content="0; url={target}">\n<meta name="robots" content="noindex">\n<meta name="description"', 1)
+    html = re.sub(r'<link rel="canonical" href="[^"]*">', f'<link rel="canonical" href="{SITE_URL}{target.split("#")[0]}">', html, 1)
+    open(out, 'w', encoding='utf-8').write(html)
 
 
 # ---------------------------------------------------------------- Placemaking
@@ -1236,7 +1393,7 @@ PATH_PATTERN['placemaking.html'] = 'squiggle'
 PATH_PATTERN.update({f'placemaking/{p["slug"]}.html': 'squiggle' for p in PLACEMAKING})
 PLACE_PATS = [('squiggle', 'f-green'), ('waves', 'f-blue'), ('dashes', 'f-red'), ('confetti', 'f-pink'), ('dots', 'f-mist'), ('arcs', 'f-green')]
 PLACE_URL = CITY + '/Community/Projects/2025/Downtown-Kalamazoo-Placemaking'
-PLACE_CRUMBS = [('index.html', 'Home'), ('about.html', 'About'), ('projects.html', 'Projects'), ('placemaking.html', 'Placemaking')]
+PLACE_CRUMBS = [('index.html', 'Home'), ('about.html', 'About'), ('projects.html', 'Projects')]
 PLACE_CSS = SECTION_CSS
 FUNDING_NOTE = {
     'Fully funded': 'All the money needed to build it is in place.',
@@ -1260,56 +1417,9 @@ def place_tags(p):
 
 
 def build_placemaking():
-    cards = ''
-    for i, p in enumerate(PLACEMAKING):
-        pat, fill = place_look(i, p)
-        art = (f'<img class="place-photo" src="{{R}}{E(p["image"])}" alt="" loading="lazy">' if p['image']
-               else f'<div class="project-pat" style="background-image:url({{R}}pattern-{pat}-sm.webp)" aria-hidden="true"></div>')
-        where = f'<p class="place-where"><span class="sr-only">Where: </span>{E(p["where"])}</p>' if p['where'] else ''
-        cards += (f'<li class="project place-card {fill}">{art}<div class="project-body">{place_tags(p)}'
-                  f'<h3 class="h3"><a href="{{R}}placemaking/{p["slug"]}.html">{E(p["title"])}</a></h3>{lead_line(p["lead"])}{where}<p>{E(p["summary"])}</p></div></li>')
-    funded = sum(1 for p in PLACEMAKING if p['funding'] == 'Fully funded')
-    partial = sum(1 for p in PLACEMAKING if p['funding'] == 'Partially funded')
-    key = ''.join(f'<div><dt>{status_tag(k)}</dt><dd>{E(v)}</dd></div>' for k, v in FUNDING_NOTE.items())
-    body = PLACE_CSS + page_hero(PLACE_CRUMBS, 'Downtown in progress', 'Placemaking',
-                     'Turning downtown’s alleys, plazas and streets into places people want to be, not just pass through.', 'f-green')
-    body += f'''<section class="section" aria-labelledby="place-why">
-  <div class="wrap two-col">
-    <div class="prose" style="max-width:none">
-      {in_short(f'Downtown has {len(PLACEMAKING)} placemaking projects with funding in place: {funded} fully funded and {partial} partially funded. Choose a project to see what’s changing and when.')}
-      <h2 class="h2" id="place-why">Why placemaking</h2>
-      <p>One-way streets and fast traffic push people on foot toward downtown’s alleys and the Kalamazoo Mall. Placemaking makes those spaces worth lingering in, with lighting, public art, landscaping, places to sit and room for events, and ties them together so it’s easy to walk from one to the next.</p>
-      <p>The work follows the Downtown Kalamazoo Placemaking plan, designed by SmithGroup with the City of Kalamazoo. Projects move ahead as funding is secured.</p>
-    </div>
-    <div class="aside">
-      <section class="panel f-green" aria-labelledby="place-docs"><h2 id="place-docs">Plans and designs</h2><ul>{link_item('City of Kalamazoo project page', PLACE_URL)}{link_item('Designs from SmithGroup', 'https://downtown-placemaking-smithgroup.hub.arcgis.com/')}{link_item('DDA & DEGA budgets and reports', 'boards.html')}</ul></section>
-    </div>
-  </div>
-</section>
-<section class="section" style="padding-top:0" aria-labelledby="place-list">
-  <div class="wrap">
-    <h2 class="h2" id="place-list" style="margin-bottom:1rem">Funded projects</h2>
-    <ul class="projects">{cards}</ul>
-    <h3 class="h3" style="margin-top:2rem" id="place-key">What the labels mean</h3>
-    <dl class="glance place-key" aria-labelledby="place-key">{key}</dl>
-  </div>
-</section>
-<section class="section" style="padding-top:0" aria-labelledby="place-next">
-  <div class="wrap two-col">
-    <div class="prose" style="max-width:none">
-      <h2 class="h2" id="place-next">Also in the plan</h2>
-      <p>These parts of the placemaking plan are designed in concept, and their schedules depend on funding:</p>
-      <ul>
-        <li><strong>Exchange Alley:</strong> lighting, public art and painted pavement, with a walking connection from Farmers Alley to Rose Street.</li>
-        <li><strong>North Kalamazoo Mall:</strong> a design that’s more open to festivals, pop-up events, walking and biking.</li>
-      </ul>
-    </div>
-    <div class="aside">
-      <section class="panel f-pink"><h2>Questions or ideas?</h2><p>Email {DOWNTOWN_EMAIL} or call {DOWNTOWN_PHONE}. Board-funded projects are discussed at the monthly <a href="{{R}}boards.html">DDA &amp; DEGA meetings</a>.</p></section>
-    </div>
-  </div>
-</section>'''
-    page('placemaking.html', 'Placemaking', body, None, 'Downtown Kalamazoo placemaking projects: Farmers Alley Pocket Park, Rose Street Plaza, Water Street and the South Burdick festival street.')
+    # Placemaking projects now sit on the Projects page; placemaking.html sends old links there.
+    moved_page('placemaking.html', 'Placemaking', 'projects.html#placemaking',
+               'Placemaking projects are now on the Projects page, with everything else changing downtown.')
     for i, p in enumerate(PLACEMAKING):
         build_place(i, p)
 
@@ -1333,7 +1443,7 @@ def build_place(i, p):
     </article>
     <div class="aside">
       {f'<section class="panel" aria-labelledby="pl-links"><h2 id="pl-links">Plans and updates</h2><ul>{links}</ul></section>' if links else ''}
-      <section class="panel f-green" aria-labelledby="pl-more"><h2 id="pl-more">More placemaking</h2><ul>{others}</ul><p><a href="{{R}}placemaking.html">All placemaking projects</a></p></section>
+      <section class="panel f-green" aria-labelledby="pl-more"><h2 id="pl-more">More placemaking</h2><ul>{others}</ul><p><a href="{{R}}projects.html">All downtown projects</a></p></section>
       <section class="panel f-pink"><h2>Questions?</h2><p>Email {DOWNTOWN_EMAIL} or call {DOWNTOWN_PHONE}.</p></section>
     </div>
   </div>
@@ -1344,37 +1454,13 @@ def build_place(i, p):
 # ---------------------------------------------------------------- Investing in downtown
 INVESTMENTS = CL.investments()
 PATH_PATTERN['investment.html'] = 'pinstripes'
-if not any(h == 'investment.html' for h, _ in ABOUT_MENU):
-    ABOUT_MENU.insert(next((i + 1 for i, (h, _) in enumerate(ABOUT_MENU) if h == 'projects.html'), len(ABOUT_MENU)), ('investment.html', 'Investing in downtown'))
 INVEST_PATS = [('arcs', 'f-pink'), ('pinstripes', 'f-blue'), ('maze', 'f-mist'), ('stripes', 'f-red'), ('speckle', 'f-green')]
 
 
 def build_investment():
-    cards = ''
-    for i, p in enumerate(INVESTMENTS):
-        pat, fill = INVEST_PATS[i % len(INVEST_PATS)]
-        art = (f'<img class="place-photo" src="{{R}}{E(p["image"])}" alt="{E(p["image_alt"])}" loading="lazy">' if p['image']
-               else f'<div class="project-pat" style="background-image:url({{R}}pattern-{pat}-sm.webp)" aria-hidden="true"></div>')
-        tags = ''.join(f'<span class="status-tag{" st-next" if j else ""}">{E(t)}</span>' for j, t in enumerate([p['kind'], p['status']]) if t)
-        where = f'<p class="place-where"><span class="sr-only">Where: </span>{E(p["where"])}</p>' if p['where'] else ''
-        links = ''.join(link_item(l['text'], str(l['url']).strip()) for l in p['links'])
-        cards += (f'<li class="project place-card {fill}">{art}<div class="project-body"><p class="place-tags">{tags}</p>'
-                  f'<h3 class="h3">{E(p["title"])}</h3>{where}{f"<p>{E(p["summary"])}</p>" if p["summary"] else ""}'
-                  f'{p["body_html"]}{f"<ul class=project-links>{links}</ul>" if links else ""}</div></li>')
-    body = SECTION_CSS + page_hero([('index.html', 'Home'), ('about.html', 'About'), ('investment.html', 'Investing in downtown')], 'Building downtown’s future', 'Investing in downtown',
-                     'Owners and developers are restoring landmarks and building new. Here’s the private investment taking shape in downtown Kalamazoo.', 'f-blue')
-    body += f'''<section class="section" aria-labelledby="inv-title">
-  <div class="wrap">
-    {in_short('This page lists private investment in downtown Kalamazoo: restorations and new buildings by owners and developers. Projects led by the City or the DEGA are on the Projects page.')}
-    <h2 class="h2" id="inv-title" style="margin-bottom:1rem">Private investment</h2>
-    <ul class="projects">{cards}</ul>
-    <div class="two-col" style="margin-top:2.5rem">
-      <section class="panel f-blue"><h2>Thinking about investing downtown?</h2><p>Talk with the City of Kalamazoo’s downtown team about sites, site plan review and support for downtown businesses. Email {DOWNTOWN_EMAIL} or call {DOWNTOWN_PHONE}.</p><p><a href="{{R}}businesses.html">Business resources</a></p></section>
-      <section class="panel"><h2>Public investment</h2><p>See the projects led by the City and the DEGA, and the DDA &amp; DEGA budgets and reports.</p><ul><li><a href="{{R}}projects.html">Downtown projects</a></li><li><a href="{{R}}boards.html">DDA &amp; DEGA</a></li></ul></section>
-    </div>
-  </div>
-</section>'''
-    page('investment.html', 'Investing in downtown', body, None, 'Private investment in downtown Kalamazoo: the State Theatre restoration and new development.')
+    # Private investment now sits on the Projects page; investment.html sends old links there, filtered to private projects.
+    moved_page('investment.html', 'Investing in downtown', 'projects.html#private',
+               'Private investment downtown is now on the Projects page, with everything else changing downtown.')
 
 
 # ---------------------------------------------------------------- For businesses
@@ -1506,7 +1592,7 @@ def build_business_resources():
     partners = ''.join(f'<li class="{BIZ_FILLS[i % 4]}"><span class="p-name">{_a(p["url"], E(p["name"])) if p["url"] else E(p["name"])}</span>'
                        f'{f"<span>{E(p["what"])}</span>" if p["what"] else ""}</li>' for i, p in enumerate(BIZ['partners']))
 
-    n_inv = len(INVESTMENTS)
+    n_inv = sum(1 for p in INVESTMENTS if p['progress'] != 'Finished')
     team_link = '<li><a href="{R}team.html">Who to contact for what</a></li>' if TEAM_LIVE else ''
 
     body += f'''<section class="section" aria-labelledby="stats-title">
@@ -1544,7 +1630,7 @@ def build_business_resources():
       <div class="sb-copy">
         <h2 class="h2" id="space-title">Find your space</h2>
         <p>Looking for a storefront, an office or a site to build on? See the {n_inv} private projects taking shape downtown, then tell us what you need and we’ll help you find the right fit.</p>
-        <div class="btn-row"><a class="btn btn-primary" href="{{R}}investment.html">See investing in downtown</a><a class="btn" href="mailto:{DOWNTOWN_EMAIL}?subject=Looking%20for%20space%20downtown">Email the downtown team</a></div>
+        <div class="btn-row"><a class="btn btn-primary" href="{{R}}projects.html#private">See private investment downtown</a><a class="btn" href="mailto:{DOWNTOWN_EMAIL}?subject=Looking%20for%20space%20downtown">Email the downtown team</a></div>
         <p>The Kalamazoo Event Center opens in fall 2027. Businesses and suppliers can learn about working with it on the {ext('https://www.kalamazooeventcenter.com/', 'Kalamazoo Event Center website')}.</p>
       </div>
       <div class="sb-pat" style="background-image:url({{R}}pattern-pinstripes-sm.webp)" aria-hidden="true"></div>

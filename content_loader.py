@@ -256,6 +256,56 @@ def _lead(p):
     return lead
 
 
+# ---------------------------------------------------------------- Projects page (shared fields)
+# Every project on the Projects page, from content/projects, content/placemaking and content/investment,
+# shows where it stands with `progress`, one of these four, written exactly like that.
+PROGRESS = ['Planning', 'Approved', 'Under construction', 'Finished']
+PATTERNS = ['arcs', 'confetti', 'dashes', 'dots', 'loops', 'maze', 'pinstripes', 'quilt', 'speckle', 'squiggle', 'stripes', 'waves']
+
+
+def _order(p):
+    try:
+        return int(p.get('order') or 99)
+    except ValueError:
+        raise ValueError(f'{p["source_file"]}: "order" should be a number, not "{p.get("order")}"')
+
+
+def _project_fields(p, default_progress='Planning'):
+    """Checks and tidies the fields the Projects page uses: progress, next, kind, pattern, finished."""
+    prog = str(p.get('progress') or '').strip() or default_progress
+    if prog not in PROGRESS:
+        raise ValueError(f'{p["source_file"]}: "progress" should be one of {", ".join(PROGRESS)}, not "{prog}"')
+    p['progress'] = prog
+    for k in ('next', 'kind', 'image', 'image_alt'):
+        p[k] = str(p.get(k) or '').strip()
+    pat = str(p.get('pattern') or '').strip().lower()
+    if pat and pat not in PATTERNS:
+        raise ValueError(f'{p["source_file"]}: "pattern" should be one of {", ".join(PATTERNS)}, not "{pat}"')
+    p['pattern'] = pat
+    fin = str(p.get('finished') or '').strip()
+    if fin and not re.fullmatch(r'\d{4}', fin):
+        raise ValueError(f'{p["source_file"]}: "finished" should be a year, like 2025, not "{fin}"')
+    p['finished'] = int(fin) if fin else None
+    if p['image'] and not p['image_alt']:
+        raise ValueError(f'{p["source_file"]}: add image_alt to describe the photo')
+    p['links'] = [l for l in (p.get('links') or []) if l and l.get('text') and l.get('url')]
+    p['order'] = _order(p)
+    return p
+
+
+def projects():
+    """Projects led by the City, the DDA or the DEGA that aren't placemaking: one Markdown file each in content/projects."""
+    out = []
+    for p in load('projects'):
+        if not p.get('title'):
+            raise ValueError(f'{p["source_file"]}: add a title')
+        for k in ('where', 'summary', 'news', 'page', 'page_label'):
+            p[k] = str(p.get(k) or '').strip()
+        p['lead'] = _lead(p)
+        out.append(_project_fields(p))
+    return sorted(out, key=lambda p: (p['order'], p['title']))
+
+
 def placemaking():
     """One Markdown file per project in content/placemaking, sorted by `order`."""
     out = []
@@ -267,12 +317,7 @@ def placemaking():
         for k in ('stage', 'where', 'summary', 'timeline', 'design', 'image', 'image_alt', 'news'):
             p[k] = str(p.get(k) or '').strip()
         p['lead'] = _lead(p)
-        p['links'] = [l for l in (p.get('links') or []) if l and l.get('text') and l.get('url')]
-        try:
-            p['order'] = int(p.get('order') or 99)
-        except ValueError:
-            raise ValueError(f'{p["source_file"]}: "order" should be a number, not "{p.get("order")}"')
-        out.append(p)
+        out.append(_project_fields(p))
     return sorted(out, key=lambda p: (p['order'], p['title']))
 
 
@@ -285,12 +330,14 @@ def investments():
             raise ValueError(f'{p["source_file"]}: add a title')
         for k in ('kind', 'status', 'where', 'summary', 'image', 'image_alt'):
             p[k] = str(p.get(k) or '').strip()
-        p['links'] = [l for l in (p.get('links') or []) if l and l.get('text') and l.get('url')]
-        try:
-            p['order'] = int(p.get('order') or 99)
-        except ValueError:
-            raise ValueError(f'{p["source_file"]}: "order" should be a number, not "{p.get("order")}"')
-        out.append(p)
+        # Older files have only `status`; a status starting "Complete" counts as Finished.
+        guess = 'Finished' if p['status'].lower().startswith('complete') else 'Under construction' if p['status'].lower().startswith('under construction') else 'Planning'
+        if not p.get('finished'):
+            m = re.search(r'(\d{4})\)?$', p['status'])
+            if guess == 'Finished' and m:
+                p['finished'] = m.group(1)
+        p['lead'] = 'Private'
+        out.append(_project_fields(p, guess))
     return sorted(out, key=lambda p: (p['order'], p['title']))
 
 
