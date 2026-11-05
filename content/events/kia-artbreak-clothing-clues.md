@@ -3,6 +3,7 @@ title: "ArtBreak: Clothing Clues: Decoding Signals in Fashion"
 date: 2026-11-11
 time: Noon–1 p.m.
 where: Kalamazoo Institute of Arts, 314 S. Park St.
+business: kalamazoo-institute-of-arts
 summary: A free lunchtime talk at the KIA on how designers use garment construction, symbolism and trends to tell a story, and how to spot those clues in clothing.
 tags: [Arts]
 fill: f-mist
@@ -15,6 +16,4 @@ In this ArtBreak, Iris Carney Cooper talks about the ideas from art, history and
 
 **Who it’s for:** All ages.
 
-**Accessibility:** This program is on the first floor. The KIA has exterior ramps, automatic doors and an elevator.
-
-[Kalamazoo Institute of Arts](../directory.html#b-kalamazoo-institute-of-arts) is downtown’s art museum, at 314 S. Park St. near Bronson Park.
+**Accessibility:** This program is on the KIA’s first floor. The building has exterior ramps, automatic doors and an elevator.

@@ -3,6 +3,7 @@ title: Statement Pieces Opening Reception
 date: 2026-11-06
 time: 5–8 p.m.
 where: Kalamazoo Institute of Arts, 314 S. Park St.
+business: kalamazoo-institute-of-arts
 summary: Celebrate the opening of Statement Pieces, the KIA’s new exhibition on fashion, art and identity, with brief remarks at 5:30 and time to explore the galleries.
 tags: [Arts, Community]
 fill: f-pink
@@ -15,6 +16,4 @@ Be among the first to see *Statement Pieces: Fashioning the Self & Society*, whi
 
 **Who it’s for:** All ages.
 
-**Accessibility:** This program is on the first floor. The KIA has exterior ramps, automatic doors and an elevator.
-
-[Kalamazoo Institute of Arts](../directory.html#b-kalamazoo-institute-of-arts) is downtown’s art museum, at 314 S. Park St. near Bronson Park.
+**Accessibility:** This program is on the KIA’s first floor. The building has exterior ramps, automatic doors and an elevator.

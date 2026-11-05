@@ -3,6 +3,7 @@ title: "Statement Pieces: A Curatorial Conversation"
 date: 2026-11-05
 time: 6–7 p.m.
 where: Kalamazoo Institute of Arts, 314 S. Park St.
+business: kalamazoo-institute-of-arts
 summary: The co-curator of Statement Pieces talks with the KIA’s Director of Curatorial Affairs about the new fashion and art exhibition and how it comes together at the KIA.
 tags: [Arts]
 fill: f-blue
@@ -15,6 +16,4 @@ Kelly Peck, co-curator of *Statement Pieces: Fashioning the Self & Society* and 
 
 **Who it’s for:** All ages.
 
-**Accessibility:** This program is on the first floor. The KIA has exterior ramps, automatic doors and an elevator.
-
-[Kalamazoo Institute of Arts](../directory.html#b-kalamazoo-institute-of-arts) is downtown’s art museum, at 314 S. Park St. near Bronson Park.
+**Accessibility:** This program is on the KIA’s first floor. The building has exterior ramps, automatic doors and an elevator.

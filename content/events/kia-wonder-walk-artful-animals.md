@@ -3,6 +3,7 @@ title: "Wonder Walk: Artful Animals"
 date: 2026-11-06
 time: 11–11:30 a.m.
 where: Kalamazoo Institute of Arts, 314 S. Park St.
+business: kalamazoo-institute-of-arts
 summary: A half-hour walk through the KIA galleries for children 2 to 4 and their grown-ups, with close looking, gallery games and activities.
 tags: [Arts, Family]
 fill: f-green
@@ -15,6 +16,4 @@ Take a Wonder Walk through the galleries, looking closely at a few animal artwor
 
 **Who it’s for:** Families with young children, ages 2 to 4.
 
-**Accessibility:** This program is on the first floor. The KIA has exterior ramps, automatic doors and an elevator.
-
-[Kalamazoo Institute of Arts](../directory.html#b-kalamazoo-institute-of-arts) is downtown’s art museum, at 314 S. Park St. near Bronson Park.
+**Accessibility:** This program is on the KIA’s first floor. The building has exterior ramps, automatic doors and an elevator.

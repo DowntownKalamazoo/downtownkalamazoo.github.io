@@ -3,6 +3,7 @@ title: "Opening Day: Statement Pieces: Fashioning the Self & Society"
 date: 2026-11-07
 time: 11 a.m.–5 p.m.
 where: Kalamazoo Institute of Arts, 314 S. Park St.
+business: kalamazoo-institute-of-arts
 summary: The KIA’s new exhibition pairs works from its collection with contemporary fashion to look at 200 years of self-presentation and identity. On view through February 7.
 tags: [Arts]
 fill: f-red
@@ -15,6 +16,4 @@ link_text: About the exhibition from the Kalamazoo Institute of Arts
 
 **Who it’s for:** All ages.
 
-**Accessibility:** This program is on the first floor. The KIA has exterior ramps, automatic doors and an elevator.
-
-[Kalamazoo Institute of Arts](../directory.html#b-kalamazoo-institute-of-arts) is downtown’s art museum, at 314 S. Park St. near Bronson Park.
+**Accessibility:** This program is on the KIA’s first floor. The building has exterior ramps, automatic doors and an elevator.
