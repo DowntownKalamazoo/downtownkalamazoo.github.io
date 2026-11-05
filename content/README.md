@@ -281,49 +281,39 @@ Captions and a transcript are required. If either is missing, or a file path is 
 
 ---
 
-## Placemaking projects
+## Projects page (Downtown in progress)
 
-Each project on the Placemaking page is one file in `content/placemaking`. Each file makes its own page, for example `downtownkalamazoo.us/placemaking/rose-street-plaza.html`. The same instructions are in `content/placemaking/README.md`.
+The Projects page (`downtownkalamazoo.us/projects.html`) shows every project downtown, public and private, grouped by where it stands: **Under construction now**, **Approved, coming next**, **In planning and design** and **Recently finished**. Older finished projects appear in a short **Finished since 2016** list. The counts at the top and the filter buttons update on their own.
 
-**Update a project** (new funding, a construction date, a photo): open its file, choose the pencil icon, change the top section, and commit.
+The cards come from three folders. Pick the folder by who leads the project:
 
-- `lead`: who leads it: **DEGA**, **DDA**, **DDA & DEGA** or **City**, written exactly like that
-- `funding`: **Fully funded**, **Partially funded** or **Seeking funding**, written exactly like that
-- `stage`: a few words, like **In design**, **Construction approved**, **Under construction** or **Complete**. Leave it blank if there's nothing to say yet.
-- `where`, `timeline`, `design`: plain sentences. Blank ones are left off the page.
-- `order`: where it appears on the Placemaking page. 1 comes first.
-- `links`: copy a `- text:` and `url:` pair to add a link. For a PDF you uploaded to `files`, the url looks like `files/rose-street-plaza-design.pdf`.
-- `image` and `image_alt`: a photo or rendering for the top of the page, uploaded to `files` (a wide JPG under 1 MB). Always describe it in `image_alt`.
+- `content/projects`: projects led by the City, the DDA or the DEGA that aren't placemaking (Streets for All, Arcadia Creek, wayfinding, parking, Bigbelly)
+- `content/placemaking`: placemaking projects. Each of these also gets its own page, like `downtownkalamazoo.us/placemaking/rose-street-plaza.html`.
+- `content/investment`: private investment by owners and developers. These show the diamond marker.
 
-Write the project description below the second `---` line, the same way as a news story.
+**Move a project to a new stage** (it's approved, construction started, it finished): open its file, choose the pencil icon, change these lines in the top section, and commit.
 
-**Add a project:** open `_TEMPLATE.md`, copy it, then choose **Add file → Create new file** in `content/placemaking`. Name it with a few words, like `exchange-alley.md`. The overview counts update on their own.
+- `progress`: **Planning**, **Approved**, **Under construction** or **Finished**, written exactly like that. This decides which section the card is in.
+- `next`: one short line at the bottom of the card, like `"Finishes: November 2026"` or `"Opens: fall 2027"`. The words before the colon show in bold. Keep the quotation marks.
+- `finished`: the year it finished, like `2025`. Projects that finished this year or last year get a full card; older ones move to the Finished since 2016 list.
 
-**Hide a project while you work on it:** add `draft: true` to the top section.
+**Other lines in the top section:**
 
-## Investing in downtown (private investment)
+- `title`, `where` and `summary`: the name, the address or area, and one or two plain sentences.
+- `lead`: in `content/projects` and `content/placemaking`, who leads it: **DEGA**, **DDA**, **DDA & DEGA** or **City**, written exactly like that. Everything in `content/investment` is shown as a private owner or developer.
+- `kind`: the label on the card's pattern band, like **Streets**, **Parks** or **New development**. Placemaking projects say **Placemaking** if it's left blank.
+- `pattern`: which brand pattern fills the band: arcs, confetti, dashes, dots, loops, maze, pinstripes, quilt, speckle, squiggle, stripes or waves. Leave it blank to have one picked for you.
+- `image` and `image_alt`: a photo, uploaded to `files` (a wide JPG under 1 MB), replaces the pattern band. Always describe it in `image_alt`; the site won't publish without it.
+- `order`: the order within a section. 1 comes first. City, DDA and DEGA projects come before private ones.
+- `links`: copy a `- text:` and `url:` pair to add a link. A page on this site, like `waste-recycling.html`, works too.
+- Placemaking only: `funding` (**Fully funded**, **Partially funded** or **Seeking funding**), `stage`, `timeline` and `design` show on the project's own page. Write the longer description below the second `---` line, the same way as a news story.
+- Private investment only: `status` is a fallback for the bottom line when `next` is blank.
 
-Each building or project on the Investing in downtown page (`downtownkalamazoo.us/investment.html`) is one file in `content/investment`. This page is for private investment: restorations, new buildings and other projects by owners and developers. Projects led by the City, the DDA or the DEGA go on the Projects page instead.
+**Add a project:** open `_TEMPLATE.md` in the right folder, copy it, then choose **Add file → Create new file** in that folder. Name it with a few words, like `exchange-alley.md`.
 
-**Update one:** open its file, choose the pencil icon, change the top section, and commit.
+**Hide a project:** add `draft: true` to the top section. (Rose Place senior apartments is hidden this way.)
 
-- `kind`: a few words, like **New development**, **Historic restoration** or **Renovation**
-- `status`: a few words, like **Site plan approved**, **Under construction**, **Planned** or **Complete**
-- `where`: the address
-- `summary`: one or two sentences
-- `order`: where it appears on the page. 1 comes first.
-- `links`: copy a `- text:` and `url:` pair to add a link. A page on this site, like `projects.html`, works too.
-- `image` and `image_alt`: a photo or rendering, uploaded to `files` (a wide JPG under 1 MB). Always describe it in `image_alt`.
-
-**Add one:** open `_TEMPLATE.md`, copy it, then choose **Add file → Create new file** in `content/investment` and name it with a few words, like `edison-lofts.md`.
-
-**Remove one:** add `draft: true` to the top section to hide it, or delete the file.
-
-**Projects page cards** (Arcadia Creek, Streets for All and the others) are grouped by who leads them. Each card's `lead=` in `yearround_section.py` is `'DEGA'` or `'City'`.
-
-The Find your space box on the For businesses page counts these projects and links here.
-
----
+The old Placemaking and Investing in downtown addresses now send visitors to the Projects page. The Find your space box on the For businesses page counts the private projects that aren't finished yet and links to the Projects page filtered to private investment.
 
 ## For businesses page
 
