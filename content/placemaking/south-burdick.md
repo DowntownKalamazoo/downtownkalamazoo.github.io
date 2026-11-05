@@ -13,6 +13,9 @@ links:
     url: https://www.kalamazoocity.org/Community/Projects/2025/Downtown-Kalamazoo-Placemaking
   - text: Designs from SmithGroup
     url: https://downtown-placemaking-smithgroup.hub.arcgis.com/
+progress: Planning
+next: "Next: schedule to be announced"
+pattern: arcs
 ---
 South Burdick, from Lovell Street to Cedar Street, is planned as a festival street. It's designed so the block can close to traffic several times a year for festivals, markets and pop-up events, then open again.
 

@@ -3,10 +3,10 @@ title: Rose Street Plaza
 order: 2
 lead: DEGA
 funding: Fully funded
-stage: Construction approved
+stage: Under construction
 where: Rose Street at Arcadia Creek
 summary: A redesigned plaza at Arcadia Creek with new materials, landscaping and lighting, and a better connection to the creek trail.
-timeline: Construction contract approved March 2, 2026, with construction starting in spring 2026
+timeline: Construction contract approved March 2, 2026. Construction started in spring 2026 and finishes in November 2026.
 design: SmithGroup
 links:
   - text: City of Kalamazoo project page
@@ -14,6 +14,9 @@ links:
   - text: Designs from SmithGroup
     url: https://downtown-placemaking-smithgroup.hub.arcgis.com/
 news: placemaking-plazas-approved
+progress: Under construction
+next: "Finishes: November 2026"
+pattern: loops
 ---
 The Rose Street plaza sits where downtown meets Arcadia Creek. It's one of the first two placemaking sites to move to construction.
 

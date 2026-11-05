@@ -14,6 +14,9 @@ links:
   - text: Designs from SmithGroup
     url: https://downtown-placemaking-smithgroup.hub.arcgis.com/
 news: placemaking-plazas-approved
+progress: Under construction
+next: "Finish: date to be announced"
+pattern: squiggle
 ---
 Farmers Alley is one of the first two placemaking sites to move to construction. The alley becomes a pocket park: a small, comfortable place to sit, meet up or pass through on the way across downtown.
 

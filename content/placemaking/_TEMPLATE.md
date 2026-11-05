@@ -4,8 +4,12 @@ order: 5
 lead: DEGA
 funding: Fully funded
 stage: In design
+progress: Planning
+next: "Next: what happens next, or when it finishes"
+finished:
+pattern: squiggle
 where: The street, alley or block
-summary: One or two sentences for the Placemaking overview page.
+summary: One or two sentences for the card on the Projects page.
 timeline: When work starts and ends, in plain words
 design: Who designed it
 image:

@@ -11,6 +11,9 @@ design:
 links:
   - text: City of Kalamazoo placemaking project page
     url: https://www.kalamazoocity.org/Community/Projects/2025/Downtown-Kalamazoo-Placemaking
+progress: Planning
+next: "Next: plans and schedule to be announced"
+pattern: waves
 ---
 Water Street is part of downtown's placemaking work. We'll share the design, what's changing and when construction is expected here as details are confirmed.
 
