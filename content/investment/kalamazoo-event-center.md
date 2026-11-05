@@ -8,4 +8,7 @@ order: 1
 links:
   - text: "Kalamazoo Event Center"
     url: https://www.kalamazooeventcenter.com/
+progress: Under construction
+next: "Opens: fall 2027"
+pattern: confetti
 ---

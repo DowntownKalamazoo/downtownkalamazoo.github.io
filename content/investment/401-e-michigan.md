@@ -8,4 +8,7 @@ summary: The City approved the site plan for this property in October 2026.
 links:
   - text: City of Kalamazoo approved site plan
     url: https://www.kalamazoocity.org/Business-Development/Real-Estate-Development/Apply-for-Site-Plan-Review/Approved-Site-Plans/401-E-Michigan-Ave
+progress: Approved
+next: "Approved: site plan, October 2026"
+pattern: speckle
 ---

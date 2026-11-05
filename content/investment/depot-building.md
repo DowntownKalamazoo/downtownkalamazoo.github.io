@@ -8,4 +8,7 @@ order: 13
 links:
   - text: "Project announcement (PlazaCorp)"
     url: https://www.plazacorp.net/plazacorp-realty-advisors-unveils-downtown-redevelopment-project
+progress: Finished
+pattern: dashes
+finished: 2016
 ---

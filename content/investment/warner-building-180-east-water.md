@@ -8,4 +8,7 @@ order: 9
 links:
   - text: "Project completion (REjournals)"
     url: https://rejournals.com/catalyst-development-closes-construction-on-mixed-use-development-in-kalamazoo/
+progress: Finished
+pattern: waves
+finished: 2021
 ---

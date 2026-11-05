@@ -8,4 +8,7 @@ order: 2
 links:
   - text: "State approval (WWMT)"
     url: https://wwmt.com/news/local/two-transformational-brownfield-projects-approved-kalamazoo-west-michigan-grand-rapids-kalamazoo-wwmt
+progress: Approved
+next: "Approved: state incentives, December 2025"
+pattern: quilt
 ---

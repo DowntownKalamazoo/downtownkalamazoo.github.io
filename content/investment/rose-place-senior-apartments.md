@@ -8,4 +8,5 @@ order: 6
 links:
   - text: "Opening coverage (Second Wave)"
     url: https://secondwavemedia.com/new-income-based-senior-apartments-take-on-tenants-at-530-rose-in-downtown-kalamazoo/
+draft: true
 ---

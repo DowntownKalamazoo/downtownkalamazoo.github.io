@@ -8,4 +8,6 @@ order: 7
 links:
   - text: "Renovation announcement (DBusiness)"
     url: https://www.dbusiness.com/daily-news/dbusiness-daily-update-radisson-plaza-hotel-and-suites-in-kalamazoo-unveils-renovations-and-more/
+progress: Finished
+pattern: confetti
 ---

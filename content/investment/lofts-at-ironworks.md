@@ -8,4 +8,7 @@ order: 3
 links:
   - text: "The Lofts at Ironworks"
     url: https://kalamazooironworks.com/
+progress: Under construction
+next: "Status: leasing now, with the final phases wrapping up"
+pattern: pinstripes
 ---

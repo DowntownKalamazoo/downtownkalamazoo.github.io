@@ -8,4 +8,7 @@ order: 5
 links:
   - text: "Project details (Public Media Network)"
     url: https://publicmedianet.org/news/community/new-downtown-housing-project-would-use-public-financing/
+progress: Planning
+next: "Goal: finish in 2028. Incentives are under review."
+pattern: pinstripes
 ---

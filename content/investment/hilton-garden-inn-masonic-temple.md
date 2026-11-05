@@ -8,4 +8,7 @@ order: 10
 links:
   - text: "Hotel opening (REBusiness)"
     url: https://rebusinessonline.com/new-hilton-garden-inn-hotel-opens-in-kalamazoo-at-reduced-capacity/
+progress: Finished
+pattern: quilt
+finished: 2021
 ---

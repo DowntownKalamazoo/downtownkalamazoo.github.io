@@ -10,4 +10,7 @@ links:
     url: https://secondwavemedia.com/curtain-rises-again-new-owners-aim-to-revive-kalamazoos-state-theatre-for-second-act/
   - text: "Signature Associates (September 2025)"
     url: https://www.signatureassociates.com/historic-kalamazoo-state-theatre-sold-new-owners-plan-to-reopen-in-2027/
+progress: Planning
+next: "Goal: reopen for the theater’s 100th anniversary in 2027"
+pattern: stripes
 ---

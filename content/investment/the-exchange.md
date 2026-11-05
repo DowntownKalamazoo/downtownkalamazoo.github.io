@@ -8,4 +8,7 @@ order: 11
 links:
   - text: "Project approval (PlazaCorp)"
     url: https://www.plazacorp.net/mixed-use-development-approved-kalamazoo
+progress: Finished
+pattern: stripes
+finished: 2019
 ---

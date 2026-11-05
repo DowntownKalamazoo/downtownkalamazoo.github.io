@@ -8,4 +8,7 @@ order: 12
 links:
   - text: "Groundbreaking (REjournals)"
     url: https://rejournals.com/development-breaks-ground-on-the-foundry-in-kalamazoo-michigan/
+progress: Finished
+pattern: dots
+finished: 2017
 ---

@@ -10,4 +10,7 @@ links:
     url: https://www.miplace.org/project-profiles/region-8---400-rose-kalamazoo--2020
   - text: "Phase II case study"
     url: https://migbc.org/case-study/avb-inc-and-hinman-company-400-rose-phase-ii/
+progress: Finished
+pattern: pinstripes
+finished: 2023
 ---
