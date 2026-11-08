@@ -889,8 +889,24 @@ def build_submit():
          'Submit an event for the Downtown Kalamazoo events calendar.')
 
 # ---------------------------------------------------------------- Newsletter
+# Where the sign-up forms send people: the Downtown Kalamazoo newsletter audience in Mailchimp.
+# This is the action URL from Mailchimp's embedded form (Audience > Signup forms > Embedded forms).
+# Change it here and every sign-up form on the site follows. The forms send EMAIL, FNAME and LNAME,
+# which match that audience's fields.
+NEWSLETTER_FORM_ACTION = 'https://kalamazoocity.us21.list-manage.com/subscribe/post?u=6f30f6dcb84dabe5f90dbd286&id=c0bb51ce79&f_id=008bb7e6f0'
+# Mailchimp's spam trap: a field people never see. Bots fill it in and Mailchimp ignores them.
+NEWSLETTER_BOT_FIELD = 'b_6f30f6dcb84dabe5f90dbd286_c0bb51ce79'
+
+# Not shown right now: the Mailchimp audience has no interest groups or ZIP field yet, so these
+# answers would be thrown away. Add the groups in Mailchimp first, then bring the checkboxes back.
 NEWS_INTERESTS = ['Weekend and holiday events', 'New shops and restaurants', 'Gift guides and deals', 'Family activities',
                   'Arts, music and culture', 'Parking and construction updates']
+
+
+def news_form_open():
+    """Opening <form> tag plus the spam trap. Without JavaScript the form posts straight to Mailchimp."""
+    return (f'<form class="form news-form" data-newsletter action="{E(NEWSLETTER_FORM_ACTION)}" method="post" novalidate>'
+            f'<div class="news-trap" aria-hidden="true"><input type="text" name="{NEWSLETTER_BOT_FIELD}" tabindex="-1" value="" autocomplete="off"></div>')
 
 
 # Michigan Downtown Association conference pop-up. Through this date, the homepage shows it
@@ -932,12 +948,12 @@ def welcome_dialog():
     <p class="eyebrow">Happy holidays from Downtown Kalamazoo</p>
     <h2 id="welcome-title">Welcome to Downtown Kalamazoo this holiday season</h2>
     <p id="welcome-text">We can’t wait to welcome you downtown. Join the community newsletter for weekend events, new shops, gift ideas and the occasional downtown secret.</p>
-    <form class="form news-form" data-newsletter novalidate>
+    ''' + news_form_open() + '''
       <div class="news-row">
-        <div class="field"><label for="w-email">Email address</label><input type="email" id="w-email" name="email" autocomplete="email" required aria-required="true" aria-describedby="w-email-err"><p class="err-msg" id="w-email-err" hidden></p></div>
+        <div class="field"><label for="w-email">Email address</label><input type="email" id="w-email" name="EMAIL" autocomplete="email" required aria-required="true" aria-describedby="w-email-err"><p class="err-msg" id="w-email-err" hidden></p></div>
         <button class="btn btn-primary" type="submit">Join the newsletter</button>
       </div>
-      <p class="help">You can unsubscribe anytime. <a href="{R}newsletter.html">Choose what you hear about</a></p>
+      <p class="help">You can unsubscribe anytime. <a href="{R}newsletter.html">More about the newsletter</a></p>
     </form>
     <div class="news-done" hidden tabindex="-1"></div>
     <p><button class="linkish" type="button" data-welcome-close>Maybe later</button></p>
@@ -946,24 +962,19 @@ def welcome_dialog():
 
 
 def build_newsletter():
-    interests = ''.join(f'<label><input type="checkbox" name="interests" value="{E(v)}"> {E(v)}</label>' for v in NEWS_INTERESTS)
     body = page_hero([('index.html', 'Home'), ('newsletter.html', 'Newsletter')], 'Stay in the loop', 'The downtown newsletter',
                      'Weekend events, new shops, gift ideas and the occasional downtown secret, in your inbox now and then.', 'f-blue')
     body += f'''<section class="section" aria-labelledby="news-title">
   <div class="wrap two-col">
     <div>
-      {in_short('Give us your email to get the Downtown Kalamazoo newsletter. Your name, ZIP code and interests are optional.')}
+      {in_short('Give us your email to get the Downtown Kalamazoo newsletter. Your name is optional.')}
       <h2 class="h2" id="news-title" style="margin-bottom:1.25rem">Sign up</h2>
-      <form class="form news-form" data-newsletter novalidate>
+      {news_form_open()}
+        <div class="field"><label for="n-email">Email address <span class="req" aria-hidden="true">*</span></label><input type="email" id="n-email" name="EMAIL" autocomplete="email" required aria-required="true" aria-describedby="n-email-err"><p class="err-msg" id="n-email-err" hidden></p></div>
         <div class="row2">
-          <div class="field"><label for="n-first">First name</label><input type="text" id="n-first" name="first" autocomplete="given-name"></div>
-          <div class="field"><label for="n-zip">ZIP code</label><p class="help" id="n-zip-help">Optional. Helps us plan events for your part of town.</p><input type="text" id="n-zip" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="10" aria-describedby="n-zip-help"></div>
+          <div class="field"><label for="n-first">First name</label><input type="text" id="n-first" name="FNAME" autocomplete="given-name"></div>
+          <div class="field"><label for="n-last">Last name</label><input type="text" id="n-last" name="LNAME" autocomplete="family-name"></div>
         </div>
-        <div class="field"><label for="n-email">Email address <span class="req" aria-hidden="true">*</span></label><input type="email" id="n-email" name="email" autocomplete="email" required aria-required="true" aria-describedby="n-email-err"><p class="err-msg" id="n-email-err" hidden></p></div>
-        <fieldset style="border:0;padding:0">
-          <legend class="label" style="font-family:var(--font-ui);font-size:.9rem;text-transform:none;padding:0">What would you like to hear about?</legend>
-          <div class="choices" style="display:grid;gap:.25rem">{interests}</div>
-        </fieldset>
         <p class="help">You can unsubscribe anytime. Your email is only used for the Downtown Kalamazoo newsletter.</p>
         <div class="btn-row"><button class="btn btn-primary" type="submit">Join the newsletter</button></div>
       </form>

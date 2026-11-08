@@ -627,6 +627,7 @@ dialog::backdrop { background: var(--scrim); }
 .linkish { background: none; border: 0; padding: 0; color: var(--link); font: inherit; font-weight: 600; text-decoration: underline; cursor: pointer; }
 .news-done { border-radius: var(--radius); padding: 1rem 1.1rem; background: var(--surface); border: 2px solid var(--fg); display: grid; gap: .6rem; }
 .news-done[hidden] { display: none; }
+.news-trap { position: absolute; left: -5000px; width: 1px; height: 1px; overflow: hidden; }
 
 /* ---------- MDA conference pop-up (shares the .welcome shell; still band, no drift) ---------- */
 .welcome.mda { width: min(38rem, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; overscroll-behavior: contain; }

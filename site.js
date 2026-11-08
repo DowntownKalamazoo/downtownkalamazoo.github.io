@@ -388,59 +388,62 @@
   })();
 
   /* ---------- Newsletter sign-up ---------- */
-  // Connect a mailing list here. For Mailchimp, paste the embedded form's action URL
-  // (https://….list-manage.com/subscribe/post?u=…&id=…) into `mailchimp`.
-  // For Formspree or a similar service, put its endpoint in `endpoint`.
-  // With both blank, the form opens a pre-filled email to `to`.
-  const NEWSLETTER = { mailchimp: '', endpoint: '', to: 'downtown@kalamazoocity.org' };
-  function mailchimpJsonp(fields) {
+  // Each form's action is the Mailchimp address set once in build.py (NEWSLETTER_FORM_ACTION).
+  // Without JavaScript the form posts to Mailchimp's own page. With JavaScript it signs people up
+  // here, through Mailchimp's post-json address, and shows the result in the page.
+  // A form with no action falls back to a pre-filled email to `to`.
+  const NEWSLETTER = { to: 'downtown@kalamazoocity.org' };
+  function mailchimpJsonp(action, params) {
     return new Promise((resolve, reject) => {
       const cb = 'dkmc' + Date.now();
-      const url = NEWSLETTER.mailchimp.replace('/post?', '/post-json?') + '&' + new URLSearchParams(fields).toString() + '&c=' + cb;
+      params.set('c', cb);
+      const url = action.replace('/post?', '/post-json?') + '&' + params.toString();
       const s = document.createElement('script');
       const t = setTimeout(() => { cleanup(); reject(new Error('timeout')); }, 10000);
       function cleanup() { clearTimeout(t); delete window[cb]; s.remove(); }
-      window[cb] = res => { cleanup(); res && res.result === 'success' ? resolve(res) : reject(new Error((res && res.msg) || 'error')); };
+      window[cb] = res => { cleanup(); resolve(res || {}); };
       s.onerror = () => { cleanup(); reject(new Error('network')); };
       s.src = url; document.head.appendChild(s);
     });
   }
   $$('form[data-newsletter]').forEach(form => {
     const done = form.parentElement.querySelector('.news-done');
+    const action = form.getAttribute('action') || '';
     form.addEventListener('submit', async e => {
       e.preventDefault();
-      const email = form.elements.email, err = form.querySelector('#' + email.id + '-err');
+      const email = form.elements.EMAIL, err = form.querySelector('#' + email.id + '-err');
       const val = email.value.trim();
+      const fail = msg => { email.setAttribute('aria-invalid', 'true'); err.textContent = msg; err.hidden = false; email.focus(); };
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
-        email.setAttribute('aria-invalid', 'true');
-        err.textContent = val ? 'Enter an email address like name@example.com.' : 'Enter your email address.';
-        err.hidden = false; email.focus(); return;
+        fail(val ? 'Enter an email address like name@example.com.' : 'Enter your email address.'); return;
       }
-      email.removeAttribute('aria-invalid'); err.hidden = true;
-      const first = form.elements.first ? form.elements.first.value.trim() : '';
-      const zip = form.elements.zip ? form.elements.zip.value.trim() : '';
-      const interests = $$('input[name="interests"]:checked', form).map(i => i.value);
+      email.value = val; email.removeAttribute('aria-invalid'); err.hidden = true;
+      const first = form.elements.FNAME ? form.elements.FNAME.value.trim() : '';
+      const last = form.elements.LNAME ? form.elements.LNAME.value.trim() : '';
       const btn = form.querySelector('button[type="submit"]');
       const showDone = html => { form.hidden = true; done.innerHTML = html; done.hidden = false; done.focus(); };
-      if (NEWSLETTER.mailchimp || NEWSLETTER.endpoint) {
+      const joined = () => { try { localStorage.setItem('dk-welcome-seen', 'joined'); } catch (x) {} };
+      if (/list-manage\.com\/subscribe\/post\?/.test(action)) {
         btn.disabled = true; const label = btn.textContent; btn.textContent = 'Joining…';
-        try {
-          if (NEWSLETTER.mailchimp) await mailchimpJsonp({ EMAIL: val, FNAME: first, MMERGE5: zip });
-          else {
-            const fd = new FormData(); fd.append('email', val); fd.append('first', first); fd.append('zip', zip); fd.append('interests', interests.join(', '));
-            const res = await fetch(NEWSLETTER.endpoint, { method: 'POST', body: fd, headers: { Accept: 'application/json' } });
-            if (!res.ok) throw new Error(res.status);
-          }
-          showDone('<p class="h3" style="font-weight:700">You’re on the list. Welcome downtown!</p><p>Watch your inbox for the next newsletter. If you don’t see a confirmation email, check your spam folder.</p>');
-          try { localStorage.setItem('dk-welcome-seen', 'joined'); } catch (x) {}
-          return;
-        } catch (x) {
+        let res;
+        try { res = await mailchimpJsonp(action, new URLSearchParams(new FormData(form))); }
+        catch (x) {
           btn.disabled = false; btn.textContent = label;
-          err.textContent = 'That didn’t go through. Check your connection and try again.'; err.hidden = false;
+          fail('That didn’t go through. Check your connection and try again, or email ' + NEWSLETTER.to + '.'); return;
+        }
+        btn.disabled = false; btn.textContent = label;
+        const msg = String(res.msg || '');
+        if (res.result === 'success') {
+          joined();
+          if (/confirm/i.test(msg)) showDone('<p class="h3" style="font-weight:700">Almost done: check your email</p><p>We just sent a message to confirm your address. Open it and select the confirm link to join. If you don’t see it in a few minutes, check your spam folder.</p>');
+          else showDone('<p class="h3" style="font-weight:700">You’re on the list. Welcome downtown!</p><p>Watch your inbox for the next newsletter.</p>');
           return;
         }
+        if (/already subscribed/i.test(msg)) { joined(); showDone('<p class="h3" style="font-weight:700">You’re already on the list</p><p>That address already gets the downtown newsletter. If it hasn’t been reaching you, check your spam folder.</p>'); return; }
+        if (/too many/i.test(msg)) { fail('There have been too many sign-up tries for this address. Please try again later.'); return; }
+        fail('We couldn’t add that address. Check it and try again, or email ' + NEWSLETTER.to + '.'); return;
       }
-      const body = ['Please add me to the Downtown Kalamazoo newsletter.', '', 'Email: ' + val, first ? 'First name: ' + first : '', zip ? 'ZIP: ' + zip : '', interests.length ? 'Interests: ' + interests.join(', ') : ''].filter(Boolean).join('\n');
+      const body = ['Please add me to the Downtown Kalamazoo newsletter.', '', 'Email: ' + val, first || last ? 'Name: ' + [first, last].filter(Boolean).join(' ') : ''].filter(Boolean).join('\n');
       const mail = 'mailto:' + NEWSLETTER.to + '?subject=' + encodeURIComponent('Newsletter sign-up') + '&body=' + encodeURIComponent(body);
       showDone('<p class="h3" style="font-weight:700">One more step: send the email</p><p>Your email app should open with your sign-up filled in. Press Send there to join.</p><p>If no email opened, send your address to <span>' + NEWSLETTER.to + '</span> with “Newsletter sign-up” in the subject.</p>');
       try { window.location.href = mail; } catch (x) {}
