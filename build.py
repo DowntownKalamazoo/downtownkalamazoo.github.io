@@ -896,6 +896,9 @@ def build_submit():
 NEWSLETTER_FORM_ACTION = 'https://kalamazoocity.us21.list-manage.com/subscribe/post?u=6f30f6dcb84dabe5f90dbd286&id=c0bb51ce79&f_id=008bb7e6f0'
 # Mailchimp's spam trap: a field people never see. Bots fill it in and Mailchimp ignores them.
 NEWSLETTER_BOT_FIELD = 'b_6f30f6dcb84dabe5f90dbd286_c0bb51ce79'
+# Mailchimp tag added to everyone who signs up on the site: "DT Public Newsletter".
+# This is the tag's ID number from the embed code (name="tags" value="…"), not its name.
+NEWSLETTER_TAG_ID = '3451203'
 
 # Not shown right now: the Mailchimp audience has no interest groups or ZIP field yet, so these
 # answers would be thrown away. Add the groups in Mailchimp first, then bring the checkboxes back.
@@ -906,6 +909,7 @@ NEWS_INTERESTS = ['Weekend and holiday events', 'New shops and restaurants', 'Gi
 def news_form_open():
     """Opening <form> tag plus the spam trap. Without JavaScript the form posts straight to Mailchimp."""
     return (f'<form class="form news-form" data-newsletter action="{E(NEWSLETTER_FORM_ACTION)}" method="post" novalidate>'
+            f'<input type="hidden" name="tags" value="{E(NEWSLETTER_TAG_ID)}">'
             f'<div class="news-trap" aria-hidden="true"><input type="text" name="{NEWSLETTER_BOT_FIELD}" tabindex="-1" value="" autocomplete="off"></div>')
 
 
