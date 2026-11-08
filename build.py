@@ -25,6 +25,33 @@ JS = open(os.path.join(HERE, 'site.js')).read()
 ADOBE_FONTS_KIT = ''
 FONTS = 'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Jost:wght@400;500;700&family=Montserrat:wght@600;700;800&family=Unbounded:wght@800;900&display=swap'
 
+# Google Analytics 4. Paste the site's Measurement ID here (it starts with G-, found in Google Analytics
+# under Admin > Data streams > the downtownkalamazoo.us stream). Leave it as '' to turn analytics off.
+# The tag only runs on downtownkalamazoo.us (not on test copies) and skips visitors whose browser sends
+# a Global Privacy Control signal. Pages work the same with or without it.
+GA_MEASUREMENT_ID = 'G-QC6KTD2JQB'
+GA_HOSTS = ('downtownkalamazoo.us', 'www.downtownkalamazoo.us')
+
+_ga_cache = []
+def analytics_tag():
+    if _ga_cache:
+        return _ga_cache[0]
+    _ga_cache.append(_analytics_tag())
+    return _ga_cache[0]
+
+def _analytics_tag():
+    mid = GA_MEASUREMENT_ID.strip()
+    if not re.fullmatch(r'G-[A-Z0-9]{4,20}', mid):
+        if mid:
+            print(f'WARNING: GA_MEASUREMENT_ID {mid!r} does not look like a G- ID; analytics left off.')
+        return ''
+    hosts = ', '.join(f"'{h}'" for h in GA_HOSTS)
+    return (f'''
+<script>(function(){{var h=[{hosts}];if(h.indexOf(location.hostname)<0||navigator.globalPrivacyControl)return;'''
+            f'''var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id={mid}';'''
+            f'''document.head.appendChild(s);window.dataLayer=window.dataLayer||[];window.gtag=function(){{dataLayer.push(arguments)}};'''
+            f'''gtag('js',new Date());gtag('config','{mid}');}})();</script>''')
+
 import random as _random
 
 # The holiday hub (holidays/) is promoted across the site while this is True: a "Holidays" link in the
@@ -296,7 +323,7 @@ def page(path, title, body, current=None, description='', root=None):
 <meta property="og:image" content="{SITE_URL}og-image.png">
 <link rel="icon" href="{r}favicon.png">
 <meta name="claude:viewport-fit-sides" content="cover">
-<script>document.documentElement.classList.add('js')</script>
+<script>document.documentElement.classList.add('js')</script>{analytics_tag()}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{FONTS}">{f'{chr(10)}<link rel="stylesheet" href="https://use.typekit.net/{ADOBE_FONTS_KIT}.css">' if ADOBE_FONTS_KIT else ''}
