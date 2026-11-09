@@ -66,6 +66,7 @@ hide:
   kzoom: Marketing agency office; removed from the visitor directory Nov 2026
   kalamazoo-pickers: Removed from the directory at staff request, Nov 3, 2026
   luxe-gift-shop-boutique: Removed from the directory at staff request, Nov 3, 2026
+  the-urban-collaborative: Removed from the directory at staff request, Nov 9, 2026
 
 update:
   the-spirit-of-kalamazoo:
@@ -75,8 +76,15 @@ update:
     - Thu–Sat 11am–8pm
     - Sun noon–5pm
   lmcu:
+    hours:
+    - Mon–Thu 9am–5:30pm
+    - Fri 9am–6pm
+    - Sat 9am–1pm
+    - Sun closed
     cat: services
   southwest-michigan-first:
+    hours:
+    - Mon–Fri 8am–5pm
     cat: orgs
   kalamazoo-defender:
     cat: orgs
@@ -116,6 +124,8 @@ update:
     - Thu–Sat 10am–8pm
     - Sun 11am–5pm
   fifth-third-bank:
+    hours:
+    - Mon–Fri 9am–5pm
     address: 136 E Michigan Ave, Kalamazoo, MI 49007
     phone: (269) 567-7800
     desc: A Fifth Third Bank branch with an ATM in the Fifth Third Bank Building on East Michigan Avenue.
@@ -130,6 +140,9 @@ update:
     hours:
     - Mon–Sat 11am–6pm
   walgreens:
+    hours:
+    - Mon–Fri 7am–10pm
+    - Sat–Sun 8am–10pm
     website: https://www.walgreens.com/locator/walgreens-760+w+michigan+ave-kalamazoo-mi-49007/id=15690
   grifols-plasma-donation-center:
     website: https://www.grifolsplasma.com/en/-/kalamazoo-mi
@@ -149,7 +162,7 @@ update:
   catalyst-center:
     website: https://www.southwestmichiganfirst.com/events/catalyst-center
     hours:
-    - Event space; open for booked events
+    - Mon–Fri 8am–5pm
   glow-hall:
     website: https://www.theglowhall.com/
     hours:
@@ -173,8 +186,12 @@ update:
     - Sat 10am–2pm
     - Sun–Mon closed
   ladies-library-association:
+    hours:
+    - Hours set by rental agreement
     website: https://ladieslibrarykzoo.org/
   senior-care-partners-pace:
+    hours:
+    - Daily 8am–4pm
     website: https://kalamazoo.seniorcarepartnersmi.org/
   600-kitchen-and-bar:
     hours:
@@ -289,6 +306,7 @@ update:
     - Fri–Sat 11am–midnight
     - Sun 11am–10pm
   integrated-services-of-kalamazoo:
+    phone: (269) 373-6000
     hours:
     - Mon–Fri 8am–5pm
     - Some services by appointment evenings and Saturdays
@@ -447,6 +465,7 @@ update:
     - Fri–Sat 11:30am–10pm
     - Sun noon–9pm
   trim-michigan-avenue-salon:
+    phone: (269) 343-5240
     hours:
     - Tue–Thu 10am–7pm
     - Fri 10am–5pm
@@ -708,6 +727,168 @@ update:
     - Fri 11am–midnight
     - Sat 10am–midnight
     - Sun 10am–9pm
+  # Hours for arts, services and organizations, from staff, Nov 9, 2026
+  arcus-gallery:
+    hours:
+    - Tue–Thu 11am–2pm
+  black-arts-cultural-center:
+    hours:
+    - Tue–Fri 10am–3pm
+  crescendo-academy:
+    hours:
+    - Scheduled classes, Monday through Friday
+  the-epic-center:
+    website: https://epickalamazoo.org/
+    hours:
+    - Mon–Sat 9am–9pm
+    - Sun 9am–6pm
+  the-foundry:
+    website: https://thefoundrykzoo.com/
+    hours:
+    - Open for scheduled space rentals
+  mrc-artworks:
+    website: https://www.mrcartworks.org/
+    hours:
+    - Mon–Wed 9am–4pm
+    - Thu–Fri 9am–7pm
+    - Sat 11am–4pm
+    - Sun closed
+  shakespeare-s-lower-level:
+    website: https://shakespearespub.com/
+    hours:
+    - Sun–Wed 11:30am–11pm
+    - Thu 11:30am–midnight
+    - Fri–Sat 11:30am–1am
+  the-station-dancewear-and-studios:
+    hours:
+    - Hours vary week to week
+  wellspring-cori-terry-dancers:
+    website: https://wellspringdance.org/
+    hours:
+    - Class times vary, Monday–Thursday and Saturday
+  the-xperience-by-luxury-escapes:
+    website: https://www.thexperiencekzoo.com/
+    hours:
+    - Wed–Thu 10am–6pm
+    - Fri–Sat noon–1am
+    - Sun 3–10pm
+    - Mon–Tue closed
+  chase-bank:
+    hours:
+    - Mon–Fri 9am–5pm
+    - Sat–Sun closed
+  dobbs-optical:
+    website: https://www.dobbsoptical.com/
+    hours:
+    - By appointment only; call to schedule
+  drue:
+    hours:
+    - Mon 10am–7pm
+    - Tue–Thu 10am–8pm
+    - Fri 10am–5pm
+    - Sat 9am–4pm
+    - Sun closed
+  hiemstra-optical:
+    website: https://hiemstraoptical.com/
+    hours:
+    - Mon–Fri 8:30am–5:30pm
+    - Sat–Sun closed
+  prolific-ink-studio:
+    website: https://www.facebook.com/ramosinkster/
+    hours:
+    - By appointment only
+  ryan-smokoska-tattoos:
+    website: https://www.facebook.com/Ryansmokoska/
+    hours:
+    - By appointment only
+  samson-s-barbershop:
+    hours:
+    - Mon 10am–5pm
+    - Tue 9am–6pm
+    - Wed 8am–8pm
+    - Thu–Fri 8am–5pm
+    - Sat 9am–3pm
+    - Sun 9am–5pm
+  west-michigan-cancer-center:
+    hours:
+    - Mon–Fri 8am–5pm
+    - Sat–Sun closed
+  the-desenberg:
+    hours:
+    - Hours set by rental agreement
+  the-radisson-hotel:
+    hours:
+    - Check-in 4pm, check-out noon
+  upjohnhouse:
+    name: The Upjohn House
+    website: https://upjohnhouse.com/
+    hours:
+    - Daily 9am–6pm
+  ask-family-service:
+    website: https://www.askforkids.org/
+    hours:
+    - Mon–Fri 9am–5pm
+    - Sat–Sun closed
+  fair-housing-center-of-southwest-michigan:
+    website: https://www.fhcswm.org/
+    hours:
+    - Mon–Thu 8:30am–4pm
+    - Fri 8:30am–noon
+    - Sat–Sun closed
+  friends-with-disabilities-fwd:
+    website: https://friendswithdisabilities.org/
+    hours:
+    - Tue–Fri 11am–4pm
+  helping-hands-wellness-center:
+    website: https://helpinghandsmedicine.com/
+    hours:
+    - Mon, Wed, Fri 9am–7pm
+    - Closed 1–2pm for lunch
+  jazz-creative-institute:
+    website: https://kalamazoomusicschool.com/
+    hours:
+    - Sun–Thu noon–8pm
+    - Fri–Sat closed
+  the-jim-gilmore-jr-foundation:
+    website: https://www.jgfdn.org/
+    hours:
+    - By appointment; call to schedule
+  kalamazoo-academy-of-rock:
+    website: https://kzoorock.com/
+    hours:
+    - Hours vary
+  kalamazoo-community-foundation:
+    hours:
+    - Mon–Thu 8am–5:30pm
+    - Fri 8am–noon
+    - Sat–Sun closed
+  kalamazoo-nonprofit-advocacy-coalition:
+    website: https://knac1853.org/
+    hours:
+    - Open 24/7
+  prevention-works:
+    website: https://www.prevention-works.org/
+    hours:
+    - Mon–Thu 9am–5pm
+    - Fri 9am–noon
+    - Sat–Sun closed
+  public-media-network:
+    website: https://publicmedianet.org/
+    hours:
+    - Mon 6–8pm
+    - Tue–Thu 2–8pm
+    - Fri 11am–5pm
+    - Sat 10am–noon
+    - Sun closed
+  rootead-enrichment-center:
+    hours:
+    - Tue–Fri 10am–5pm
+    - Sat 10am–3pm
+    - Sun–Mon closed
+  startup-zoo:
+    website: https://startupzoo.org/
+    hours:
+    - Hours set by rental agreement
 
 social_district: [locals-bar]
 
