@@ -3,7 +3,8 @@ import html
 import directory_page
 
 E = html.escape
-BIZ = {b['name']: b for b in directory_page.BIZ}
+# Look up by directory id (safe when a name changes in directory-updates.yml) or by name.
+BIZ = {**{b['name']: b for b in directory_page.BIZ}, **{b['id']: b for b in directory_page.BIZ}}
 
 
 def biz(name, kicker='A local find'):
@@ -121,7 +122,7 @@ GENERAL = [
     PAGE_SECRETS['events/moonlight-madness.html'],
     biz("Uncle Buddy's Toy Stash"), biz('The Aroma Labs'), biz('Kalamazoo Candle Company'), biz('Pop City Popcorn'),
     biz('Crawlspace Comedy Theatre'), biz('Kalamazoo Book Arts Center'), biz('Rocket Fizz'), biz('Mason Jar Plant Shop'),
-    biz('Glass Art Kalamazoo'), biz('Climb Kalamazoo'), biz('Sarkozy Bakery'), biz('Kalamazoo Spice and Tea Merchants'),
+    biz('Glass Art Kalamazoo'), biz('Climb Kalamazoo'), biz('Sarkozy Bakery'), biz('kalamazoo-spice-and-tea-merchants'),
 ]
 POOL = {}
 for _f in GENERAL + list(PAGE_SECRETS.values()):
