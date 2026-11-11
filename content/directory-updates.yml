@@ -136,7 +136,8 @@ update:
     - Sun–Thu 11am–10pm
     - Fri–Sat 11am–midnight
   kalamazoo-spice-and-tea-merchants:
-    website: https://www.spicemerchants.biz/kalamazoo
+    name: Spice & Tea Merchants
+    website: https://www.facebook.com/kzoospicetea
     hours:
     - Mon–Sat 11am–6pm
   walgreens:
@@ -215,7 +216,7 @@ update:
     - Mon closed
   beowoof-provisions-for-pets:
     hours:
-    - Mon–Fri 10am–7pm
+    - Mon–Fri 10am–6pm
     - Sat 10am–6pm
     - Sun closed
   bimbo-s-pizza:
@@ -905,6 +906,15 @@ add:
     cat: dine
     address: 300 E Michigan Ave, Kalamazoo, MI 49007
     social_district: true
+  - name: Beowoof Dog Salon
+    cat: services
+    address: 428 S. Burdick Street, Kalamazoo, MI 49007
+    phone: (269) 888-5966
+    website: https://www.beowoof.com/grooming
+    desc: One-on-one, cage-free dog grooming at Beowoof on South Burdick Street, by appointment only. Call or book online.
+    downtown_dollars: true
+    hours:
+    - By appointment only
   - name: Park Club
     cat: dine
     address: 219 W South St, Kalamazoo, MI 49007

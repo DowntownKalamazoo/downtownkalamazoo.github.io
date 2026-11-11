@@ -568,6 +568,12 @@ businesses:
       price: ""
       description: Toys for cats and dogs.
       wrap_label: Pet toys
+    - name: Holiday apparel sale
+      kind: unwrap
+      for: [pet]
+      price: ""
+      description: Selected apparel is 20% off through Christmas.
+      wrap_label: Apparel
 
 - business: bimbo-s-pizza
   gifts:
