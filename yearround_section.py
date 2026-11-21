@@ -1099,8 +1099,14 @@ def build_waste():
     check = '<svg aria-hidden="true" focusable="false" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
     cross = '<svg aria-hidden="true" focusable="false" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>'
     pin = '<svg aria-hidden="true" focusable="false" width="18" height="24" viewBox="-12 -18 24 34"><path d="M0 14 C-5 6 -11 1 -11 -6 A11 11 0 1 1 11 -6 C11 1 5 6 0 14 Z" fill="#38a669" stroke="#121345" stroke-width="2.5"/><circle cx="0" cy="-6" r="4" fill="#121345"/></svg>'
-    with open(os.path.join(HERE, 'files', 'waste-recycling', 'bigbelly-map.svg')) as f:
-        station_map = f.read()
+    map_file = os.path.join(HERE, 'files', 'waste-recycling', 'bigbelly-map.svg')
+    if os.path.exists(map_file):
+        with open(map_file) as f:
+            station_map = f.read()
+    else:
+        # Don't stop the whole site if the map hasn't been uploaded yet; the station list below still shows.
+        print('::warning title=Waste & recycling::files/waste-recycling/bigbelly-map.svg is missing, so the station map is left off the page. Upload it to files/waste-recycling.')
+        station_map = '<p class="wr-sub" style="margin:1rem">The station map is coming soon. See the list of stations by street below.</p>'
     bars = ''.join(f'<li><span class="wr-bar-label">{E(d)}</span><span class="wr-bar-track"><span class="wr-bar" style="width:{p}%"></span></span><strong class="wr-bar-val">{p}%</strong></li>' for d, p in WASTE_AUDIT)
     right = ''.join(f'<li>{E(t)}</li>' for t in WASTE_AUDIT_RIGHT)
     wrong = ''.join(f'<li>{E(t)}</li>' for t in WASTE_AUDIT_WRONG)
