@@ -1039,45 +1039,220 @@ def build_ambassadors():
 
 
 # ---------------------------------------------------------------- Waste & recycling
+# Downtown recycling for take-out cups and containers (FPI partnership, launched November 21, 2026).
+# The lists below match the City of Kalamazoo's recycling page and the downtown bin signs.
+# The map is files/waste-recycling/bigbelly-map.svg. Its pins were placed from the Bigbelly portal map,
+# not from coordinates, so they show the block, not the exact spot.
+WASTE_STATIONS = 51
+WASTE_ADDED_2025 = 26
+WASTE_RECYCLE = [
+    ('Paper cups with lids', '(coffee, hot cocoa, fountain drinks)', True),
+    ('Plastic cups with lids', '', False),
+    ('Plastic containers with lids', 'including deli and soup containers, bowls, and clear or black take-out containers', False),
+    ('Clear plastic clamshells', '', False),
+    ('Paper take-out containers', '(sandwich and fry boxes, food trays and boats)', False),
+    ('Paper bags', '', False),
+    ('Drink carriers', '', False),
+    ('Aluminum foil and foil trays', '(please ball up loose foil)', False),
+    ('Cans', '(aluminum, tin, and steel)', False),
+    ('Glass bottles and jars', '', False),
+]
+WASTE_LANDFILL = [
+    ('Straws, stirrers, and stoppers', '', False),
+    ('Plastic utensils', '', False),
+    ('Napkins, paper towels, and paper plates', '(even if unused)', False),
+    ('Condiment packets', '', False),
+    ('Chip bags and wrappers', '', False),
+    ('Plastic bags', '', True),
+    ('Foam cups and containers', '', True),
+    ('Paper or cardboard with grease or food residue', '', False),
+    ('Broken glass', '', False),
+]
+WASTE_CORRIDORS = [
+    ('About 20', 'along the Kalamazoo Mall (Burdick Street), from Kalamazoo Avenue to Lovell Street'),
+    ('12', 'on East Michigan Avenue and around Portage Street'),
+    ('5', 'along Water Street and Arcadia Creek'),
+    ('4', 'on West Michigan Avenue'),
+    ('4', 'on Rose Street'),
+    ('3', 'on Kalamazoo Avenue east of the Mall'),
+    ('3', 'on Farmers Alley, Portage Street and East South Street'),
+]
+# 2025 waste audit by Western Michigan University interns (Industrial-Organizational Behavior Management program).
+# Contamination = landfill items plus liquid, as a share of everything in the recycling side, by weight.
+WASTE_AUDIT = [('July 2, 2025', 49), ('July 9, 2025', 36), ('July 16, 2025', 46)]
+WASTE_AUDIT_AVG = '43.7'
+WASTE_AUDIT_RIGHT = ['Plastic cups', 'Paper cups', 'Paper (documents and scrap)', 'Aluminum cans', 'Glass bottles', 'Cardboard', 'Plastic water bottles']
+WASTE_AUDIT_WRONG = ['Foam take-out containers and foam cups', 'Food', 'Liquid left in cups and bottles', 'Straws left in cups', 'Soft plastics like bags and wrappers', 'Clothing']
+NEWS_TAKEOUT = 'news/takeout-recycling-downtown.html'
+DROP_OFF_URL = CITY + '/Residents/Recycling-Waste/Recycling-Drop-Off'
+CURBSIDE_URL = CITY + '/Residents/Recycling-Waste/Recycling'
+
+
 def build_waste():
+    def items(rows, tag_text):
+        out = ''
+        for name, note, flag in rows:
+            tag = f' <span class="wr-tag">{tag_text}</span>' if flag else ''
+            note = f' {E(note)}' if note and not note.startswith('including') else (f', {E(note)}' if note else '')
+            out += f'<li><strong>{E(name)}</strong>{note}{tag}</li>'
+        return out
+    check = '<svg aria-hidden="true" focusable="false" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
+    cross = '<svg aria-hidden="true" focusable="false" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>'
+    pin = '<svg aria-hidden="true" focusable="false" width="18" height="24" viewBox="-12 -18 24 34"><path d="M0 14 C-5 6 -11 1 -11 -6 A11 11 0 1 1 11 -6 C11 1 5 6 0 14 Z" fill="#38a669" stroke="#121345" stroke-width="2.5"/><circle cx="0" cy="-6" r="4" fill="#121345"/></svg>'
+    with open(os.path.join(HERE, 'files', 'waste-recycling', 'bigbelly-map.svg')) as f:
+        station_map = f.read()
+    bars = ''.join(f'<li><span class="wr-bar-label">{E(d)}</span><span class="wr-bar-track"><span class="wr-bar" style="width:{p}%"></span></span><strong class="wr-bar-val">{p}%</strong></li>' for d, p in WASTE_AUDIT)
+    right = ''.join(f'<li>{E(t)}</li>' for t in WASTE_AUDIT_RIGHT)
+    wrong = ''.join(f'<li>{E(t)}</li>' for t in WASTE_AUDIT_WRONG)
+    related = (f'<li><a href="{{R}}{NEWS_TAKEOUT}">Kalamazoo expands recycling to downtown for take-out cups and containers</a></li>'
+               '<li><a href="{R}news/more-smart-recycling-units.html">More smart recycling units coming downtown</a></li>' if SHOW_NEWS else '') + '<li><a href="{R}ambassadors.html">Downtown Ambassadors</a></li>'
+    corridors = ''.join(f'<li><strong>{n}</strong> {E(t)}</li>' for n, t in WASTE_CORRIDORS)
+    buttons = ('<p class="btn-row" style="margin-top:1.5rem"><a class="btn btn-primary" href="#steps">Recycle your cup in 3 steps</a>'
+               '<a class="btn" href="#what-goes-where">What goes where</a></p>')
     body = page_hero([('index.html', 'Home'), ('about.html', 'About'), ('waste-recycling.html', 'Waste & recycling')], 'Bigbelly program', 'Waste &amp; recycling',
-                     'Downtown’s smart Bigbelly bins sort trash from recycling and let the ambassadors know when they’re full. Here’s how they work, and how to use them right.', 'f-green')
-    body += f'''<section class="section" aria-labelledby="how-title">
-  <div class="wrap two-col">
+                     'Downtown Kalamazoo provides public trash and recycling collection throughout downtown through a network of Bigbelly stations. '
+                     'Each station has a landfill side and a recycling side, so you can sort your items wherever you shop, dine, or work downtown.', 'f-green', extra=buttons)
+    body += f'''<section class="section" aria-labelledby="takeout-title">
+  <div class="wrap wr-intro">
     <div class="prose" style="max-width:none">
-      {in_short('Bigbelly bins have two sides: one for trash and one for recycling. Keep food and liquids out of the recycling side. When you are not sure, use the trash side.')}
-      <h2 class="h2" id="how-title">How the bins work</h2>
-      <ul class="checks f-green">
-        <li><strong>Two sides.</strong> Every unit has one bin for trash and one for recycling.</li>
-        <li><strong>Smart sensors.</strong> When a bin is full, it sends an alert, and the Downtown Ambassadors empty it.</li>
-        <li><strong>Off the sidewalk.</strong> Ambassadors take what they collect to a dumpster site on Farmers Alley for pickup.</li>
-      </ul>
-      <dl class="glance" style="margin-block:1.5rem">
-        <div><dt>Dual units downtown</dt><dd>51</dd></div>
-        <div><dt>New units added in 2025</dt><dd>26</dd></div>
-        <div><dt>Old cans replaced</dt><dd>58</dd></div>
-        <div><dt>Units downtown by December 2021</dt><dd>25</dd></div>
-      </dl>
-      <h2 class="h2">Recycle right</h2>
-      <p>Western Michigan University interns from the Industrial-Organizational Behavior Management program audited the downtown bins and found that <strong>nearly 44% of what went into the recycling side was contamination</strong>, mostly food waste and things that can’t be recycled. A little care makes the whole bin recyclable.</p>
-      <ul class="checks f-blue">
-        <li>Put food, napkins and anything wet or greasy on the trash side.</li>
-        <li>Empty cups and bottles before you recycle them.</li>
-        <li>Follow the labels on the unit for what goes where.</li>
-        <li>Not sure? Trash it. One wrong item can spoil a whole bin of recycling.</li>
-      </ul>
-      <h2 class="h2" style="margin-top:2rem">Who makes it happen</h2>
-      <p>The City of Kalamazoo runs the program with the Downtown Ambassadors. The 2025 expansion was funded by the <a href="{{R}}boards.html">Downtown Economic Growth Authority (DEGA)</a>, and trash and recycling are hauled by the city’s contractor, Best Way Disposal. Audits will continue, and their results guide the signs on the bins.</p>
-      {sources_list([('WMUK: Kalamazoo will replace old trash cans downtown with more smart recycling units (August 2025)', 'https://www.wmuk.org/wmuk-news/2025-08-01/the-city-of-kalamazoo-will-replace-old-trash-cans-downtown-with-more-smart-recycling-units'), ('Waste360: Kalamazoo updates downtown recycling with smart bins and an audit program', 'https://www.waste360.com/waste-recycling/kalamazoo-mi-updates-downtown-recycling-with-smart-bins-audit-program')])}
+      <div class="wr-new fill f-green">
+        <p class="wr-new-kicker">New this season</p>
+        <h2 class="wr-new-title">Did you know?</h2>
+        <p>Paper cups are the newest addition to Kalamazoo’s recycling list. Clean, empty take-out cups and containers can now go in downtown recycling bins.</p>
+      </div>
+      <h2 class="h2" id="takeout-title">Take-out cups and containers are recyclable downtown</h2>
+      <p>These items are already accepted in residential recycling carts across the city. Now you can recycle them on the go, too.</p>
+      <p>Downtown’s Bigbelly network grew to {WASTE_STATIONS} stations in 2025, when {WASTE_ADDED_2025} new units were added.</p>
+      <p>The take-out recycling expansion is part of a partnership between the City of Kalamazoo, Downtown Kalamazoo, and the Foodservice Packaging Institute (FPI), supported by a communications grant from FPI with co-funding from the NextGen Consortium.</p>
+      {f'<p><a href="{{R}}{NEWS_TAKEOUT}">Read the announcement</a></p>' if SHOW_NEWS else ''}
+    </div>
+    <figure class="wr-photo">
+      <img src="{{R}}files/waste-recycling/bigbelly-2025.jpg" width="1179" height="1133" loading="lazy" decoding="async" alt="Downtown Ambassadors and staff gathered around a new Bigbelly station on a brick downtown sidewalk. The station has a blue recycling opening on the left and a trash opening on the right.">
+      <figcaption>Downtown Ambassadors with one of the {WASTE_ADDED_2025} Bigbelly stations added in 2025.</figcaption>
+    </figure>
+  </div>
+</section>
+<section class="wr-steps" id="steps" aria-labelledby="steps-title">
+  <div class="wrap">
+    <h2 class="h2" id="steps-title">Recycle your cup in 3 easy steps</h2>
+    <ol class="wr-step-list">
+      <li class="f-pink"><span class="wr-step-num fill" aria-hidden="true">1</span><h3>Step 1: Empty it</h3><p>Pour out any leftover coffee, cocoa, or ice.</p></li>
+      <li class="f-green"><span class="wr-step-num fill" aria-hidden="true">2</span><h3>Step 2: Toss the straw</h3><p>Straws, stirrers, and stoppers go in the trash.</p></li>
+      <li class="f-red"><span class="wr-step-num fill" aria-hidden="true">3</span><h3>Step 3: Recycle it</h3><p>Put the cup, lid, and sleeve in the recycling bin. You can leave the lid on.</p></li>
+    </ol>
+  </div>
+</section>
+<section class="section" id="what-goes-where" aria-labelledby="where-title">
+  <div class="wrap">
+    <h2 class="h2" id="where-title">What goes where</h2>
+    <p class="wr-sub">All items must be <strong>clean and empty</strong>. Remove liquid and food residue before recycling. Place items loose in the bin, not in a bag. Labels and lids can stay on.</p>
+    <div class="wr-sort">
+      <section class="wr-bin f-green" aria-labelledby="bin-recycle">
+        <div class="wr-bin-head fill">{check}<div><p class="wr-bin-kicker">Clean &amp; empty only</p><h3 id="bin-recycle">Recycle</h3></div></div>
+        <ul class="wr-bin-list">{items(WASTE_RECYCLE, 'New')}</ul>
+      </section>
+      <section class="wr-bin f-red" aria-labelledby="bin-landfill">
+        <div class="wr-bin-head fill">{cross}<div><p class="wr-bin-kicker">Not accepted in recycling</p><h3 id="bin-landfill">Landfill</h3></div></div>
+        <ul class="wr-bin-list">{items(WASTE_LANDFILL, 'Recyclable at drop-off events')}</ul>
+        <p class="wr-bin-note">Plastic bags and foam can’t go in downtown or curbside recycling, but they can be recycled at Kalamazoo’s {ext(DROP_OFF_URL, 'Recycling Drop-Off Events')}. Plastic grocery bags can also be returned to many big box stores.</p>
+      </section>
+    </div>
+  </div>
+</section>
+<section class="section band" aria-labelledby="how-title">
+  <div class="wrap">
+    <h2 class="h2" id="how-title">How the Bigbelly stations work</h2>
+    <ul class="checks f-green wr-how">
+      <li><strong>Two sides.</strong> Every station has one bin for recycling and one for the landfill.</li>
+      <li><strong>Smart sensors.</strong> When a bin is full, it sends an alert, and the Downtown Ambassadors empty it.</li>
+      <li><strong>Off the sidewalk.</strong> Ambassadors take what they collect to a dumpster site on Farmers Alley for pickup.</li>
+    </ul>
+    <dl class="glance" style="margin-top:1.75rem">
+      <div><dt>Stations downtown</dt><dd>{WASTE_STATIONS}</dd></div>
+      <div><dt>New stations added in 2025</dt><dd>{WASTE_ADDED_2025}</dd></div>
+      <div><dt>Old trash cans replaced</dt><dd>58</dd></div>
+      <div><dt>Recycling contamination, 2025 audit</dt><dd>{WASTE_AUDIT_AVG}%</dd></div>
+    </dl>
+  </div>
+</section>
+<section class="section" id="find-a-station" aria-labelledby="map-title">
+  <div class="wrap">
+    <h2 class="h2" id="map-title">Find a Bigbelly station</h2>
+    <p class="wr-sub">There are {WASTE_STATIONS} Bigbelly stations downtown, each with a recycling side and a landfill side. Most line the Kalamazoo Mall, Michigan Avenue, Water Street and Kalamazoo Avenue.</p>
+    <figure class="wr-map">
+      <div class="wr-map-pan" tabindex="0" role="region" aria-label="Station map. On a small screen, scroll sideways to see all of it.">{station_map}</div>
+      <figcaption>{pin} <span><strong>Bigbelly station</strong> (recycling + landfill). Pins show the block, not the exact spot.</span></figcaption>
+    </figure>
+    <h3 class="h3" style="margin-top:1.75rem">Stations by street</h3>
+    <ul class="wr-corridors">{corridors}</ul>
+  </div>
+</section>
+<section class="section band" id="audit" aria-labelledby="audit-title">
+  <div class="wrap">
+    <h2 class="h2" id="audit-title">What the 2025 waste audit found</h2>
+    <p class="wr-sub">In July 2025, Western Michigan University interns from the Industrial-Organizational Behavior Management program audited the downtown recycling. On three mornings, the Downtown Ambassadors brought bags from the recycling side of the bins to Farmers Alley, where the team sorted everything by hand and weighed what belonged in recycling, what belonged in the landfill, and the liquid left inside.</p>
+    <div class="wr-audit">
+      <figure class="wr-audit-chart">
+        <figcaption><span class="wr-audit-big">{WASTE_AUDIT_AVG}%</span> <span>of what went into the recycling side, by weight, was trash or liquid, on average across the three audits.</span></figcaption>
+        <ul class="wr-bars">{bars}</ul>
+        <p class="wr-audit-note">Contamination counts landfill items and liquid. Weights from July 16 are partly estimated because of a problem with the scale.</p>
+      </figure>
+      <div class="wr-audit-lists">
+        <section class="wr-audit-list f-green" aria-labelledby="audit-right"><h3 class="h3" id="audit-right">Often recycled right</h3><ul class="checks f-green">{right}</ul></section>
+        <section class="wr-audit-list f-red" aria-labelledby="audit-wrong"><h3 class="h3" id="audit-wrong">Most common mistakes</h3><ul class="checks f-red">{wrong}</ul></section>
+      </div>
+    </div>
+    <div class="wr-audit-result">
+      <h3 class="h3">What changed</h3>
+      <p>The audit found cups and bottles with drinks still in them and straws left in cups. The new signs on every Bigbelly station show the most common mistakes on the landfill side, like foam, straws, and plastic bags and wrappers, and say “clean and empty only” on the recycling side. That’s also why step 1 for every cup is to empty it. Audits will continue, and their results will guide the signs.</p>
+    </div>
+  </div>
+</section>
+<section class="section-tight">
+  <div class="wrap">
+    <div class="wr-loop">
+      <div class="wr-loop-pat" aria-hidden="true"></div>
+      <div class="wr-loop-text">
+        <p class="wr-loop-kicker">Where does it go?</p>
+        <h2 class="h2">From your cup to a cereal box, right here in Kalamazoo</h2>
+        <p>Paper cups recycled downtown can come back as new packaging close to home. Graphic Packaging International operates a paper mill in Kalamazoo that buys recovered paper cups and turns that fiber into new paperboard packaging, including cereal and food boxes, beverage carriers, and even new paper cups.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap wr-more">
+    <section class="wr-card f-green" aria-labelledby="dropoff-title">
+      <h2 class="h3" id="dropoff-title">Recycling drop-off events</h2>
+      <p>Some items can’t go in downtown bins or curbside carts but can still be recycled. The City of Kalamazoo hosts drop-off events throughout the year for items like foam and plastic bags.</p>
+      <p class="wr-card-link">{ext(DROP_OFF_URL, 'See upcoming drop-off events')}</p>
+    </section>
+    <section class="wr-card f-blue" aria-labelledby="home-title">
+      <h2 class="h3" id="home-title">Recycling at home</h2>
+      <p>All City of Kalamazoo residents get bi-weekly curbside recycling at no additional cost. The same take-out cups and containers accepted downtown are accepted in your home cart. Not sure about an item? Look it up in the {ext(CITY + '/recyclecoach', 'Recycle Coach')} app.</p>
+      <p class="wr-card-link">{ext(CURBSIDE_URL, 'Curbside recycling, carts and schedules')}</p>
+    </section>
+    <section class="wr-card f-red" aria-labelledby="questions-title">
+      <h2 class="h3" id="questions-title">Questions?</h2>
+      <p>Contact the City of Kalamazoo: call <a href="tel:311">311</a> or <a href="tel:+12693378000">{DOWNTOWN_PHONE}</a>, or email <a href="mailto:311@kalamazoocity.org">311@kalamazoocity.org</a>.</p>
+      <p><strong>Bin full or broken?</strong> Email <a href="mailto:{DOWNTOWN_EMAIL}">{DOWNTOWN_EMAIL}</a> or call 311 with the location.</p>
+    </section>
+  </div>
+</section>
+<section class="section" aria-labelledby="who-title">
+  <div class="wrap two-col">
+    <div class="prose">
+      <h2 class="h2" id="who-title">Who makes it happen</h2>
+      <p>The City of Kalamazoo runs the Bigbelly program with the <a href="{{R}}ambassadors.html">Downtown Ambassadors</a>. The 2025 expansion was funded by the <a href="{{R}}boards.html">Downtown Economic Growth Authority (DEGA)</a>, and trash and recycling are hauled by the city’s contractor, Best Way Disposal.</p>
+      {sources_list([('WMUK: Kalamazoo will replace old trash cans downtown with more smart recycling units (August 2025)', 'https://www.wmuk.org/wmuk-news/2025-08-01/the-city-of-kalamazoo-will-replace-old-trash-cans-downtown-with-more-smart-recycling-units'), ('Waste360: Kalamazoo updates downtown recycling with smart bins and an audit program', 'https://www.waste360.com/waste-recycling/kalamazoo-mi-updates-downtown-recycling-with-smart-bins-audit-program'), ('City of Kalamazoo: Recycling', CURBSIDE_URL)], 'h3')}
     </div>
     <div class="aside">
-      <section class="panel f-green"><h2>Bin full or broken?</h2><p>Email {DOWNTOWN_EMAIL} or call 311 with the location.</p></section>
-      <section class="panel"><h2>Businesses</h2><p>Questions about trash and recycling for your business? Email {DOWNTOWN_EMAIL}.</p></section>
-      <section class="panel"><h2>Related</h2><ul><li><a href="{{R}}ambassadors.html">Downtown Ambassadors</a></li>{'<li><a href="{R}news/more-smart-recycling-units.html">More smart recycling units coming downtown</a></li>' if SHOW_NEWS else ''}</ul></section>
+      <section class="panel"><h2>Related</h2><ul>{related}</ul></section>
     </div>
   </div>
 </section>'''
-    page('waste-recycling.html', 'Waste & recycling', body, None, 'Downtown Kalamazoo’s Bigbelly smart trash and recycling program, and how to recycle right.')
+    page('waste-recycling.html', 'Waste & recycling', body, None,
+         'Recycle take-out cups and containers in downtown Kalamazoo’s Bigbelly stations: what goes where, three steps for cups, and a map of all 51 stations.')
 
 
 # ---------------------------------------------------------------- Social District
