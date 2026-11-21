@@ -7,3 +7,6 @@ Name each photo simply, like `cherris-truffles.jpg`, then add it to its gift in 
 
     image: files/gifts/cherris-truffles.jpg
     image_alt: A box of nine truffles dusted with cocoa.
+
+If the image is just a business's logo, also add `photo_style: logo` so the whole logo shows on a little gift card
+instead of being cropped like a photo.
