@@ -23,6 +23,8 @@
 #                      Any size is fine. The site resizes it.
 #   image_alt:         required with a photo. A sentence describing it for people who can't see it.
 #   photo_focus:       optional: top or bottom, if the photo's crop cuts off the product (center is normal)
+#   photo_style:       optional: logo, when the image is just a business's logo. The whole logo shows on a little
+#                      gift card over the business's wrapping paper, instead of being cropped like a photo.
 #   wrap_label:        one or two words shown on the gift wrap when there's no photo, like Truffles.
 #                      If it's blank, the tag uses the gift's name.
 #   link:              optional. Where the "From" line goes instead of the directory listing,
@@ -48,6 +50,8 @@ businesses:
       for: [someone-special, self-care, has-everything]
       price: "$100 to $1,000"
       description: A night at a historic boutique inn downtown, with free on-site parking and a freshly prepared two-course breakfast.
+      image: files/gifts/kalamazoo-house-gift-certificate.jpg
+      image_alt: A Kalamazoo House gift certificate showing the inn's green Victorian house, propped among holiday greenery and gold ornaments.
       wrap_label: Overnight stay
       only_in_kalamazoo: yes
 
@@ -56,21 +60,36 @@ businesses:
     - name: WMU squirrel tumbler
       kind: unwrap
       for: [kalamazoo-lover, coffee-tea]
-      price: ""
+      price: "$40"
       description: A triple-insulated 24 oz steel Corkcicle tumbler for Western Michigan University fans.
+      image: files/gifts/spirit-of-kalamazoo-wmu-tumbler.jpg
+      image_alt: Five white tumblers stacked in a pyramid, each printed with a squirrel wearing a yellow Western Michigan sweater.
       wrap_label: Tumbler
     - name: Kalamazoo hoodie
       kind: unwrap
       for: [kalamazoo-lover, has-everything]
-      price: ""
+      price: "$40"
       description: A warm, cozy unisex hoodie for chilly days.
+      image: files/gifts/spirit-of-kalamazoo-hoodie.jpg
+      image_alt: A heather blue hoodie printed with "Kalamazoo, Michigan, Est. 1884" and a Michigan outline.
       wrap_label: Hoodie
       only_in_kalamazoo: yes
+    - name: Michi-gummies
+      kind: eat-drink
+      for: [kid, kalamazoo-lover]
+      price: ""
+      description: Fruity gummies shaped like Michigan, in six flavors.
+      image: files/gifts/spirit-of-kalamazoo-michi-gummies.jpg
+      image_alt: A bag of Michi-Gummies candy with red Michigan-shaped gummies.
+      wrap_label: Gummies
+      stocking_stuffer: yes
     - name: Kalamazoo Hot Sauce
       kind: eat-drink
       for: [foodie, kalamazoo-lover]
-      price: ""
+      price: "$14"
       description: Five hand-crafted flavors from Kalamazoo Hot Sauce Co., made with clean ingredients and no thickeners.
+      image: files/gifts/spirit-of-kalamazoo-hot-sauce.jpg
+      image_alt: Five bottles of The Kalamazoo Hot Sauce Co. sauces lined up in the sun in front of flowers.
       wrap_label: Hot sauce
       only_in_kalamazoo: yes
       stocking_stuffer: yes
@@ -80,14 +99,18 @@ businesses:
     - name: Beginner blacksmithing class
       kind: experience
       for: [maker, adventurer, kid]
-      price: ""
+      price: "$60"
       description: Forge an S hook or garden snake and learn the basics of an ancient craft. Private classes for 1 to 8 people, ages 9 and up.
+      image: files/gifts/combat-ready-art-blacksmithing.jpg
+      image_alt: A hand-forged steel snake and a twisted S hook on a dark wooden block.
       wrap_label: Blacksmithing
     - name: Railroad spike knifemaking class
       kind: experience
       for: [maker, adventurer]
-      price: ""
+      price: "$130"
       description: Turn a railroad spike into a working knife with a handle you choose, in three hours. Their most popular class.
+      image: files/gifts/combat-ready-art-spike-knife.jpg
+      image_alt: A rusty railroad spike above two polished knives forged from railroad spikes, one with a twisted handle.
       wrap_label: Knifemaking
 
 - business: sit-and-stay-winery
@@ -95,22 +118,28 @@ businesses:
     - name: Locally crafted wine
       kind: eat-drink
       for: [foodie, someone-special, host]
-      price: ""
+      price: "From $15"
       description: A large selection, from dry to sweet, with something for everyone.
+      image: files/gifts/sit-and-stay-wine.jpg
+      image_alt: A row of Sit and Stay Winery bottles with cartoon dog labels, Cabernet Sauvignon in front.
       wrap_label: Wine
       only_in_kalamazoo: yes
       age_21: yes
     - name: Gifts for the wine lover
       kind: unwrap
       for: [someone-special, host, has-everything]
-      price: ""
+      price: "From $5"
       description: Wine glasses, decanters and branded shirts.
+      image: files/gifts/sit-and-stay-wine-gifts.jpg
+      image_alt: A pink Sit and Stay Winery T-shirt and cap with a bottle of Pink Moscato.
       wrap_label: Wine gifts
     - name: Make-your-own-wine experience
       kind: experience
       for: [maker, someone-special, foodie]
-      price: ""
+      price: "$300"
       description: Learn to make wine, then bottle it, label it and take it home.
+      image: files/gifts/sit-and-stay-make-wine.jpg
+      image_alt: A smiling man adds ingredients to a bucket of red wine while someone stirs.
       wrap_label: Make wine
       age_21: yes
 
@@ -119,8 +148,10 @@ businesses:
     - name: Specialty gift boxes
       kind: eat-drink
       for: [foodie, coffee-tea, host, has-everything]
-      price: ""
+      price: "From $35"
       description: Curated boxes of house-made spice blends and teas that make gifting easy.
+      image: files/gifts/spice-and-tea-gift-boxes.jpg
+      image_alt: Spice and tea gift boxes wrapped in cellophane and raffia, with the words "Specialty Gift Boxes, starting at $35."
       wrap_label: Gift boxes
 
 - business: studio-grill
@@ -130,6 +161,8 @@ businesses:
       for: [foodie, has-everything]
       price: "$5, $10 or $20"
       description: An easy stocking stuffer in three amounts.
+      image: files/gifts/studio-grill-gift-certificate.jpg
+      image_alt: A red and white $20 Studio Grill gift certificate.
       wrap_label: Gift certificate
       stocking_stuffer: yes
 
@@ -140,6 +173,8 @@ businesses:
       for: [arts-fan, has-everything]
       price: "$20 minimum donation"
       description: A year of original art by artWorks artists. Each calendar supports opportunities for people with disabilities.
+      image: files/gifts/mrc-artworks-calendar.jpg
+      image_alt: The 2027 MRC artWorks calendar, with a rainbow painting on the cover and a snowy forest painting on a month page.
       wrap_label: Calendar
       only_in_kalamazoo: yes
       gives_back: yes
@@ -149,20 +184,25 @@ businesses:
     - name: Colors & Cocktails gift card
       kind: gift-card
       for: [arts-fan, maker]
-      price: ""
+      price: "From $25"
       description: Good for any of their 20-plus art classes.
+      image: files/gifts/colors-cocktails-gift-card.jpg
+      image_alt: The Colors & Cocktails gift card, teal with a pink-dressed painter in the logo.
+      photo_style: logo
       wrap_label: Gift card
     - name: DIY art kits
       kind: unwrap
       for: [kid, maker, arts-fan]
-      price: ""
+      price: "From $9.95"
       description: Over 20 kit styles and dozens of designs, for kids and adults to make at home.
       wrap_label: Art kits
     - name: Art classes for kids and adults
       kind: experience
       for: [arts-fan, maker, someone-special, kid]
-      price: ""
+      price: "From $15"
       description: Canvas, glassware and seasonal workshops for every skill level. Bring your own food and drinks.
+      image: files/gifts/colors-cocktails-art-classes.jpg
+      image_alt: Four smiling women at a studio table hold up the butterfly, macaron and peacock paintings they made.
       wrap_label: Art classes
 
 - business: rocket-fizz
@@ -170,20 +210,26 @@ businesses:
     - name: Build-your-own six-pack
       kind: eat-drink
       for: [foodie, kid, has-everything]
-      price: ""
+      price: "From $21.99"
       description: Pick from more than 500 sodas. Classic root beer, or something bold like ranch dressing, black olive or dirt.
+      image: files/gifts/rocket-fizz-six-pack.jpg
+      image_alt: A six-pack carrier of glass-bottle sodas, including pickle, key lime pie and blue cream, with a swirl lollipop.
       wrap_label: Six-pack
     - name: Pop culture puzzles
       kind: unwrap
       for: [kid, has-everything]
-      price: ""
+      price: "From $19.99"
       description: Movies, bands and silly fun, plus a puzzle of the shop’s own soda wall. The selection changes often.
+      image: files/gifts/rocket-fizz-puzzles.jpg
+      image_alt: A stack of 500-piece puzzles, including Cheshire Cat, The Powerpuff Girls, Star Trek and The Goonies.
       wrap_label: Puzzles
     - name: Stocking stuffers
       kind: unwrap
       for: [kid, has-everything]
       price: ""
       description: Treats from the Euro cart, shock gum, tin signs, bottle openers and fun pens.
+      image: files/gifts/rocket-fizz-stocking-stuffers.jpg
+      image_alt: A cart piled with European candy bars, including Cadbury, Aero, Maltesers and Toblerone.
       wrap_label: Stocking stuffers
       stocking_stuffer: yes
 
@@ -192,20 +238,26 @@ businesses:
     - name: Spudsters
       kind: unwrap
       for: [kid, has-everything]
-      price: ""
+      price: "$25"
       description: Squishy, potato-shaped plush buddies. Customers say they make great car pillows.
+      image: files/gifts/uncle-buddys-spudsters.jpg
+      image_alt: Shelves of round Spudsters plush animals, including a black cat, possum, cow, frog, rooster and bee.
       wrap_label: Spudsters
     - name: Bath toys
       kind: unwrap
       for: [kid]
-      price: ""
+      price: "From $15"
       description: A slightly out-of-control selection for screen-free bath time.
+      image: files/gifts/uncle-buddys-bath-toys.jpg
+      image_alt: Shelves of colorful bath toy boxes, including bath time flutes, xylophone, hoops and stickers.
       wrap_label: Bath toys
     - name: Book nooks and wooden puzzles
       kind: unwrap
       for: [maker, kid]
-      price: ""
+      price: "From $15"
       description: Miniature houses with lights, wooden flowers and puzzles for teens and kidults, ages 14 and up.
+      image: files/gifts/uncle-buddys-book-nooks.jpg
+      image_alt: Rolife Book Nook kits on a pink shelf, including Arcade Dating, Sunshine Town and Garden House.
       wrap_label: Book nooks
 
 - business: rustica
@@ -213,8 +265,11 @@ businesses:
     - name: Rustica gift card
       kind: gift-card
       for: [foodie, someone-special]
-      price: ""
+      price: "Any amount"
       description: A personalized gift card.
+      image: files/gifts/rustica-gift-card.jpg
+      image_alt: The Rustica logo, a bicycle carrying wine and bread, with the words Rustic European Cuisine.
+      photo_style: logo
       wrap_label: Gift card
 
 - business: downtown
@@ -224,6 +279,8 @@ businesses:
       for: [has-everything, kalamazoo-lover]
       price: "$5, $10 or $20"
       description: Digital gift certificates good at participating downtown businesses. They arrive by email, so they work even on Christmas Eve.
+      image: files/gifts/downtown-dollars.jpg
+      image_alt: The words Downtown Kalamazoo over a white brush-stroke K on a colorful quilt pattern.
       wrap_label: Downtown Dollars
       link: dollars.html
       only_in_kalamazoo: yes
@@ -231,8 +288,10 @@ businesses:
     - name: Downtown Kalamazoo merch
       kind: unwrap
       for: [kalamazoo-lover]
-      price: ""
+      price: "From $20"
       description: Tees, hoodies, hats and more.
+      image: files/gifts/downtown-merch.jpg
+      image_alt: A bright blue hoodie with a pink Downtown Kalamazoo K logo on the chest.
       wrap_label: Merch
       only_in_kalamazoo: yes
 
@@ -241,35 +300,65 @@ businesses:
     - name: Holiday popcorn tins
       kind: eat-drink
       for: [foodie, kid, host, has-everything]
-      price: ""
+      price: "From $48.95"
       description: 2, 3.5 or 6 gallon tins filled with up to three flavors.
+      image: files/gifts/pop-city-holiday-tins.jpg
+      image_alt: Two red snowflake tins from Pop City Popcorn, one open with cheddar, caramel and butter popcorn.
       wrap_label: Popcorn tins
     - name: Popcorn gift baskets
       kind: eat-drink
       for: [foodie, has-everything]
-      price: ""
+      price: "From $20"
       description: Pick a basket design, then decide what goes inside.
+      image: files/gifts/pop-city-gift-baskets.jpg
+      image_alt: Holiday popcorn tins and gift boxes filled with popcorn bags, pasta, jam and mustard.
       wrap_label: Gift baskets
     - name: Pop-at-home kit
       kind: unwrap
       for: [foodie, maker]
-      price: ""
+      price: "From $7.99"
       description: Popcorn seed, seasonings and Whirley Pop poppers.
+      image: files/gifts/pop-city-pop-at-home.jpg
+      image_alt: Whirley Pop stovetop popcorn poppers stacked with tins of sweet caramel and zesty cheddar seasoning.
       wrap_label: Pop at home
+
+- business: terrapin-worldwide-imports
+  gifts:
+    - name: Stone pendant necklaces
+      kind: unwrap
+      for: [someone-special]
+      price: "$45"
+      description: Beautiful stone pendants on a chain.
+      image: files/gifts/terrapin-pendant.jpg
+      image_alt: A large oval labradorite pendant leaning on a quartz crystal, with matching earrings on a stand.
+      wrap_label: Pendants
+    - name: Triloka specialty incense
+      kind: unwrap
+      for: [self-care, has-everything]
+      price: "From $5"
+      description: Custom-blended incense for meditation, yoga and ritual, made with natural or recycled materials.
+      image: files/gifts/terrapin-triloka-incense.jpg
+      image_alt: A wooden shelf of incense boxes and cones, with Triloka incense hanging above.
+      wrap_label: Incense
+      stocking_stuffer: yes
 
 - business: earthly-delights-amy-zane
   gifts:
     - name: Jellycat plush
       kind: unwrap
       for: [kid]
-      price: ""
+      price: "From $35"
       description: An assortment of Jellycat friends.
+      image: files/gifts/earthly-delights-jellycat.jpg
+      image_alt: Shelves of Jellycat plush, including smiling garlic, eggplant, corn, broccoli and fried eggs on toast.
       wrap_label: Jellycat
     - name: Eugy 3D puzzles
       kind: unwrap
       for: [kid, maker]
-      price: ""
+      price: "$17.99"
       description: A fun variety of Eugy 3D animal puzzle sets.
+      image: files/gifts/earthly-delights-eugy.jpg
+      image_alt: A gray cardboard elephant built from an Eugy 3D puzzle.
       wrap_label: 3D puzzles
 
 - business: civic-theatre
@@ -277,8 +366,11 @@ businesses:
     - name: 2026–27 Flex Pass 16
       kind: experience
       for: [arts-fan, someone-special]
-      price: ""
+      price: "$318"
       description: Sixteen admissions to use for any production in the 2026–27 season.
+      image: files/gifts/civic-flex-pass.jpg
+      image_alt: The Civic, Kalamazoo Civic Theatre logo.
+      photo_style: logo
       wrap_label: Flex Pass
 
 - business: farmers-alley-theatre
@@ -288,6 +380,9 @@ businesses:
       for: [arts-fan, someone-special]
       price: ""
       description: Choose just the shows you want and save 15% off single tickets.
+      image: files/gifts/farmers-alley-flex-pass.jpg
+      image_alt: The Farmers Alley Theatre logo.
+      photo_style: logo
       wrap_label: Flex Pass
 
 - business: dabney-co
@@ -295,8 +390,10 @@ businesses:
     - name: Cocktail-making class
       kind: experience
       for: [someone-special, foodie]
-      price: ""
+      price: "$90"
       description: Treat yourself and someone you love to a cocktail-making class.
+      image: files/gifts/dabney-cocktail-class.jpg
+      image_alt: A gloved Santa hand holds a creamy holiday cocktail with a cinnamon-sugar rim and a candy cane.
       wrap_label: Cocktails
       age_21: yes
 
@@ -305,30 +402,57 @@ businesses:
     - name: Take-home glass kits
       kind: unwrap
       for: [maker, kid]
-      price: ""
+      price: "From $10"
       description: Make suncatchers, magnets or nightlights at home this winter.
+      image: files/gifts/glass-art-take-home-kit.jpg
+      image_alt: Rows of colorful fused-glass squares with flower, bird and abstract designs.
       wrap_label: Glass kits
+    - name: Glassmaking class gift card
+      kind: experience
+      for: [maker, adventurer, someone-special]
+      price: "Any amount"
+      description: A gift card they can use toward any of Glass Art Kalamazoo’s classes.
+      image: files/gifts/glass-art-classes.jpg
+      image_alt: A torch flame shapes a tiny glass snowman on a rod.
+      wrap_label: Glass class
+    - name: Local glass artwork
+      kind: unwrap
+      for: [arts-fan, someone-special, has-everything]
+      price: "From $15"
+      description: A beautiful piece by a local artist.
+      image: files/gifts/glass-art-artwork.jpg
+      image_alt: Three fused-glass bowls in sunlight, in yellow and lavender, blue and green, and red and orange.
+      wrap_label: Glass art
+      only_in_kalamazoo: yes
 
 - business: cherri-s-chocol-art
   gifts:
     - name: Salted caramels
       kind: eat-drink
       for: [foodie]
-      price: ""
+      price: "$9.99"
       description: 5 oz bags in Michigan Maple Pecan, Classic Salted or Habanero Salted.
+      image: files/gifts/cherris-salted-caramels.jpg
+      image_alt: Shiny blue bags of Cherri’s Chocol’art salted caramels, including Michigan Maple Pecan.
       wrap_label: Caramels
+      stocking_stuffer: yes
     - name: Kalamazoo chocolate bars
       kind: eat-drink
       for: [foodie, kalamazoo-lover]
-      price: ""
+      price: "$5"
       description: Yes There Really Is a Kalamazoo, Winnie Wink, or A Sweet for You from Kalamazoo.
+      image: files/gifts/cherris-kalamazoo-bars.jpg
+      image_alt: Chocolate bars wrapped as "A Sweet for You from Kalamazoo" and "Yes, there really is a Kalamazoo."
       wrap_label: Chocolate
       only_in_kalamazoo: yes
+      stocking_stuffer: yes
     - name: Truffle boxes
       kind: eat-drink
       for: [foodie, someone-special, host, has-everything]
-      price: ""
+      price: "From $13.49"
       description: Boxes of 4, 9, 12 or 16 truffles and confections.
+      image: files/gifts/cherris-truffles.jpg
+      image_alt: A white gift box with a window showing nine chocolates and a Cherri’s Chocol’art “Made in Kalamazoo” sticker.
       wrap_label: Truffles
 
 - business: kalamazoo-candle-company
@@ -336,15 +460,27 @@ businesses:
     - name: Winter candle trio
       kind: unwrap
       for: [self-care, host, has-everything]
-      price: ""
+      price: "$69"
       description: "Three customer favorites: Balsam & Cedar, Cranberry Bellini and Hearth & Home."
+      image: files/gifts/kalamazoo-candle-winter-bundle.jpg
+      image_alt: Three lit Kalamazoo Candle Company candles in glass jars on a wooden table by a window.
       wrap_label: Candle trio
       only_in_kalamazoo: yes
+    - name: Candle-making class
+      kind: experience
+      for: [maker, self-care, someone-special]
+      price: ""
+      description: "[Description and price from Kalamazoo Candle Co.]"
+      image: files/gifts/kalamazoo-candle-class.jpg
+      image_alt: A smiling woman stirs melted wax in a glass jar at a candle-making table.
+      wrap_label: Candle class
     - name: Large two-wick winter candle
       kind: unwrap
       for: [self-care, host]
-      price: ""
+      price: "$29"
       description: A 100% soy candle in one of their winter fragrances.
+      image: files/gifts/kalamazoo-candle-two-wick.jpg
+      image_alt: An orange Candy Cane Lane candle tin with a 100-plus hour burn time.
       wrap_label: Candle
       only_in_kalamazoo: yes
 
@@ -353,18 +489,40 @@ businesses:
     - name: Intro to Climbing class
       kind: experience
       for: [adventurer]
-      price: ""
-      description: An introductory climbing class.
+      price: "$129"
+      description: Perfect for first-timers. Learn the basics, learn to belay and get comfortable on the rope.
+      image: files/gifts/climb-kalamazoo-intro.jpg
+      image_alt: A tall indoor climbing wall covered in colorful holds, with ropes hanging down.
       wrap_label: Climbing
 
 - business: bell-s-general-store
   gifts:
-    - name: Bell’s apparel
+    - name: Oberon game night bundle
+      kind: unwrap
+      for: [kalamazoo-lover, host, has-everything]
+      price: "$55"
+      description: An Oberon puzzle and tabletop cornhole board, plus a free Oberon deck of playing cards.
+      image: files/gifts/bells-oberon-game-night.jpg
+      image_alt: An Oberon-themed tabletop cornhole board, 1,000-piece puzzle and playing cards in front of a Christmas tree.
+      wrap_label: Game night
+      only_in_kalamazoo: yes
+    - name: Bell’s fan bundle
+      kind: unwrap
+      for: [kalamazoo-lover, has-everything]
+      price: "$37"
+      description: A classic logo tee and sporty socks, plus two free Bell’s pint glasses.
+      image: files/gifts/bells-fan-bundle.jpg
+      image_alt: A gray Bell’s Inspired Brewing tee, Bell’s socks and two Bell’s pint glasses of beer.
+      wrap_label: Fan bundle
+      only_in_kalamazoo: yes
+    - name: Bell’s 40th anniversary crewneck
       kind: unwrap
       for: [kalamazoo-lover]
-      price: ""
-      description: Shirts and gear from Bell’s.
-      wrap_label: Apparel
+      price: "$60"
+      description: A cozy sweatshirt with a vintage logo, celebrating four decades of Bell’s.
+      image: files/gifts/bells-40th-crewneck.jpg
+      image_alt: A smiling man in a slate blue Bell’s crewneck with the vintage Kalamazoo Brewing Co. logo.
+      wrap_label: Crewneck
       only_in_kalamazoo: yes
     - name: Two Hearted variety 12-pack
       kind: eat-drink
@@ -379,6 +537,8 @@ businesses:
       for: [foodie, kalamazoo-lover]
       price: ""
       description: A gift card for Bell’s.
+      image: files/gifts/bells-gift-card.jpg
+      image_alt: A hand holds a can of Bell’s Oberon Eclipse citrus wheat outside the Bell’s building.
       wrap_label: Gift card
 
 - business: urban-asanas
@@ -386,8 +546,11 @@ businesses:
     - name: 10-class bundle
       kind: experience
       for: [self-care, adventurer]
-      price: ""
+      price: "$160"
       description: Ten classes, with access to both heated and non-heated yoga.
+      image: files/gifts/urban-asanas-logo.jpg
+      image_alt: The Urban Asanas logo in gold.
+      photo_style: logo
       wrap_label: Yoga
 
 - business: sarkozy-bakery
@@ -395,32 +558,80 @@ businesses:
     - name: Sarkozy gift card
       kind: gift-card
       for: [foodie, coffee-tea]
-      price: ""
+      price: "Any amount"
       description: A gift card for Sarkozy Bakery.
+      image: files/gifts/sarkozy-logo.jpg
+      image_alt: The Sarkozy Bakery logo, with golden wheat stalks in a circle.
+      photo_style: logo
       wrap_label: Gift card
     - name: Sarkozy pie
       kind: eat-drink
       for: [foodie, host]
-      price: ""
-      description: "[Flavors from Sarkozy Bakery]"
+      price: "From $30"
+      description: A whole pie from Sarkozy Bakery.
+      image: files/gifts/sarkozy-pie.jpg
+      image_alt: A slice of pumpkin pie with whipped cream in front of two whole pies and small pumpkins.
       wrap_label: Pie
+
+- business: the-velvet-daisy
+  gifts:
+    - name: Boutique gifts from local makers
+      kind: unwrap
+      for: [has-everything, self-care, kalamazoo-lover]
+      price: "From $10"
+      description: Gifts from 46 local vendors, from coffee to catnip.
+      wrap_label: Local makers
+      only_in_kalamazoo: yes
 
 - business: unwind-massage-and-stretch
   gifts:
     - name: Unwind gift card
       kind: gift-card
       for: [self-care, someone-special]
-      price: ""
+      price: "Any amount"
       description: Treat someone you love to a one-of-a-kind massage and stretch service.
+      image: files/gifts/unwind-logo.jpg
+      image_alt: The Unwind Massage & Stretch logo.
+      photo_style: logo
       wrap_label: Gift card
+
+- name: Honare Salon
+  gifts:
+    - name: LAFCO seasonal candles
+      kind: unwrap
+      for: [self-care, host, has-everything]
+      price: "$56 or $76"
+      description: Long-burning, non-toxic candles in cozy and festive scents like Feu de Bois, Pistachio Oud and Woodland Spruce.
+      image: files/gifts/honare-lafco-candles.jpg
+      image_alt: Boxed LAFCO candles, including Feu de Bois and Pistachio Oud, among fall leaves and velvet pumpkins.
+      wrap_label: Candles
+    - name: LAFCO eau de parfum
+      kind: unwrap
+      for: [self-care, someone-special]
+      price: "$38"
+      description: Long-lasting perfumes with fresh, floral, fruity or woody notes, in 10 mL bottles.
+      image: files/gifts/honare-lafco-perfume.jpg
+      image_alt: Six small LAFCO perfume bottles with marbled caps on a white display, including Fireside Light and Golden Morning.
+      wrap_label: Perfume
+    - name: Aveda Hand Relief
+      kind: unwrap
+      for: [self-care]
+      price: "$28"
+      description: Rosemary Mint, Shampure and Cherry Almond scents to protect hands from harsh winter weather.
+      image: files/gifts/honare-aveda-hand-relief.jpg
+      image_alt: Three tubes of Aveda Hand Relief cream in Rosemary Mint, Shampure and Cherry Almond.
+      wrap_label: Hand cream
+      stocking_stuffer: yes
 
 - business: blush-salon-spa
   gifts:
     - name: Mani-pedi
       kind: experience
       for: [self-care]
-      price: ""
+      price: "From $120"
       description: A manicure and pedicure at Blush Salon & Spa.
+      image: files/gifts/blush-mani-pedi.jpg
+      image_alt: A nail artist paints a client's long almond-shaped nails.
       wrap_label: Mani-pedi
 
 - business: lana-s-boutique
@@ -428,30 +639,40 @@ businesses:
     - name: Blue Q oven mitts
       kind: unwrap
       for: [foodie, host, has-everything]
-      price: ""
+      price: "$17.99"
       description: A set of oven mitts to help you handle the hot stuff.
+      image: files/gifts/lanas-oven-mitts.jpg
+      image_alt: A rack of colorful Blue Q oven mitts with sayings like "Welcome to My Cooking Show!"
       wrap_label: Oven mitts
     - name: World’s Softest Socks
       kind: unwrap
       for: [self-care, has-everything]
-      price: ""
+      price: "$14.99"
       description: An assortment of World’s Softest Socks.
+      image: files/gifts/lanas-softest-socks.jpg
+      image_alt: Three pairs of fuzzy holiday socks with snowflake, peppermint and diamond patterns.
       wrap_label: Socks
+      stocking_stuffer: yes
 
 - business: factory-coffee-shop
   gifts:
     - name: Coffee box
       kind: eat-drink
       for: [coffee-tea]
-      price: ""
+      price: "$60"
       description: Three bags of Factory Coffee.
+      image: files/gifts/factory-coffee-box.jpg
+      image_alt: An open Factory Coffee box holding three bags of coffee, including The Grind and Half Caff.
+      photo_focus: bottom
       wrap_label: Coffee
       only_in_kalamazoo: yes
     - name: Factory Coffee gift card
       kind: gift-card
       for: [coffee-tea]
-      price: ""
+      price: "Any amount"
       description: A gift card for Factory Coffee.
+      image: files/gifts/factory-coffee-gift-card.jpg
+      image_alt: A hand holds up a white Factory Coffee paper bag.
       wrap_label: Gift card
 
 - business: okun-brothers-shoes
@@ -459,20 +680,26 @@ businesses:
     - name: Irish Setter Wingshooter XD boot
       kind: unwrap
       for: [has-everything, adventurer]
-      price: ""
+      price: "$285"
       description: A waterproof 6-inch safety-toe work boot for light to medium duty. Also in brown.
+      image: files/gifts/okun-irish-setter-boot.jpg
+      image_alt: A black leather Irish Setter work boot with a white sole in a gift box of tissue paper.
       wrap_label: Work boots
     - name: Timberland PRO Titan EV boot
       kind: unwrap
       for: [has-everything, adventurer]
-      price: ""
+      price: "$190"
       description: A light, waterproof 6-inch composite-toe boot in women’s and men’s sizes.
+      image: files/gifts/okun-timberland-boot.jpg
+      image_alt: A brown leather Timberland PRO work boot on pine branches in front of a gift box.
       wrap_label: Work boots
     - name: Boot care and accessories
       kind: unwrap
       for: [has-everything]
-      price: ""
+      price: "$5 to $25"
       description: Red Wing accessories, boot care, laces and work socks.
+      image: files/gifts/okun-boot-care.jpg
+      image_alt: Work socks, leather conditioner, a shoe brush, laces and a green beanie among pine branches.
       wrap_label: Boot care
       stocking_stuffer: yes
 
@@ -481,21 +708,28 @@ businesses:
     - name: Specialty hot chocolate tin
       kind: eat-drink
       for: [coffee-tea, foodie, kid]
-      price: ""
+      price: "$15.95"
       description: A rich blend of chocolates with a touch of spice. Stir a few spoonfuls into hot milk.
+      image: files/gifts/water-street-hot-chocolate.jpg
+      image_alt: Three stacked Water St. hot chocolate tins in Candy Cane, Sleeping Bear and Cocoa del Sol.
       wrap_label: Hot cocoa
+      stocking_stuffer: yes
     - name: Aroma Borealis coffee
       kind: eat-drink
       for: [coffee-tea]
-      price: ""
+      price: "$24.50"
       description: A warming winter blend with a full body and hints of chocolate, sold October through February.
+      image: files/gifts/water-street-aroma-borealis.jpg
+      image_alt: A bag of Aroma Borealis whole bean coffee with a northern lights design, in front of hostas.
       wrap_label: Coffee
       only_in_kalamazoo: yes
     - name: Etched coffee carafe
       kind: unwrap
       for: [coffee-tea, host]
-      price: ""
+      price: "$102"
       description: A double-walled, vacuum-insulated 33 oz carafe with a 360-degree pour lid. Dishwasher safe.
+      image: files/gifts/water-street-carafe.jpg
+      image_alt: A black coffee carafe etched with the Water St. Coffee Joint marquee logo.
       wrap_label: Carafe
 
 - business: south-street-cigars-spirits
@@ -503,8 +737,10 @@ businesses:
     - name: Rare bourbon
       kind: eat-drink
       for: [foodie, has-everything]
-      price: ""
+      price: "From $55"
       description: A bottle of rare whiskey for the bourbon lover in your life.
+      image: files/gifts/south-street-bourbon.jpg
+      image_alt: Four bottles of bourbon on a counter, including Basil Hayden 10 Year and Widow Jane 10 Year.
       wrap_label: Bourbon
       age_21: yes
     - name: Rare Pink cigars
@@ -512,6 +748,8 @@ businesses:
       for: [has-everything]
       price: ""
       description: Rare Pink Vintage 1960 Series cigars, handmade in the Dominican Republic.
+      image: files/gifts/south-street-cigars.jpg
+      image_alt: Pink boxes of Rare Pink Vintage 1960s Series cigars, one open to show the cigars.
       wrap_label: Cigars
       age_21: yes
 
@@ -520,14 +758,18 @@ businesses:
     - name: Matcharia gift card
       kind: gift-card
       for: [coffee-tea]
-      price: ""
+      price: "Any amount"
       description: A gift card for Matcharia.
+      image: files/gifts/matcharia-gift-card.jpg
+      image_alt: A hand holds a pink Matcharia gift card in front of the cafe’s chalkboard menu.
       wrap_label: Gift card
     - name: Matcha tea-making set
       kind: unwrap
       for: [coffee-tea, self-care]
-      price: ""
+      price: "From $70"
       description: Everything they need to make matcha at home.
+      image: files/gifts/matcharia-matcha-set.jpg
+      image_alt: A Hario matcha tea set with a bamboo whisk, glass bowl, sifter and scoop in front of its box.
       wrap_label: Matcha
 
 - business: the-aroma-labs
@@ -535,14 +777,18 @@ businesses:
     - name: Scent-making experience
       kind: experience
       for: [maker, self-care, someone-special]
-      price: ""
+      price: "From $50"
       description: Book a scent-making experience at The Aroma Labs.
+      image: files/gifts/aroma-labs-scent-making.jpg
+      image_alt: "Gloved hands drop fragrance into a small bottle, with the words: Your scent, mixed by hand."
       wrap_label: Scent making
     - name: DIY scent kit
       kind: unwrap
       for: [maker, self-care]
-      price: ""
+      price: "From $30"
       description: Create a signature fragrance at home.
+      image: files/gifts/aroma-labs-diy-kit.jpg
+      image_alt: Open Aroma Labs DIY scent kits with small dropper bottles of fragrance oils.
       wrap_label: Scent kit
 
 - business: wl-social-house
@@ -550,8 +796,11 @@ businesses:
     - name: WL Social House gift card
       kind: gift-card
       for: [foodie]
-      price: ""
+      price: "Any amount"
       description: A gift card for WL Social House.
+      image: files/gifts/wl-social-house-logo.jpg
+      image_alt: The WL Social House logo in white on dark green.
+      photo_style: logo
       wrap_label: Gift card
 
 - business: beowoof-provisions-for-pets
@@ -559,14 +808,19 @@ businesses:
     - name: AKC Canine Good Citizen class
       kind: experience
       for: [pet]
-      price: ""
+      price: "$250"
       description: Six sessions, with AKC testing included.
+      image: files/gifts/beowoof-canine-class.jpg
+      image_alt: A happy golden retriever puppy with its paws up next to an AKC Canine Good Citizen ribbon.
+      photo_focus: top
       wrap_label: Dog class
     - name: Pet toys
       kind: unwrap
       for: [pet]
-      price: ""
+      price: "From $15"
       description: Toys for cats and dogs.
+      image: files/gifts/beowoof-pet-toys.jpg
+      image_alt: Plush gnome dog toys in red holiday hats in a wooden Beowoof basket.
       wrap_label: Pet toys
     - name: Holiday apparel sale
       kind: unwrap
@@ -580,8 +834,10 @@ businesses:
     - name: Bimbo’s pizza, shipped
       kind: eat-drink
       for: [foodie, kalamazoo-lover]
-      price: ""
+      price: "From $50"
       description: Ship Kalamazoo’s famous pizza anywhere in the country.
+      image: files/gifts/bimbos-pizza.jpg
+      image_alt: The green hanging sign outside Bimbo’s Pizza, which reads Since 1959.
       wrap_label: Pizza
       only_in_kalamazoo: yes
 
@@ -590,14 +846,19 @@ businesses:
     - name: Goodr sunglasses
       kind: unwrap
       for: [adventurer]
-      price: ""
+      price: "From $30"
       description: A variety of Goodr sunglasses.
+      image: files/gifts/gazelle-goodr.jpg
+      image_alt: Three pairs of Goodr sunglasses in mint, tortoiseshell and red, displayed on their boxes.
       wrap_label: Sunglasses
     - name: Running gloves and mittens
       kind: unwrap
       for: [adventurer]
-      price: ""
+      price: "From $30"
       description: Running gloves and mittens for winter miles.
+      image: files/gifts/gazelle-logo.jpg
+      image_alt: The Gazelle Sports logo, a leaping gazelle in rainbow colors.
+      photo_style: logo
       wrap_label: Gloves
 
 - business: k-zoo-in-the-mitten
@@ -605,17 +866,30 @@ businesses:
     - name: Michigan merch
       kind: unwrap
       for: [kalamazoo-lover]
-      price: ""
+      price: "From $20"
       description: Magnets, hats, cups and more.
+      image: files/gifts/kzoo-mitten-michigan-merch.jpg
+      image_alt: Red mugs that read "Yes, there really is a Kalamazoo."
       wrap_label: Michigan
+    - name: Hometown tumblers
+      kind: unwrap
+      for: [kalamazoo-lover, coffee-tea]
+      price: "$27"
+      description: Keep drinks hot or cold while repping your hometown.
+      image: files/gifts/kzoo-mitten-tumblers.jpg
+      image_alt: Navy and black insulated tumblers engraved "home. Kalamazoo Michigan."
+      wrap_label: Tumblers
+      only_in_kalamazoo: yes
 
 - business: mason-jar-plant-shop
   gifts:
     - name: Rare plants
       kind: unwrap
       for: [self-care, host, has-everything]
-      price: ""
+      price: "From $30"
       description: Rare and collectible plants.
+      image: files/gifts/mason-jar-plants.jpg
+      image_alt: Potted houseplants, including a monstera, snake plant and pothos, in front of a teal shop counter.
       wrap_label: Plants
 
 - business: morrison-jewelers
@@ -625,12 +899,16 @@ businesses:
       for: [someone-special]
       price: ""
       description: Watches from Morrison Jewelers’ signature line.
+      image: files/gifts/morrison-jewelers.jpg
+      image_alt: Diamond rings and a wedding band above the Morrison Jewelers logo.
       wrap_label: Watches
     - name: Earrings
       kind: unwrap
       for: [someone-special]
       price: ""
       description: Earrings from Morrison Jewelers.
+      image: files/gifts/morrison-jewelers.jpg
+      image_alt: Diamond rings and a wedding band above the Morrison Jewelers logo.
       wrap_label: Earrings
 
 - business: pedal-bicycles
@@ -638,56 +916,97 @@ businesses:
     - name: Indoor cycling trainer
       kind: unwrap
       for: [adventurer]
-      price: ""
+      price: "From $550"
       description: A class-leading indoor trainer for cyclists of every level.
+      image: files/gifts/pedal-bike-wall.jpg
+      image_alt: A white road bike displayed on a rack under the Pedal sign on a wood wall.
       wrap_label: Trainer
     - name: Bike accessories
       kind: unwrap
       for: [adventurer, kid]
-      price: ""
+      price: "From $50"
       description: Helmets, lights, bells, baskets and more.
+      image: files/gifts/pedal-logo.jpg
+      image_alt: The Pedal logo, a cruiser bicycle in a circle.
+      photo_style: logo
       wrap_label: Bike gear
 
 - business: the-waiting-room
   gifts:
-    - name: Beanies
+    - name: Coal beanie
       kind: unwrap
-      for: [has-everything]
-      price: ""
-      description: Warm hats for cold weather.
+      for: [has-everything, kalamazoo-lover]
+      price: "$20"
+      description: A thick-knit cuffed beanie with The Waiting Room’s woven patch, in black, slate blue or light brown.
+      image: files/gifts/waiting-room-beanie.jpg
+      image_alt: A slate blue knit beanie with a white The Waiting Room patch.
+      photo_focus: bottom
       wrap_label: Beanies
+    - name: The Waiting Room gift card
+      kind: gift-card
+      for: [has-everything]
+      price: "$25 to $300"
+      description: Let them find their own style. Electronic cards online, physical cards in the store.
+      image: files/gifts/waiting-room-gift-card.jpg
+      image_alt: A blue The Waiting Room gift card and its black To, From and Amount sleeve.
+      wrap_label: Gift card
+    - name: Tyler by Guy Fox cologne
+      kind: unwrap
+      for: [someone-special, self-care]
+      price: "$78"
+      description: Bright bergamot and mandarin with sage, coconut water and juniper, finished with cedarwood.
+      image: files/gifts/waiting-room-tyler-cologne.jpg
+      image_alt: A bottle of Tyler cologne by Guy Fox next to its map-printed box.
+      wrap_label: Cologne
 
 - business: caffe-casa
   gifts:
     - name: Caffe Casa gift card
       kind: gift-card
       for: [coffee-tea]
-      price: ""
+      price: "Any amount"
       description: A gift card for Caffe Casa.
+      image: files/gifts/caffe-casa-latte.jpg
+      image_alt: Hands hold a green mug of latte with a chocolate swirl on the foam.
       wrap_label: Gift card
 
-# Waiting on details from these businesses. Each stays off the page until its brackets are replaced.
-
-- business: terrapin-worldwide-imports
+- business: kalamazoo-institute-of-arts
   gifts:
-    - name: "[Gift name from Terrapin]"
-      kind: unwrap
-      for: [has-everything]
-      price: ""
-      description: "[Description from Terrapin Worldwide Imports]"
-
-- business: the-velvet-daisy
-  gifts:
-    - name: "[Gift name from The Velvet Daisy]"
-      kind: unwrap
-      for: [has-everything]
-      price: ""
-      description: "[Description from The Velvet Daisy]"
-
-- name: Honare Salon
-  gifts:
-    - name: "[Gift name from Honare Salon]"
+    - name: Household membership
       kind: experience
-      for: [self-care]
-      price: ""
-      description: "[Description from Honare Salon]"
+      for: [arts-fan, has-everything, kid]
+      price: "$85"
+      description: A year of art and culture for the whole household.
+      image: files/gifts/kia-logo.jpg
+      image_alt: The Kalamazoo Institute of Arts 100th anniversary logo.
+      photo_style: logo
+      wrap_label: Membership
+
+- business: the-station-dancewear-and-studios
+  gifts:
+    - name: Knit shrug
+      kind: unwrap
+      for: [self-care, has-everything]
+      price: "$48"
+      description: A cozy knit shrug for dance warm-ups, or to add a dance look to any outfit.
+      image: files/gifts/station-knit-shrug.jpg
+      image_alt: A dancer poses in a red knit shrug over a green leotard and poinsettia skirt.
+      photo_focus: top
+      wrap_label: Shrug
+    - name: Ballet dolls
+      kind: unwrap
+      for: [kid]
+      price: "$35"
+      description: Ballet-inspired dolls to spark imagination. Several styles.
+      image: files/gifts/station-ballet-doll.jpg
+      image_alt: A soft mouse doll in a teal sweater, striped skirt and ballet slippers.
+      wrap_label: Ballet doll
+    - name: Leg warmers
+      kind: unwrap
+      for: [self-care, kid]
+      price: "From $15"
+      description: The easiest warm layer for the studio or beyond, in many colors, styles and sizes.
+      image: files/gifts/station-leg-warmers.jpg
+      image_alt: A dancer on pointe wearing long pink ribbed leg warmers.
+      wrap_label: Leg warmers
+      stocking_stuffer: yes

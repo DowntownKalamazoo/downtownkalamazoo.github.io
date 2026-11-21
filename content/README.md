@@ -229,6 +229,7 @@ The business's name, link and Downtown Dollars tag come from the business direct
    ```
    The `image_alt` sentence describes the photo for people who can't see it. Always include it.
 4. If the crop cuts off the product, add `photo_focus: top` or `photo_focus: bottom`.
+5. If the image is just the business's logo, add `photo_style: logo`. The whole logo then shows on a little gift card over the business's wrapping paper, instead of being cropped like a photo. Logos look best with only a little white space around them.
 
 Until a gift has a photo, its tag shows gift wrap in the business's directory pattern, with `wrap_label` written on it.
 
