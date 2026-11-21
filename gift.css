@@ -88,6 +88,11 @@
 .gg-wrap-label { max-width: 85%; padding: .6rem 1rem; background: var(--gg-paper); color: var(--gg-ink); border: 3px solid var(--gg-ink);
   transform: rotate(-2deg); text-align: center; font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; line-height: 1.1;
   text-transform: uppercase; text-wrap: balance; overflow-wrap: anywhere; }
+/* Logo-only images (photo_style: logo): the whole logo on a little gift card over the business's wrapping paper */
+.gg-logo { padding: 2rem 1.5rem 1.1rem; }
+.gg-card { display: flex; align-items: center; justify-content: center; width: 80%; aspect-ratio: 1.586 / 1; padding: .6rem; box-sizing: border-box;
+  background: #fff; border: 3px solid var(--gg-ink); border-radius: .75rem; box-shadow: 0 6px 14px rgba(18, 19, 69, .25); transform: rotate(-3deg); }
+.gg-card img { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
 .gg-body { display: grid; gap: .6rem; padding: 1rem 1.35rem .9rem; }
 .gg-pick { justify-self: start; padding: .15rem .65rem; border-radius: 999px; background: #f2b829; color: var(--gg-ink);
   font-family: var(--font-ui); font-weight: 800; font-size: .75rem; }

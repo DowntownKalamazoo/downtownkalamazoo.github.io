@@ -164,6 +164,9 @@ def load():
             focus = _text(g.get('photo_focus')).lower()
             if focus not in FOCUS:
                 raise GiftGuideError(f'{where}: photo_focus should be top, center or bottom.')
+            style = _text(g.get('photo_style')).lower() or 'photo'
+            if style not in ('photo', 'logo'):
+                raise GiftGuideError(f'{where}: photo_style should be photo or logo, not "{style}".')
             desc = _text(g.get('description'))
             price = _text(g.get('price'))
             wrap = _text(g.get('wrap_label')) or name
@@ -187,7 +190,7 @@ def load():
                 link = link.lstrip('/')
             gifts.append(dict(
                 id=gid, name=name, kind=kind, who=who, desc=desc, price=price, band=_band(price),
-                image=image, alt=alt, focus=FOCUS[focus], wrap=wrap,
+                image=image, alt=alt, focus=FOCUS[focus], logo=(style == 'logo'), wrap=wrap,
                 biz=biz['name'], biz_id=biz['id'], href=link or biz['href'], pat=biz['pat'], dd=biz['dd'],
                 local=_yes(g.get('only_in_kalamazoo')), gives=_yes(g.get('gives_back')),
                 stocking=_yes(g.get('stocking_stuffer')), adult=_yes(g.get('age_21')),
@@ -225,7 +228,7 @@ def prepare_photos(gifts, out_dir, warnings):
         else:
             with Image.open(src) as im:
                 im = ImageOps.exif_transpose(im).convert('RGB')
-                if im.width < 800:
+                if im.width < (400 if g['logo'] else 800):
                     warnings.append(f'{g["biz"]}, "{g["name"]}": the photo is only {im.width} pixels wide, so it may look soft. '
                                     f'Ask for a larger one if you can.')
                 outs = []
@@ -259,7 +262,11 @@ def _select(sid, label, options):
 def _tag(g, i):
     who = ' '.join(g['who'])
     tilt = ((i * 37) % 5 - 2) * 0.7
-    if g.get('img'):
+    if g.get('img') and g['logo']:
+        srcset = f' srcset="{g["img"]["srcset"]}" sizes="(max-width: 600px) 70vw, 220px"' if g['img']['srcset'] else ''
+        media = (f'<div class="gg-media gg-wrap gg-logo" style="background-image:url({{R}}pattern-{g["pat"]}.webp)">'
+                 f'<div class="gg-card"><img src="{{R}}{E(g["img"]["src"])}"{srcset} alt="{E(g["alt"])}" loading="lazy" decoding="async"></div></div>')
+    elif g.get('img'):
         srcset = f' srcset="{g["img"]["srcset"]}" sizes="(max-width: 600px) 92vw, 300px"' if g['img']['srcset'] else ''
         media = (f'<div class="gg-media"><img src="{{R}}{E(g["img"]["src"])}"{srcset} alt="{E(g["alt"])}" loading="lazy" decoding="async"'
                  f' style="object-position:{g["focus"]}"></div>'
