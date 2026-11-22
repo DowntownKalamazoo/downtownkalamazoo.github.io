@@ -84,7 +84,7 @@ SITE_URL = 'https://downtownkalamazoo.us/'
 
 # Each part of the site has its own brand pattern, so people can tell where they are by texture as well as color.
 SECTION_PATTERN = {'directory': 'maze', 'events': 'confetti', 'plan': 'arcs', 'gifts': 'stripes', 'dollars': 'dashes',
-                   'visit': 'waves', 'businesses': 'pinstripes', 'news': 'speckle'}
+                   'visit': 'waves', 'explore': 'waves', 'businesses': 'pinstripes', 'news': 'speckle'}
 PATH_PATTERN = {'index.html': 'squiggle', 'holidays/index.html': 'dots', 'holidays/sbs.html': 'quilt', 'newsletter.html': 'speckle',
                 'accessibility.html': 'loops', 'access-guide.html': 'loops', 'take-home.html': 'quilt',
                 'your-downtown.html': 'squiggle', '404.html': 'quilt',
@@ -127,16 +127,14 @@ BRUSH_V = _brush(True, 3)
 BRUSH_H = _brush(False, 5)
 
 NAV = [
-    ('directory.html', 'Explore downtown', 'directory'),
+    ('explore.html', 'Explore & visit', 'explore'),
     ('events.html', 'Events', 'events'),
     ('dollars.html', 'Downtown Dollars', 'dollars'),
-] + ([('news.html', 'News', 'news')] if SHOW_NEWS else []) + [
-    ('visit.html', 'Visit', 'visit'),
     ('businesses.html', 'For businesses', 'businesses'),
 ]
 ABOUT_MENU = [
     ('about.html', 'About downtown'),
-] + ([('history.html', 'History of downtown')] if SHOW_HISTORY else []) + [
+] + ([('news.html', 'News & stories')] if SHOW_NEWS else []) + ([('history.html', 'History of downtown')] if SHOW_HISTORY else []) + [
     ('boards.html', 'DDA & DEGA'),
     ('projects.html', 'Projects'),
     ('ambassadors.html', 'Downtown Ambassadors'),
@@ -181,14 +179,18 @@ def social_links(label='Downtown Kalamazoo on social media'):
 
 def header(r, current, path=''):
     cur = lambda key: ' aria-current="page"' if key == current else ''
-    items = ''.join(f'<li><a href="{r}{h}"{cur(key)}>{E(t)}</a></li>' for h, t, key in NAV)
+    items = ''
+    for h, t, key in NAV:
+        if key == 'businesses' and HOLIDAY_SEASON:
+            # Seasonal: the Holidays pill sits after Downtown Dollars from November 6 to December 31.
+            items += f'<li class="nav-holiday"><a href="{r}holidays/index.html"{cur("holidays")}>Holidays<span class="sr-only"> (seasonal)</span></a></li>'
+        items += f'<li><a href="{r}{h}"{cur(key)}>{E(t)}</a></li>'
     about_on = path in [h for h, _ in ABOUT_MENU]
     about = ''.join(f'<li><a href="{r}{h}"{" aria-current=\"page\"" if h == path else ""}>{E(t)}</a></li>' for h, t in ABOUT_MENU)
     items += (f'<li class="has-menu"><button type="button" class="nav-menu-btn{" is-current" if about_on else ""}" aria-expanded="false" aria-controls="menu-about">About'
               f'<svg aria-hidden="true" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>'
               f'<ul class="nav-menu" id="menu-about">{about}</ul></li>')
-    if HOLIDAY_SEASON:
-        items += f'<li class="nav-holiday"><a href="{r}holidays/index.html"{cur("holidays")}>Holidays</a></li>'
+    items += '<li><a href="#contact">Contact</a></li>'
     hbar = ''
     if path.startswith('holidays/'):
         links = ''.join(f'<li><a href="{r}{h}"{" aria-current=\"page\"" if h == path or (h != "holidays/index.html" and path.startswith(h[:-5] + "/")) else ""}>{E(t)}</a></li>' for h, t in HOLIDAY_NAV[1:])
@@ -219,7 +221,7 @@ def footer(r):
   <div class="footer-stripe" aria-hidden="true">{''.join(f'<span style="background-image:url({r}pattern-{n}-sm.webp)"></span>' for n in FOOTER_PATCH)}</div>
   <div class="wrap">
     <div class="footer-grid{" has-holidays" if hol else ""}">
-      <div>
+      <div id="contact">
         <p class="footer-word">Downtown<br>Kalamazoo</p>
         <p>Creative. Welcoming. Rooted.</p>
         <p style="margin-top:.75rem">City Hall, 241 W. South St.<br>Email downtown@kalamazoocity.org, or call 311 or (269) 337-8000.</p>
@@ -230,7 +232,7 @@ def footer(r):
         <li><a href="{r}events.html">Events calendar</a></li>
         <li><a href="{r}dollars.html">Downtown Dollars</a></li>
         <li><a href="{r}social-district.html">Social District</a></li>
-        <li><a href="{r}visit.html">Visit &amp; park</a></li>{f'{chr(10)}        <li><a href="{r}access-guide.html">Accessible downtown</a></li>' if SHOW_ACCESS_GUIDE else ''}
+        <li><a href="{r}explore.html">Explore &amp; visit</a></li>{f'{chr(10)}        <li><a href="{r}access-guide.html">Accessible downtown</a></li>' if SHOW_ACCESS_GUIDE else ''}
       </ul></nav>
       <nav aria-label="About downtown"><h2>Downtown</h2><ul>{f'{chr(10)}        <li><a href="{r}news.html">News &amp; stories</a></li>' if SHOW_NEWS else ''}{f'{chr(10)}        <li><a href="{r}team.html">Our team</a></li>' if TEAM_LIVE else ''}{f'{chr(10)}        <li><a href="{r}history.html">History</a></li>' if SHOW_HISTORY else ''}
         <li><a href="{r}projects.html">Projects</a></li>
@@ -1748,6 +1750,7 @@ exec(open(os.path.join(HERE, 'yearround_section.py'), encoding='utf-8').read())
 
 # The Downtown Dollars page (story, numbers and the merchant list).
 exec(open(os.path.join(HERE, 'dollars_section.py'), encoding='utf-8').read())
+exec(open(os.path.join(HERE, 'explore_section.py'), encoding='utf-8').read())
 
 if __name__ == '__main__':
     if os.path.exists(OUT): shutil.rmtree(OUT)
@@ -1763,7 +1766,7 @@ if __name__ == '__main__':
             src = os.path.join(root_, f); dst = os.path.join(OUT, os.path.relpath(src, assets))
             os.makedirs(os.path.dirname(dst), exist_ok=True); shutil.copy(src, dst)
     apply_giveaway()
-    build_home(); build_submit(); build_newsletter(); build_events(); build_plan_index(); build_directory(); build_gifts(); build_sbs(); build_dollars(); build_visit(); build_businesses(); build_accessibility()
+    build_home(); build_submit(); build_newsletter(); build_events(); build_plan_index(); build_directory(); build_gifts(); build_sbs(); build_dollars(); build_visit(); build_explore(); build_businesses(); build_accessibility()
     build_404(); build_take_home(); build_voices()
     if SHOW_ACCESS_GUIDE:
         build_access()
