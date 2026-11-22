@@ -340,6 +340,18 @@ If a line has a colon followed by a space, put the whole value in double quotes.
 
 ---
 
+## Explore & visit page
+
+`explore.html` puts finding a place, getting here, parking and questions on one page. It's the first link in the main menu.
+
+- **The list of places** comes from the business directory, so there's nothing extra to update. A fix in `content/directory-updates.yml` shows up on both pages, and every count on the page (171 places, 54 Dine and so on) is worked out from the directory.
+- **Park nearby** on each card names the closest public parking, with the city ramps favored for their 90 free minutes. It's worked out from the street address, so a listing with an unusual address may not get one.
+- **Parking rates, addresses and links** are shared with the Visit page (`CITY_RAMPS`, `CITY_LOTS`, `OTHER_PARKING` and `PARK_KZOO_PAGES` in `build.py`). Change them there and both pages update.
+- **The trolley box** and the trolley line in the hero show only during the holiday season and come down on their own after the last ride.
+- The page's wording lives in `explore_section.py`. The Visit page (`visit.html`) is still online for old links.
+
+---
+
 ## Switching pages on and off
 
 Some parts of the site can be turned on or off. Their content stays in the repository either way, so nothing is lost. Open `build.py` and find these lines near the top. News is on; the other three are off for now:
@@ -351,7 +363,7 @@ SHOW_ACCESS_GUIDE = False
 SHOW_ACCOMMODATION = False
 ```
 
-- `SHOW_NEWS`: the News & stories page and every post in `content/news`
+- `SHOW_NEWS`: the News & stories page and every post in `content/news` (linked from the About menu and the footer)
 - `SHOW_HISTORY`: the History of downtown page
 - `SHOW_ACCESS_GUIDE`: the Accessible downtown guide
 - `SHOW_ACCOMMODATION`: the "Need an accommodation?" box on event, plan and Visit pages
@@ -364,7 +376,7 @@ The links in the footer and on the About page come from `SOCIAL` near the top of
 
 ## Season switch
 
-When the holidays are over, open `build.py`, find `HOLIDAY_SEASON = True`, and change it to `HOLIDAY_SEASON = False`. The Holidays menu link, homepage banner and footer column go away, and the holiday pages stay online at `/holidays/`.
+When the holidays are over, open `build.py`, find `HOLIDAY_SEASON = True`, and change it to `HOLIDAY_SEASON = False`. The Holidays menu link (the red button after Downtown Dollars), homepage banner and footer column go away, and the holiday pages stay online at `/holidays/`.
 
 ## Something went wrong?
 
