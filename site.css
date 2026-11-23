@@ -861,6 +861,18 @@ input, select, textarea, button { box-sizing: border-box; }
 .t-press-release { background: var(--dk-blue); } .t-news { background: var(--dk-green); } .t-feature { background: var(--dk-pink); } .t-in-the-news { background: var(--dk-mist); border: 1px solid var(--ink); }
 .news-title { font-family: var(--font-body); font-weight: 700; font-size: 1.2rem; line-height: 1.25; }
 .news-source { font-size: .9rem; color: var(--muted); }
+.news-outlet { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; margin: 0; font-family: var(--font-ui); font-weight: 700; font-size: .95rem; color: var(--fg); }
+.news-outlet .sep { color: var(--muted); }
+.news-outlet span:last-child { font-weight: 600; color: var(--muted); }
+.ni { flex: none; vertical-align: -.2em; }
+.news-title .ni { width: .85em; height: .85em; vertical-align: -.05em; margin-left: .25em; }
+.news-labels { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .8rem; margin: 0; font-size: .9rem; }
+.mini-tag.news-pay { display: inline-flex; align-items: center; gap: .3rem; margin: 0; color: var(--fg); border-color: var(--fg); }
+.news-pay .ni { width: 14px; height: 14px; }
+.news-rel { font-family: var(--font-ui); font-weight: 600; color: var(--muted); }
+.news-go { margin: .15rem 0 0; padding-top: .6rem; border-top: 1px solid var(--line); font-family: var(--font-ui); font-weight: 700; font-size: .95rem; }
+.news-go .ni { width: 16px; height: 16px; margin-left: .25em; }
+.news-mentions li { margin-bottom: .55rem; } .news-mentions li .muted { display: block; font-size: .85rem; }
 .news-body h2 { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; font-size: 1.25rem; margin-top: 1.75rem; }
 .news-body ul, .news-body ol { padding-left: 1.3rem; }
 .news-body p, .news-body li { margin-bottom: .7rem; }
@@ -1493,3 +1505,4 @@ a[href^="tel:"] { white-space: nowrap; }
 .ex-acts { margin-top: auto; padding-top: .45rem; }
 .ex-body { height: 100%; align-content: start; }
 @media (max-width: 820px) { .ex-help { grid-template-columns: 1fr; } }
+.pj-card[id], .pj-older li[id] { scroll-margin-top: 6rem; }

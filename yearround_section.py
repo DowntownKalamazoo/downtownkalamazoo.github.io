@@ -193,16 +193,98 @@ def cal_row(o, heading='h3', show_tags=True):
 
 
 # ---------------------------------------------------------------- Home
+NEWS_ICONS = {
+    'Article': '<path d="M4 5h13v14H6a2 2 0 0 1-2-2V5z"/><path d="M17 9h3v8a2 2 0 0 1-2 2"/><path d="M7 9h7M7 12h7M7 15h4"/>',
+    'Video': '<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M10 9.5v5l4.5-2.5z"/>',
+    'Audio': '<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/>',
+    'lock': '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+    'out': '<path d="M14 5h5v5"/><path d="M19 5l-8 8"/><path d="M17 14v4a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h4"/>',
+}
+NEWS_VERB = {'Article': 'Read', 'Video': 'Watch', 'Audio': 'Listen'}
+
+
+def news_icon(name):
+    return (f'<svg class="ni" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" '
+            f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">{NEWS_ICONS[name]}</svg>')
+
+
+def _domain(url):
+    from urllib.parse import urlparse
+    return re.sub(r'^www\.', '', urlparse(url).netloc)
+
+
+def is_outside(p):
+    """An "In the news" item with no story of our own: every link to it goes straight to the outlet."""
+    return p['type'] == 'In the news' and not p['body_html']
+
+
+def news_href(p):
+    return p['source_url'] if is_outside(p) else f'news/{p["slug"]}.html'
+
+
+def news_link(p, text=None):
+    text = text or E(p['title'])
+    return ext(p['source_url'], text) if is_outside(p) else f'<a href="{{R}}news/{p["slug"]}.html">{text}</a>'
+
+
+_RELATED = {}
+
+
+def related_targets():
+    """slug -> (title, link) for every project a news item can point to with `related:`."""
+    if not _RELATED:
+        for q in PROJECT_FILES:
+            _RELATED[q['slug']] = (q['title'], f'projects.html#pj-{q["slug"]}')
+        for q in INVESTMENTS:
+            _RELATED[q['slug']] = (q['title'], f'projects.html#pj-{q["slug"]}')
+        for q in PLACEMAKING:
+            _RELATED[q['slug']] = (q['title'], f'placemaking/{q["slug"]}.html')
+    return _RELATED
+
+
+def news_about(slug):
+    """Published news items that name this project in `related:`, newest first."""
+    return [p for p in NEWS if slug in p['related']] if SHOW_NEWS else []
+
+
 def news_card(p, heading='h3'):
-    href = p.get('source_url') if p['type'] == 'In the news' and not p['body_html'] else f'news/{p["slug"]}.html'
-    link = ext(href, E(p['title'])) if href.startswith('http') else f'<a href="{{R}}{href}">{E(p["title"])}</a>'
-    src = f'<p class="news-source">{"From " if p["type"] == "In the news" else ""}{E(p.get("source") or p.get("author") or "")}</p>' if (p.get('source') or p.get('author')) else ''
-    return f'''<li class="news-item" data-type="{E(p['type'])}"><article>
+    out = is_outside(p)
+    title = E(p['title']) + (news_icon("out") if out else '')
+    link = news_link(p, title)
+    outlet = ''
+    if out:
+        outlet = f'<p class="news-outlet">{news_icon(p["format"])}<span>{E(p["source"] or _domain(p["source_url"]))}</span><span class="sep" aria-hidden="true">·</span><span>{E(p["format"])}</span></p>'
+    labels = []
+    if p['paywall']:
+        labels.append(f'<span class="mini-tag news-pay">{news_icon("lock")}Subscriber article</span>')
+    targets = related_targets()
+    rel = [f'<a href="{{R}}{E(targets[r][1])}">{E(targets[r][0])}</a>' for r in p['related'] if r in targets]
+    if rel:
+        labels.append(f'<span class="news-rel">Related: {", ".join(rel)}</span>')
+    labels = f'<p class="news-labels">{"".join(labels)}</p>' if labels else ''
+    if out:
+        go = ext(p['source_url'], f'{NEWS_VERB[p["format"]]} on {E(_domain(p["source_url"]))}{news_icon("out")}', 'news-go-link')
+        arch = f' <span aria-hidden="true">·</span> {ext(p["archive_url"], "Archived copy")}' if p['archive_url'] else ''
+        foot = f'<p class="news-go">{go}{arch}</p>'
+    else:
+        foot = f'<p class="news-source">{E(p["source"] or p["author"])}</p>' if (p['source'] or p['author']) else ''
+    return f'''<li class="news-item{' news-outside' if out else ''}" data-type="{E(p['type'])}"><article>
+  {outlet}
   <p class="news-meta"><span class="type-tag t-{re.sub(r'[^a-z]+', '-', p['type'].lower())}">{E(p['type'])}</span><time datetime="{p['date']}">{long_date(p['date'])}</time></p>
   <{heading} class="news-title">{link}</{heading}>
   <p>{E(p.get('summary', ''))}</p>
-  {src}
+  {labels}
+  {foot}
 </article></li>'''
+
+
+def news_mentions(slug, heading_id):
+    """The "In the news" panel on a project page, or nothing if no story names the project."""
+    items = news_about(slug)
+    if not items:
+        return ''
+    lis = ''.join(f'<li>{news_link(q)} <span class="muted">{E(q["source"] or q["author"] or "Downtown Kalamazoo")}, {long_date(q["date"])}</span></li>' for q in items[:5])
+    return f'<section class="panel news-mentions" aria-labelledby="{heading_id}"><h2 id="{heading_id}">In the news</h2><ul>{lis}</ul><p><a href="{{R}}news.html">All news &amp; stories</a></p></section>'
 
 
 CATEGORY_TILES = [
@@ -670,8 +752,15 @@ def build_news():
   </div>
 </section>'''
     page('news.html', 'News & stories', body, 'news', 'Press releases, news and stories from downtown Kalamazoo.')
-    for i, p in enumerate(NEWS):
-        if p['type'] == 'In the news' and not p['body_html']:
+    for f, msg in CL.news_link_warnings(NEWS):
+        print(f'::warning file={f},title=Check this link::{msg}')
+    targets = related_targets()
+    for p in NEWS:
+        for r in p['related']:
+            if r not in targets:
+                print(f'::warning file={p["source_file"]},title=Unknown related project::"{r}" doesn’t match a project file name; the link was left off')
+    for p in NEWS:
+        if is_outside(p):
             continue
         build_news_post(p)
 
@@ -699,7 +788,7 @@ def build_news_post(p):
       <p class="share-row"><button class="btn btn-small" type="button" data-share>Share this story</button> <span class="muted" data-share-status role="status"></span></p>
     </article>
     <div class="aside">
-      <section class="panel" aria-labelledby="more-title"><h2 id="more-title">More news</h2><ul>{''.join(f'<li><a href="{{R}}news.html">{E(q["title"])}</a></li>' if (q['type'] == 'In the news' and not q['body_html']) else f'<li><a href="{{R}}news/{q["slug"]}.html">{E(q["title"])}</a></li>' for q in more)}</ul><p><a href="{{R}}news.html">All news &amp; stories</a></p></section>
+      <section class="panel" aria-labelledby="more-title"><h2 id="more-title">More news</h2><ul>{''.join(f'<li>{news_link(q)}</li>' for q in more)}</ul><p><a href="{{R}}news.html">All news &amp; stories</a></p></section>
       <section class="panel f-blue"><h2>For media</h2><p>Email {DOWNTOWN_EMAIL} or call {DOWNTOWN_PHONE}.</p></section>
     </div>
   </div>
@@ -1465,6 +1554,8 @@ def _card_links(p):
     if p.get('news') and SHOW_NEWS and p['source'] == 'projects':
         links += f'<li><a href="{{R}}news/{E(p["news"])}.html">Read our story</a></li>'
     links += ''.join(link_item(l['text'], str(l['url']).strip()) for l in p['links'])
+    if p['source'] != 'placemaking':
+        links += ''.join(f'<li>{news_link(q, "In the news: " + E(q["title"]) + " (" + E(q["source"] or "Downtown Kalamazoo") + ")")}</li>' for q in news_about(p['slug'])[:2])
     return f'<ul class="project-links">{links}</ul>' if links else ''
 
 
@@ -1479,7 +1570,7 @@ def project_tile(p):
     where = f'<p class="place-where"><span class="sr-only">Where: </span>{E(p["where"])}</p>' if p.get('where') else ''
     summary = f'<p>{E(p["summary"])}</p>' if p.get('summary') else ''
     nxt = _next_line(p['next'] or (p.get('status') if p['source'] == 'investment' else ''))
-    return (f'<li class="pj-card" data-type="{p["type"]}">{band}<div class="pj-body">'
+    return (f'<li class="pj-card" id="pj-{E(p["slug"])}" data-type="{p["type"]}">{band}<div class="pj-body">'
             f'<div class="pj-track" aria-hidden="true">{track}</div><p class="pj-step">Step {step} of 4: {STEP_NAME[p["progress"]]}</p>'
             f'<h3>{title}</h3>{lead_line(p["lead"])}{where}{summary}{nxt}{_card_links(p)}</div></li>')
 
@@ -1507,7 +1598,7 @@ def build_projects():
         rows = ''
         for p in older:
             name = ext(str(p['links'][0]['url']).strip(), E(p['title'])) if p['links'] else E(p['title'])
-            rows += (f'<li data-type="{p["type"]}"><span class="t"><span class="sw" style="background-image:url({{R}}pattern-{p["pattern"]}-sm.webp)" aria-hidden="true"></span>{name}</span>'
+            rows += (f'<li id="pj-{E(p["slug"])}" data-type="{p["type"]}"><span class="t"><span class="sw" style="background-image:url({{R}}pattern-{p["pattern"]}-sm.webp)" aria-hidden="true"></span>{name}</span>'
                      f'<span class="y">{p["finished"] or "Finished"}</span></li>')
         older_html = (f'<section class="pj-stage" data-pj-stage aria-labelledby="pj-older-h"><div class="pj-stage-head"><h2 class="h2" id="pj-older-h">Finished since 2016</h2>'
                       f'<p class="pj-intro">Restored landmarks and new buildings that have already opened.</p></div>'
@@ -1624,6 +1715,7 @@ def build_place(i, p):
     </article>
     <div class="aside">
       {f'<section class="panel" aria-labelledby="pl-links"><h2 id="pl-links">Plans and updates</h2><ul>{links}</ul></section>' if links else ''}
+      {news_mentions(p['slug'], 'pl-news')}
       <section class="panel f-green" aria-labelledby="pl-more"><h2 id="pl-more">More placemaking</h2><ul>{others}</ul><p><a href="{{R}}projects.html">All downtown projects</a></p></section>
       <section class="panel f-pink"><h2>Questions?</h2><p>Email {DOWNTOWN_EMAIL} or call {DOWNTOWN_PHONE}.</p></section>
     </div>

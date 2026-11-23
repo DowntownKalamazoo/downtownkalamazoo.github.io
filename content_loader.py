@@ -67,13 +67,42 @@ def load_yaml(name, default=None):
 NEWS_TYPES = ['Press release', 'News', 'Feature', 'In the news']
 
 
+NEWS_FORMATS = ['Article', 'Video', 'Audio']
+
+
 def news():
+    """One Markdown file per story in content/news. "In the news" items are stories from other outlets:
+    the news list links straight to them, so they need a source_url (or a story written below the top section)."""
     posts = []
     for p in load('news'):
         p['date'] = _date(p.get('date'))
         p['type'] = p.get('type') if p.get('type') in NEWS_TYPES else 'News'
+        for k in ('source', 'source_url', 'archive_url', 'author'):
+            p[k] = str(p.get(k) or '').strip()
+        fmt = str(p.get('format') or 'Article').strip().capitalize()
+        if fmt not in NEWS_FORMATS:
+            raise ValueError(f'{p["source_file"]}: "format" should be Article, Video or Audio, not "{p.get("format")}"')
+        p['format'] = fmt
+        p['paywall'] = p.get('paywall') is True or str(p.get('paywall')).strip().lower() in ('true', 'yes')
+        rel = p.get('related') or []
+        p['related'] = [str(r).strip() for r in (rel if isinstance(rel, list) else [rel]) if str(r).strip()]
+        if p['type'] == 'In the news' and not p['source_url'] and not p.get('body_html', '').strip():
+            raise ValueError(f'{p["source_file"]}: "In the news" items need a source_url (the link to the outside story)')
+        for k in ('source_url', 'archive_url'):
+            if p[k] and not p[k].startswith('http'):
+                raise ValueError(f'{p["source_file"]}: "{k}" should be a full link starting with https://')
         posts.append(p)
     return sorted(posts, key=lambda p: p['date'] or dt.date.min, reverse=True)
+
+
+def news_link_warnings(posts):
+    """Gentle checks on outside links: these don't stop the build, they show as warnings on the Actions tab."""
+    out = []
+    for p in posts:
+        u = p['source_url']
+        if re.search(r'/amp/?$|[?&](utm_|fbclid|gclid)', u):
+            out.append((p['source_file'], 'source_url looks like an AMP or tracking link; use the normal article address'))
+    return out
 
 
 # ---------------------------------------------------------------- Events
