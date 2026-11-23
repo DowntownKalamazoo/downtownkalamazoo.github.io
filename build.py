@@ -130,7 +130,6 @@ NAV = [
     ('explore.html', 'Explore & visit', 'explore'),
     ('events.html', 'Events', 'events'),
     ('dollars.html', 'Downtown Dollars', 'dollars'),
-    ('businesses.html', 'For businesses', 'businesses'),
 ]
 ABOUT_MENU = [
     ('about.html', 'About downtown'),
@@ -140,6 +139,7 @@ ABOUT_MENU = [
     ('ambassadors.html', 'Downtown Ambassadors'),
     ('waste-recycling.html', 'Waste & recycling'),
     ('social-district.html', 'Social District'),
+    ('businesses.html', 'For businesses'),
 ]
 # The Our team page joins the About menu and footer once content/team.yml is out of draft.
 import content_loader as _CL
@@ -180,17 +180,17 @@ def social_links(label='Downtown Kalamazoo on social media'):
 def header(r, current, path=''):
     cur = lambda key: ' aria-current="page"' if key == current else ''
     items = ''
+    # Top bar: Explore & visit, Events, Downtown Dollars, About, then Holidays (in season).
     for h, t, key in NAV:
-        if key == 'businesses' and HOLIDAY_SEASON:
-            # Seasonal: the Holidays pill sits after Downtown Dollars from November 6 to December 31.
-            items += f'<li class="nav-holiday"><a href="{r}holidays/index.html"{cur("holidays")}>Holidays<span class="sr-only"> (seasonal)</span></a></li>'
         items += f'<li><a href="{r}{h}"{cur(key)}>{E(t)}</a></li>'
     about_on = path in [h for h, _ in ABOUT_MENU]
     about = ''.join(f'<li><a href="{r}{h}"{" aria-current=\"page\"" if h == path else ""}>{E(t)}</a></li>' for h, t in ABOUT_MENU)
     items += (f'<li class="has-menu"><button type="button" class="nav-menu-btn{" is-current" if about_on else ""}" aria-expanded="false" aria-controls="menu-about">About'
               f'<svg aria-hidden="true" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>'
               f'<ul class="nav-menu" id="menu-about">{about}</ul></li>')
-    items += '<li><a href="#contact">Contact</a></li>'
+    if HOLIDAY_SEASON:
+        # Seasonal: the Holidays pill sits last, November 6 to December 31.
+        items += f'<li class="nav-holiday"><a href="{r}holidays/index.html"{cur("holidays")}>Holidays<span class="sr-only"> (seasonal)</span></a></li>'
     hbar = ''
     if path.startswith('holidays/'):
         links = ''.join(f'<li><a href="{r}{h}"{" aria-current=\"page\"" if h == path or (h != "holidays/index.html" and path.startswith(h[:-5] + "/")) else ""}>{E(t)}</a></li>' for h, t in HOLIDAY_NAV[1:])
