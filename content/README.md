@@ -24,7 +24,14 @@ Posts appear on the News & stories page (`news.html`) once you commit.
 6. Write the story below the second `---` line. Leave a blank line between paragraphs.
 7. Choose **Commit changes**.
 
-**"In the news" items** only need the top section. Leave the story blank and the news list links straight to the outside article.
+**"In the news" items** only need the top section. Leave the story blank and the news list links straight to the outside article. A few extra lines help readers:
+
+- `format`: **Article**, **Video** (a TV segment) or **Audio** (radio or a podcast). The card then says "Read on," "Watch on" or "Listen on" and the outlet's web address. Leave it out for articles.
+- `paywall: true` adds a "Subscriber article" label so people know before they click.
+- `archive_url`: a backup copy from web.archive.org, in case the outlet takes the story down later. Optional.
+- `related`: the file name of a project, without `.md` (for example `kalamazoo-event-center`). The story then shows on that project: in an "In the news" box on placemaking pages, and as a link on the project's card on the Projects page. Use any file name from `content/projects`, `content/placemaking` or `content/investment`. For more than one, write `related: [water-street, south-burdick]`. This works for our own news posts too.
+
+Write the summary in your own words, never copied from the article, and use the outlet's publication date. Don't use the outlet's photos or logo. If a link looks like an AMP or tracking link, or a `related` name doesn't match a project, the Actions tab shows a yellow warning but the site still publishes.
 
 **To keep something private while you work on it**, add a line `draft: true` to the top section. Remove the line when it's ready.
 
