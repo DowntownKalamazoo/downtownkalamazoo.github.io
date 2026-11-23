@@ -7,7 +7,11 @@ type: News                # Press release, News, Feature, or In the news
 summary: One or two sentences shown in the news list and in search results.
 # author: Downtown Kalamazoo
 # source: City of Kalamazoo              # for press releases or outside stories
-# source_url: https://...                # "In the news" items link straight to this
+# source_url: https://...                # "In the news" items link straight to this (the normal article address, not /amp)
+# format: Article                        # "In the news" only: Article, Video (TV) or Audio (radio, podcast)
+# paywall: true                          # "In the news" only: shows a "Subscriber article" label
+# archive_url: https://web.archive.org/...  # optional backup copy, in case the outlet removes the story
+# related: kalamazoo-event-center        # optional: a project's file name (without .md); see content/README.md
 # image: files/your-photo.jpg            # optional; upload the photo to the files folder first
 # image_alt: What the photo shows, in a sentence
 # draft: true                            # keeps it off the site until you remove this line
